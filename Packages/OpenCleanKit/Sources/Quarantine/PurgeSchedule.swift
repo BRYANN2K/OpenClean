@@ -34,7 +34,13 @@ public struct PurgeSchedule: Sendable {
         let data = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
         try data.write(to: plistURL, options: .atomic)
         _ = try? runner.run("/bin/launchctl", ["bootout", "gui/\(uid)/\(Self.label)"])
-        let output = try runner.run("/bin/launchctl", ["bootstrap", "gui/\(uid)", plistURL.path])
+        let output: CommandOutput
+        do {
+            output = try runner.run("/bin/launchctl", ["bootstrap", "gui/\(uid)", plistURL.path])
+        } catch {
+            try? FileManager.default.removeItem(at: plistURL)
+            throw error
+        }
         guard output.status == 0 else {
             try? FileManager.default.removeItem(at: plistURL)
             throw ScheduleError.launchctl(output.stderrText)

@@ -1,5 +1,6 @@
 import Darwin
 import Foundation
+import ProcessKit
 import RuleKit
 import ScanEngine
 import Testing
@@ -371,6 +372,21 @@ struct RestoreAndPurgeTests {
         let schedule = PurgeSchedule(home: home.path, runner: runner, uid: 501)
         runner.respond("/bin/launchctl bootstrap gui/501 \(schedule.plistURL.path)", status: 1, stderr: "nope")
         #expect(throws: ScheduleError.launchctl("nope")) { try schedule.enable(executable: "/x/openclean") }
+        #expect(!schedule.isEnabled)
+    }
+
+    struct ThrowingRunner: CommandRunner {
+        struct Boom: Error, Equatable {}
+        func run(_ executable: String, _ arguments: [String]) throws -> CommandOutput {
+            if arguments.first == "bootstrap" { throw Boom() }
+            return CommandOutput(status: 0)
+        }
+    }
+
+    @Test func throwingBootstrapRemovesPlistAndPropagates() throws {
+        let home = try TempDirectory()
+        let schedule = PurgeSchedule(home: home.path, runner: ThrowingRunner(), uid: 501)
+        #expect(throws: ThrowingRunner.Boom()) { try schedule.enable(executable: "/x/openclean") }
         #expect(!schedule.isEnabled)
     }
 }
