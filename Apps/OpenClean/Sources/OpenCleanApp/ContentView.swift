@@ -53,7 +53,18 @@ struct ContentView: View {
         NavigationSplitView {
             // Custom rows instead of List selection: the system list paints selection in the macOS accent
             // colour (usually blue), which clashes with the app's palette.
-            ScrollView {
+            // A plain stack, not a ScrollView: with six fixed rows nothing scrolls, and a ScrollView in the
+            // sidebar of a hidden-title-bar window picks up an extra automatic top inset, which pushed the rows
+            // down and left the drawn rows out of line with their hit areas.
+            VStack(spacing: 0) {
+                HStack(spacing: 10) {
+                    AppIconView(size: 28)
+                    Wordmark(size: 17)
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+
                 VStack(spacing: 2) {
                     ForEach(SidebarItem.modules) { item in
                         SidebarRow(item: item, isSelected: (navigation.selection ?? .smartScan) == item) {
@@ -62,19 +73,10 @@ struct ContentView: View {
                     }
                 }
                 .padding(.horizontal, 10)
-            }
-            .scrollContentBackground(.hidden)
-            .background(Theme.sidebar.opacity(0.2))
-            .safeAreaInset(edge: .top, spacing: 0) {
-                HStack(spacing: 10) {
-                    AppIconView(size: 28)
-                    Wordmark(size: 17)
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
-            }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
+                .padding(.top, 6)
+
+                Spacer(minLength: 0)
+
                 VStack(spacing: 6) {
                     StorageCard(disk: model.disk, stats: model.stats)
                     SidebarRow(item: .settings, isSelected: navigation.selection == .settings) {
@@ -83,6 +85,8 @@ struct ContentView: View {
                 }
                 .padding(12)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Theme.sidebar.opacity(0.2))
             .frame(minWidth: 230)
             .navigationSplitViewColumnWidth(min: 230, ideal: 240, max: 280)
             // The sidebar is the app's only navigation, so it can't be hidden.
