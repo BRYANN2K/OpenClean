@@ -20,10 +20,10 @@ struct MenuBarLabel: View {
         HStack(spacing: 4) {
             Image(nsImage: MenuBarGlyph.image)
             if metric == .cpuAndMemory {
-                Image(systemName: "cpu")
-                Text(formatPercent(model.cpu)).monospacedDigit()
-                Image(systemName: "memorychip")
-                Text(formatPercent(model.memory?.usedFraction)).monospacedDigit()
+                // A menu bar label shows only one image and one text (inline images are dropped), so both
+                // figures share one Text with short word labels.
+                Text("CPU \(formatPercent(model.cpu))  RAM \(formatPercent(model.memory?.usedFraction))")
+                    .monospacedDigit()
             } else if metric != .none {
                 Text(text(for: metric)).monospacedDigit()
             }
