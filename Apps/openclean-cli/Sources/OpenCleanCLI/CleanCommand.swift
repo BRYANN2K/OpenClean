@@ -27,6 +27,10 @@ struct CleanCommand: AsyncParsableCommand {
     var json = false
 
     func run() async throws {
+        if json && !dryRun && !yes {
+            CLI.printError("--json requires --yes or --dry-run")
+            throw ExitCode(1)
+        }
         let coordinator = CLI.coordinator()
         let settings = CLI.bootstrap(coordinator)
         let loaded = coordinator.loadRules(includeCaution: true)
@@ -43,7 +47,16 @@ struct CleanCommand: AsyncParsableCommand {
         let plan = CleanupPlan(result: result, selectedPaths: selected)
 
         guard !plan.isEmpty else {
-            print(json ? try JSONReport.plan(plan) : "Nothing to clean.")
+            if json {
+                print(try JSONReport.plan(plan))
+            } else {
+                let held = result.rules.filter { $0.status == .scanned && ($0.rule.safety != .regenerable) }
+                    .reduce(0) { $0 + $1.items.filter { !$0.reportOnly }.count }
+                print(
+                    held > 0
+                        ? "Nothing to clean. \(held) item(s) need --include-review (and --rule for caution rules)."
+                        : "Nothing to clean.")
+            }
             return
         }
         if json && dryRun {

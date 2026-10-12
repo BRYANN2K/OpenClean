@@ -72,4 +72,26 @@ struct CleanCLITests {
             #expect(run.stderr.contains("Unknown rule id"))
         }
     }
+
+    @Test func jsonWithoutYesOrDryRunIsRefused() throws {
+        try CLIFixtures.withHome { home, env in
+            let cache = try home.file("Library/Caches/com.example/blob", bytes: 10)
+            let run = try CLIBinary.run(["clean", "--json"], environment: env)
+            #expect(run.status == 1)
+            #expect(run.stdout.isEmpty)
+            #expect(run.stderr.contains("--json requires --yes or --dry-run"))
+            #expect(FileManager.default.fileExists(atPath: cache))
+        }
+    }
+
+    @Test func cautionRuleSurvivesIncludeReview() throws {
+        try CLIFixtures.withHome { home, env in
+            let risky = try home.file("Risky/thing", bytes: 10)
+            let download = try home.file("Downloads/old.dmg", bytes: 10)
+            let run = try CLIBinary.run(["clean", "--yes", "--include-review"], environment: env)
+            #expect(run.status == 0, "\(run.stderr)")
+            #expect(!FileManager.default.fileExists(atPath: download))
+            #expect(FileManager.default.fileExists(atPath: risky))
+        }
+    }
 }
