@@ -28,4 +28,23 @@ struct DenyListTests {
     func allowsOrdinaryPaths(path: String) {
         #expect(!deny.isDenied(path), "expected \(path) to be allowed: \(deny.denialReason(for: path) ?? "")")
     }
+
+    @Test(arguments: [
+        "/Users/tester/Library/Caches/../../Documents/x", "/Users/tester/./Documents/x", "Documents/x", "",
+        "/users/TESTER/documents/x", "/applications/safari.app",
+        "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+    ])
+    func deniesNonCanonicalCaseAndNestedBundles(path: String) {
+        #expect(deny.isDenied(path), "expected \(path) to be denied")
+    }
+
+    @Test func caseVariantStillAllowedWhenOrdinary() {
+        #expect(!deny.isDenied("/Library/Caches/com.Example"))
+        #expect(!deny.isDenied("/Applications/Utilities"))
+    }
+
+    @Test func reasonsKeepConfiguredRootText() {
+        #expect(deny.denialReason(for: "/Users/tester/Documents/x") == "inside protected location /Users/tester/Documents")
+        #expect(deny.denialReason(for: "/users/tester/documents/x") == "inside protected location /Users/tester/Documents")
+    }
 }

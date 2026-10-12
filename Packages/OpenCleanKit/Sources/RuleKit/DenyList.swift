@@ -28,26 +28,39 @@ public struct DenyList: Sendable {
     public func isDenied(_ path: String) -> Bool { denialReason(for: path) != nil }
 
     public func denialReason(for rawPath: String) -> String? {
+        // Fail closed: a path we cannot reason about lexically is never deletable.
+        guard rawPath.hasPrefix("/") else { return "non-canonical path (not absolute)" }
+        if rawPath.split(separator: "/").contains(where: { $0 == "." || $0 == ".." }) {
+            return "non-canonical path (contains . or .. component)"
+        }
         let path = normalizedPath(rawPath)
+        // The filesystem is case-insensitive, so compare lowercased forms.
+        let lower = path.lowercased()
+        func within(_ root: String) -> Bool { isAncestorOrEqual(root.lowercased(), of: lower) }
 
-        for location in exact where path == location {
+        for location in exact where lower == location.lowercased() {
             return "protected location \(location)"
         }
-        for root in subtrees where isAncestorOrEqual(root, of: path) {
-            if allowedInside.contains(where: { isAncestorOrEqual($0, of: path) }) { continue }
+        for root in subtrees where within(root) {
+            if allowedInside.contains(where: within) { continue }
             return "inside protected location \(root)"
         }
-        for parent in bundleParents where path.hasPrefix(parent + "/") {
-            let first = path.dropFirst(parent.count + 1).split(separator: "/").first ?? ""
-            if first.hasSuffix(".app") { return "application bundle \(parent)/\(first)" }
+        let components = path.split(separator: "/").map(String.init)
+        for parent in bundleParents where lower.hasPrefix(parent.lowercased() + "/") {
+            let depth = parent.split(separator: "/").count
+            let below = components.dropFirst(depth)
+            if let idx = below.firstIndex(where: { $0.lowercased().hasSuffix(".app") }) {
+                let bundle = components.prefix(depth + (idx - below.startIndex) + 1).joined(separator: "/")
+                return "application bundle /\(bundle)"
+            }
         }
-        if path.hasPrefix(photosParent + "/") {
+        if lower.hasPrefix(photosParent.lowercased() + "/") {
             let first = path.dropFirst(photosParent.count + 1).split(separator: "/").first ?? ""
-            if first.hasSuffix(".photoslibrary") { return "Photos library \(photosParent)/\(first)" }
+            if first.lowercased().hasSuffix(".photoslibrary") { return "Photos library \(photosParent)/\(first)" }
         }
         let containedRoots = subtrees + exact.filter { $0 != "/" } + bundleParents + [photosParent]
-        for root in containedRoots where path != "/" && isAncestorOrEqual(path, of: root) {
-            if allowedInside.contains(where: { isAncestorOrEqual($0, of: path) }) { continue }
+        for root in containedRoots where path != "/" && isAncestorOrEqual(lower, of: root.lowercased()) {
+            if allowedInside.contains(where: within) { continue }
             return "contains protected location \(root)"
         }
         return nil
