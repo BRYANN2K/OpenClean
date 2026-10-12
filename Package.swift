@@ -52,5 +52,15 @@ let package = Package(
             dependencies: ["Probes", "ScanEngine", "ProcessKit", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/ProbesTests"
         ),
+        .target(
+            name: "Privilege",
+            dependencies: ["ProcessKit"],
+            path: "Packages/OpenCleanKit/Sources/Privilege"
+        ),
+        .testTarget(
+            name: "PrivilegeTests",
+            dependencies: ["Privilege", "ProcessKit", "TestSupport"],
+            path: "Packages/OpenCleanKit/Tests/PrivilegeTests"
+        ),
     ]
 )
