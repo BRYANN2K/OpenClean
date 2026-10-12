@@ -34,11 +34,13 @@ public struct DenyList: Sendable {
             return "non-canonical path (contains . or .. component)"
         }
         let path = normalizedPath(rawPath)
-        // The filesystem is case-insensitive, so compare lowercased forms.
-        let lower = path.lowercased()
-        func within(_ root: String) -> Bool { isAncestorOrEqual(root.lowercased(), of: lower) }
+        let key = pathKey(path)
+        func within(_ root: String) -> Bool { isAncestorOrEqual(pathKey(root), of: key) }
+        func hasSuffix(_ component: ArraySlice<UInt8>, _ suffix: String) -> Bool {
+            component.count >= suffix.utf8.count && component.suffix(suffix.utf8.count).elementsEqual(suffix.utf8)
+        }
 
-        for location in exact where lower == location.lowercased() {
+        for location in exact where key == pathKey(location) {
             return "protected location \(location)"
         }
         for root in subtrees where within(root) {
@@ -46,20 +48,23 @@ public struct DenyList: Sendable {
             return "inside protected location \(root)"
         }
         let components = pathComponents(path)
-        for parent in bundleParents where within(parent) && lower != parent.lowercased() {
+        let keyComponents = key.split(separator: 0x2F, omittingEmptySubsequences: true)
+        for parent in bundleParents where within(parent) && key != pathKey(parent) {
             let depth = pathComponents(parent).count
-            let below = components.dropFirst(depth)
-            if let idx = below.firstIndex(where: { $0.lowercased().hasSuffix(".app") }) {
+            let below = keyComponents.dropFirst(depth)
+            if let idx = below.firstIndex(where: { hasSuffix($0, ".app") }) {
                 let bundle = components.prefix(depth + (idx - below.startIndex) + 1).joined(separator: "/")
                 return "application bundle /\(bundle)"
             }
         }
-        if within(photosParent), lower != photosParent.lowercased() {
-            let first = components.dropFirst(pathComponents(photosParent).count).first ?? ""
-            if first.lowercased().hasSuffix(".photoslibrary") { return "Photos library \(photosParent)/\(first)" }
+        if within(photosParent), key != pathKey(photosParent) {
+            let depth = pathComponents(photosParent).count
+            if keyComponents.count > depth, hasSuffix(keyComponents[keyComponents.startIndex + depth], ".photoslibrary") {
+                return "Photos library \(photosParent)/\(components[depth])"
+            }
         }
         let containedRoots = subtrees + exact.filter { $0 != "/" } + bundleParents + [photosParent]
-        for root in containedRoots where path != "/" && isAncestorOrEqual(lower, of: root.lowercased()) {
+        for root in containedRoots where path != "/" && isAncestorOrEqual(key, of: pathKey(root)) {
             if allowedInside.contains(where: within) { continue }
             return "contains protected location \(root)"
         }

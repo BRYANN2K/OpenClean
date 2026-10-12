@@ -64,4 +64,25 @@ struct DenyListTests {
     func allowsCombiningMarksInOrdinaryPaths(path: String) {
         #expect(!deny.isDenied(path), "expected \(path) to be allowed: \(deny.denialReason(for: path) ?? "")")
     }
+
+    @Test(arguments: [
+        "/Applications/Foo\u{0600}.app", "/Applications/Foo\u{0600}.app/Contents/x",
+        "/Users/tester/Applications/a/Foo\u{0600}.app/x", "/Users/tester/Pictures/x\u{0600}.photoslibrary",
+        "/Users/tester/Pictures/x\u{0600}.photoslibrary/database",
+        "/APPLICATIONS/\u{0301}Safari.app", "/system/\u{0301}x", "/usr/loca\u{0301}l/x",
+    ])
+    func deniesPrependCharsCaseAndEquivalents(path: String) {
+        #expect(deny.isDenied(path), "expected \(path) to be denied")
+    }
+
+    @Test func allowsUsrLocalWithCombiningMark() {
+        #expect(!deny.isDenied("/usr/local/\u{0301}x"))
+    }
+
+    @Test func treatsCanonicallyEquivalentHomesAsEqual() {
+        let nfcHome = DenyList(home: "/Users/Jos\u{e9}")
+        let nfdHome = DenyList(home: "/Users/Jose\u{301}")
+        #expect(nfcHome.isDenied("/Users/Jose\u{301}/Documents/x"))
+        #expect(nfdHome.isDenied("/Users/Jos\u{e9}/Documents/x"))
+    }
 }

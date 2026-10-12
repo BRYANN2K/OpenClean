@@ -55,20 +55,32 @@ func normalizedPath(_ path: String) -> String {
     return bytes.isEmpty ? "/" : String(decoding: bytes, as: UTF8.self)
 }
 
-/// True when `ancestor` equals `path` or is one of its parent directories. Compares UTF-8 bytes.
-func isAncestorOrEqual(_ ancestor: String, of path: String) -> Bool {
-    if ancestor == "/" { return true }
-    let a = Array(ancestor.utf8)
-    let p = Array(path.utf8)
+/// Byte form of `ancestorOrEqual`: `ancestor` equals `path` or is a parent directory of it.
+func isAncestorOrEqual(_ a: [UInt8], of p: [UInt8]) -> Bool {
+    if a == [0x2F] { return true }
     if p.count == a.count { return p == a }
     return p.count > a.count && p.starts(with: a) && p[a.count] == 0x2F
 }
 
-/// True when `path` equals `root` or is inside it, comparing UTF-8 bytes (optionally on lowercased forms).
+/// True when `ancestor` equals `path` or is one of its parent directories. Compares UTF-8 bytes.
+func isAncestorOrEqual(_ ancestor: String, of path: String) -> Bool {
+    isAncestorOrEqual(Array(ancestor.utf8), of: Array(path.utf8))
+}
+
+/// Case-insensitive, canonical-equivalence-insensitive comparison key (APFS treats NFC/NFD names as
+/// the same). Folds case first, then decomposes, so the result is stable. "/" is never altered.
+func pathKey(_ s: String) -> [UInt8] {
+    Array(s.folding(options: [.caseInsensitive], locale: nil).decomposedStringWithCanonicalMapping.utf8)
+}
+
+/// True when `path` equals `root` or is inside it, comparing UTF-8 bytes. `root` may carry trailing
+/// or duplicate slashes. With `caseInsensitive`, compares `pathKey`s.
 public func pathIsWithin(_ path: String, _ root: String, caseInsensitive: Bool = false) -> Bool {
-    caseInsensitive
-        ? isAncestorOrEqual(root.lowercased(), of: path.lowercased())
-        : isAncestorOrEqual(root, of: path)
+    let r = normalizedPath(root)
+    let p = normalizedPath(path)
+    return caseInsensitive
+        ? isAncestorOrEqual(pathKey(r), of: pathKey(p))
+        : isAncestorOrEqual(r, of: p)
 }
 
 /// True if any "/"-separated component is exactly "." or "..". Works on UTF-8 bytes so a combining

@@ -32,5 +32,7 @@ struct PathTests {
         #expect(!pathIsWithin("/A/b", "/a"))
         #expect(pathIsWithin("/a", "/a"))
         #expect(pathIsWithin("/anything", "/"))
+        #expect(pathIsWithin("/a/b", "/a/"))
+        #expect(pathIsWithin("/Users/Jose\u{301}/x", "/users/Jos\u{e9}", caseInsensitive: true))
     }
 }
