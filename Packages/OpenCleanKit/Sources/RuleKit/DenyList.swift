@@ -18,6 +18,8 @@ public struct DenyList: Sendable {
             "\(h)/Documents", "\(h)/Desktop",
             "\(h)/Library/Keychains", "/Library/Keychains",
             "\(h)/Library/Mail", "\(h)/Library/Mobile Documents",
+            "\(h)/.ssh", "\(h)/.gnupg", "\(h)/Library/Application Support/OpenClean",
+            "/private/etc", "/private/var/db",
         ]
         exact = ["/", h, "/usr/local"]
         allowedInside = ["/usr/local"]

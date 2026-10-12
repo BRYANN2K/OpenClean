@@ -123,20 +123,28 @@ public final class AppModel {
         let coordinator = coordinator
         do {
             let report = try await Task.detached { try coordinator.execute(plan) }.value
-            lastReport = report
-            if generation != settingsGeneration {
-                result = nil
-                selectedPaths = []
-                phase = .idle
-            } else {
-                dropCleanedItems(report)
-                phase = .finished
-            }
+            finishClean(report: report, error: nil, generation: generation)
         } catch {
-            errorMessage = error.localizedDescription
-            phase = .results
+            finishClean(report: nil, error: error, generation: generation)
         }
         refreshHistory()
+    }
+
+    /// Applies the outcome of a clean. If exclusions or Advanced changed while it ran (`generation` is
+    /// stale), the scan result no longer matches the settings and is discarded, success or failure.
+    func finishClean(report: RemovalReport?, error: (any Error)?, generation: Int) {
+        if let report { lastReport = report }
+        if let error { errorMessage = error.localizedDescription }
+        if generation != settingsGeneration {
+            result = nil
+            selectedPaths = []
+            phase = .idle
+        } else if let report {
+            dropCleanedItems(report)
+            phase = .finished
+        } else {
+            phase = .results
+        }
     }
 
     public func restore(sessionID: String, paths: Set<String>?, onConflict: ConflictPolicy) async -> RestoreReport? {

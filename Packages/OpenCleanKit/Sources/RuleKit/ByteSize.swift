@@ -33,8 +33,11 @@ public struct ByteSize: Decodable, Sendable, Equatable, Comparable, CustomString
         ]
         for unit in units where trimmed.hasSuffix(unit.suffix) {
             let number = trimmed.dropLast(unit.suffix.count).trimmingCharacters(in: .whitespaces)
-            guard let value = Double(number), value >= 0 else { return nil }
-            return ByteSize(bytes: Int64(value * unit.factor))
+            guard let value = Double(number), value.isFinite, value >= 0 else { return nil }
+            let product = value * unit.factor
+            // Double(Int64.max) rounds up to 2^63, which Int64 cannot hold, so the bound is exclusive.
+            guard product.isFinite, product < Double(Int64.max) else { return nil }
+            return ByteSize(bytes: Int64(product))
         }
         guard let value = Int64(trimmed), value >= 0 else { return nil }
         return ByteSize(bytes: value)

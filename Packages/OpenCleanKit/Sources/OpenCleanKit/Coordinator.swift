@@ -10,6 +10,9 @@ import ScanEngine
 /// The single entry point the app and the CLI use. Holds no mutable state.
 public struct OpenCleanCoordinator: Sendable {
     public let home: String
+    /// `home` with symlinks resolved; every safety check (deny-list, linter, path expansion) uses this,
+    /// because scan items are canonical paths.
+    let resolvedHome: String
     public let paths: AppPaths
     public let registry: ProbeRegistry
     public let bundledRulesDirectory: URL?
@@ -29,9 +32,11 @@ public struct OpenCleanCoordinator: Sendable {
         fullDiskAccess: (@Sendable () -> FullDiskAccessStatus)? = nil,
         trash: @escaping TrashOperation = Remover.systemTrash
     ) {
-        let resolvedHome = environment["OPENCLEAN_HOME"] ?? home
-        self.home = resolvedHome
-        paths = AppPaths.standard(home: resolvedHome)
+        let givenHome = environment["OPENCLEAN_HOME"] ?? home
+        self.home = givenHome
+        let resolvedHome = realPath(givenHome) ?? givenHome
+        self.resolvedHome = resolvedHome
+        paths = AppPaths.standard(home: givenHome)
         self.registry = registry
         bundledRulesDirectory = RulesLocator.bundledDirectory(environment: environment)
         self.processChecker = processChecker
@@ -46,7 +51,7 @@ public struct OpenCleanCoordinator: Sendable {
 
     public func fullDiskAccessStatus() -> FullDiskAccessStatus { accessCheck() }
 
-    public func makeLinter() -> RuleLinter { RuleLinter(home: home, knownProbes: registry.ids) }
+    public func makeLinter() -> RuleLinter { RuleLinter(home: resolvedHome, knownProbes: registry.ids) }
 
     public func loadRules(includeCaution: Bool) -> LoadedRules {
         var directories: [URL] = []
@@ -63,13 +68,13 @@ public struct OpenCleanCoordinator: Sendable {
     public func scan(
         _ rules: [Rule], settings: Settings, progress: AsyncStream<ScanProgress>.Continuation? = nil
     ) async -> ScanResult {
-        let expander = PathExpander(home: home)
+        let expander = PathExpander(home: resolvedHome)
         let excludes = settings.excludedPaths.map { path -> String in
             let expanded = expander.expand(path)
             return realPath(expanded) ?? expanded
         }
         let context = ScanContext(
-            home: home, hasFullDiskAccess: accessCheck() == .granted, processChecker: processChecker,
+            home: resolvedHome, hasFullDiskAccess: accessCheck() == .granted, processChecker: processChecker,
             userExcludes: excludes)
         return await ScanEngine(registry: registry).scan(rules, context: context, progress: progress)
     }
@@ -77,7 +82,7 @@ public struct OpenCleanCoordinator: Sendable {
     public func execute(_ plan: CleanupPlan) throws -> RemovalReport {
         let openPaths = try? openFiles.openPaths()
         let checker = PreDeleteChecker(
-            denyList: DenyList(home: home), processChecker: processChecker, openPaths: openPaths)
+            denyList: DenyList(home: resolvedHome), processChecker: processChecker, openPaths: openPaths)
         return try Remover(store: store, checker: checker, admin: admin, trash: trash).remove(plan.requests)
     }
 

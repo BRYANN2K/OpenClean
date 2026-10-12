@@ -123,6 +123,23 @@ struct RulePackLoaderTests {
         #expect(throws: RulePackError.self) { try loader.load(yaml: yaml, sourcePath: "p.yaml") }
     }
 
+    @Test func rejectsOverflowingMinSizeWithoutCrashing() {
+        let yaml = """
+            pack: p
+            version: 1
+            rules:
+              - id: a.b
+                name: A
+                category: user
+                explain: x
+                paths: ["~/x/*"]
+                safety: review
+                conditions:
+                  min_size: 1e30TB
+            """
+        #expect(throws: RulePackError.self) { try loader.load(yaml: yaml, sourcePath: "p.yaml") }
+    }
+
     @Test func loadsDirectoryAndCollectsErrors() throws {
         let dir = try TempDirectory()
         try "pack: good\nversion: 1\nrules: []\n".write(

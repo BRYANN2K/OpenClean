@@ -32,7 +32,8 @@ public struct XcodeSimulatorsProbe: Probe {
         let listing = try JSONDecoder().decode(Listing.self, from: output.stdout)
         let root = context.home + "/Library/Developer/CoreSimulator/Devices/"
         return listing.devices.values.flatMap { $0 }
-            .filter { $0.isAvailable == false }
+            // The udid becomes a path component; anything but a UUID (e.g. "../..") is not a simulator.
+            .filter { $0.isAvailable == false && UUID(uuidString: $0.udid) != nil }
             .sorted { $0.udid < $1.udid }
             .map { ProbeFinding(path: root + $0.udid, hint: "Unavailable simulator: \($0.name)") }
     }

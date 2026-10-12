@@ -16,12 +16,11 @@ struct BundledRulesTests {
     @Test func everyBundledPackLintsClean() throws {
         let loaded = try load()
         #expect(loaded.problems.isEmpty, "\(loaded.problems)")
-        #expect(loaded.rules.count == 29)
+        #expect(loaded.rules.count == 28)
         #expect(
             Set(loaded.rules.map(\.id)) == [
                 "system.caches",
                 "system.logs",
-                "system.diagnostic-reports",
                 "timemachine.local-snapshots",
                 "user.app-caches",
                 "user.logs",

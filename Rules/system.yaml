@@ -21,16 +21,6 @@ rules:
       - "/private/var/log/*.bz2"
     safety: regenerable
     requires: [admin]
-  - id: system.diagnostic-reports
-    name: System crash reports
-    category: system
-    explain: Crash and hang reports macOS already collected. Only useful when sending them to a developer.
-    paths:
-      - "/Library/Logs/DiagnosticReports/*"
-    safety: regenerable
-    conditions:
-      min_age_days: 7
-    requires: [admin]
   - id: timemachine.local-snapshots
     name: Local Time Machine snapshots
     category: system

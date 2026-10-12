@@ -40,6 +40,24 @@ struct DenyListTests {
         #expect(deny.isDenied(path), "expected \(path) to be denied")
     }
 
+    @Test(arguments: [
+        "/Users/tester/.ssh", "/Users/tester/.ssh/id_ed25519", "/Users/tester/.gnupg/pubring.kbx",
+        "/Users/tester/Library/Application Support/OpenClean",
+        "/Users/tester/Library/Application Support/OpenClean/settings.json",
+        "/private/etc/hosts", "/private/var/db/dslocal", "/private", "/private/var",
+    ])
+    func deniesSecretsOpenCleanDataAndSystemDatabases(path: String) {
+        #expect(deny.isDenied(path), "expected \(path) to be denied")
+    }
+
+    @Test(arguments: [
+        "/private/var/log/x.gz", "/private/var/folders/ab/cdef/T/com.example",
+        "/Users/tester/Library/Application Support/OpenCleanOther", "/Users/tester/.sshfoo",
+    ])
+    func stillAllowsSystemLogsAndTemporaryFolders(path: String) {
+        #expect(!deny.isDenied(path), "expected \(path) to be allowed: \(deny.denialReason(for: path) ?? "")")
+    }
+
     @Test func caseVariantStillAllowedWhenOrdinary() {
         #expect(!deny.isDenied("/Library/Caches/com.Example"))
         #expect(!deny.isDenied("/Applications/Utilities"))

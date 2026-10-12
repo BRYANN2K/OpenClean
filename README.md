@@ -61,6 +61,8 @@ openclean schedule purge --daily        # optional daily purge of expired quaran
 Exit codes: `0` success, `1` error or aborted, `2` finished but some items were skipped.
 
 `openclean clean --json` requires `--yes` or `--dry-run`, so scripted runs never clean by accident.
+When `openclean clean` is not run from a terminal, system items that need the administrator password are
+skipped (with a note on stderr) unless you pass `--allow-admin`.
 
 ## How it stays safe
 

@@ -23,6 +23,8 @@ public enum SessionListing: Sendable, Identifiable {
 public enum QuarantineError: Error, Equatable {
     case sessionNotFound(String)
     case manifestMismatch(String)
+    /// The manifest was written by a newer OpenClean; reading it could misinterpret its entries.
+    case unsupportedSchema(Int)
 }
 
 /// Owns `Quarantine/<session-id>/{manifest.json, items/}`.
@@ -58,6 +60,7 @@ public struct QuarantineStore: Sendable {
             throw QuarantineError.sessionNotFound(id)
         }
         let manifest = try Self.decoder().decode(SessionManifest.self, from: Data(contentsOf: manifestURL(id)))
+        guard manifest.schema <= 1 else { throw QuarantineError.unsupportedSchema(manifest.schema) }
         // Manifests are user-writable: the decoded id must match the folder it lives in.
         guard manifest.id == id else { throw QuarantineError.manifestMismatch(id) }
         return manifest

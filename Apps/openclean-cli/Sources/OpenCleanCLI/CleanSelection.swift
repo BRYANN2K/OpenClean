@@ -25,4 +25,11 @@ enum CleanSelection {
         }
         return selected
     }
+
+    /// Removes items whose rule needs the administrator password; `dropped` counts how many were selected.
+    static func excludingAdmin(_ paths: Set<String>, in result: ScanResult) -> (kept: Set<String>, dropped: Int) {
+        let adminPaths = Set(result.rules.filter { $0.rule.needs(.admin) }.flatMap(\.items).map(\.path))
+        let kept = paths.subtracting(adminPaths)
+        return (kept, paths.count - kept.count)
+    }
 }

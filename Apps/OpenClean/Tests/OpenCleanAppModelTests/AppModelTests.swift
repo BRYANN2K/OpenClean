@@ -222,6 +222,26 @@ struct AppModelTests {
         #expect(model.phase == .results)
     }
 
+    @Test func cleanFailureAfterSettingsChangeDiscardsStaleResult() async throws {
+        struct CleanFailed: LocalizedError {
+            var errorDescription: String? { "clean failed" }
+        }
+        let home = try TempDirectory()
+        try home.file("Library/Caches/com.example/blob", bytes: 4_096)
+        let model = try makeModel(home)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+        #expect(model.result != nil)
+        #expect(!model.selectedPaths.isEmpty)
+        // A generation that no longer matches stands in for "exclusions changed while cleaning".
+        model.finishClean(report: nil, error: CleanFailed(), generation: -1)
+        #expect(model.phase == .idle)
+        #expect(model.result == nil)
+        #expect(model.selectedPaths.isEmpty)
+        #expect(model.errorMessage == "clean failed")
+    }
+
     @Test func settingsChangeDuringScanDiscardsResult() async throws {
         let home = try TempDirectory()
         let model = try makeModel(home, registry: ProbeRegistry([SlowAppProbe()]))

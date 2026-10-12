@@ -19,6 +19,17 @@ struct ReviewSheet: View {
                     Label(
                         "\(plan.adminRequests.count) system item(s) need your administrator password.",
                         systemImage: "lock.shield")
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 2) {
+                            ForEach(plan.adminRequests.map(\.item.path), id: \.self) { path in
+                                Text(path)
+                                    .font(.caption.monospaced())
+                                    .textSelection(.enabled)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .frame(maxHeight: 120)
                 }
                 Text("Files that changed since the scan, or are open in another app, are skipped automatically.")
                     .font(.callout)

@@ -11,6 +11,8 @@ Run before each release, on a test user account.
 - [ ] Select System caches, Clean: exactly one administrator prompt appears.
 - [ ] Cancel the prompt: those items are listed as skipped in History; everything else was cleaned.
 - [ ] Approve the prompt: items are gone and logged as deleted.
+- [ ] The review sheet and `openclean clean --dry-run` list each system item that needs the password.
+- [ ] `openclean clean --yes < /dev/null` skips system items with a note to use `--allow-admin`; no prompt appears.
 
 ## Quarantine and History
 - [ ] Clean a review item: it disappears from its folder and appears under History.

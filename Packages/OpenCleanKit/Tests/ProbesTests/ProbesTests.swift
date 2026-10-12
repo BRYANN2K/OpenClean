@@ -18,17 +18,31 @@ struct ProbesTests {
             "/usr/bin/xcrun simctl list devices --json",
             stdout: """
                 {"devices": {"com.apple.CoreSimulator.SimRuntime.iOS-16-0": [
-                  {"udid": "AAA", "name": "iPhone 14", "isAvailable": false},
-                  {"udid": "BBB", "name": "iPhone 15", "isAvailable": true}
+                  {"udid": "0F5A3C2E-7B1D-4E8A-9C6F-2D4B8A1E3F70", "name": "iPhone 14", "isAvailable": false},
+                  {"udid": "6C2B9E41-3D8F-4A7C-B5E0-91F2A6D8C4B3", "name": "iPhone 15", "isAvailable": true}
                 ]}}
                 """)
         let findings = try await XcodeSimulatorsProbe(runner: runner).scan(context(home))
         #expect(
             findings == [
                 ProbeFinding(
-                    path: home.path + "/Library/Developer/CoreSimulator/Devices/AAA",
+                    path: home.path + "/Library/Developer/CoreSimulator/Devices/0F5A3C2E-7B1D-4E8A-9C6F-2D4B8A1E3F70",
                     hint: "Unavailable simulator: iPhone 14")
             ])
+    }
+
+    @Test func xcodeSimulatorsIgnoresDevicesWhoseUDIDIsNotAUUID() async throws {
+        let home = try TempDirectory()
+        let runner = FakeCommandRunner()
+        runner.respond(
+            "/usr/bin/xcrun simctl list devices --json",
+            stdout: """
+                {"devices": {"com.apple.CoreSimulator.SimRuntime.iOS-16-0": [
+                  {"udid": "../../Documents", "name": "Evil", "isAvailable": false},
+                  {"udid": "AAA", "name": "Odd", "isAvailable": false}
+                ]}}
+                """)
+        #expect(try await XcodeSimulatorsProbe(runner: runner).scan(context(home)).isEmpty)
     }
 
     @Test func xcodeSimulatorsIsEmptyWhenXcrunFails() async throws {

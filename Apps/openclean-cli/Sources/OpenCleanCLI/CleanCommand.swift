@@ -26,6 +26,11 @@ struct CleanCommand: AsyncParsableCommand {
     @Flag(help: "Print machine-readable JSON.")
     var json = false
 
+    @Flag(
+        name: .customLong("allow-admin"),
+        help: "Allow system items that need the administrator password when not running in a terminal.")
+    var allowAdmin = false
+
     func run() async throws {
         if json && !dryRun && !yes {
             CLI.printError("--json requires --yes or --dry-run")
@@ -43,7 +48,16 @@ struct CleanCommand: AsyncParsableCommand {
 
         let rules = CleanSelection.rules(from: loaded.rules, categories: Set(categories), ruleIDs: Set(ruleIDs))
         let result = await coordinator.scan(rules, settings: settings)
-        let selected = CleanSelection.paths(in: result, includeReview: includeReview, explicitRuleIDs: Set(ruleIDs))
+        var selected = CleanSelection.paths(in: result, includeReview: includeReview, explicitRuleIDs: Set(ruleIDs))
+        if isatty(STDIN_FILENO) != 1 && !allowAdmin {
+            let filtered = CleanSelection.excludingAdmin(selected, in: result)
+            selected = filtered.kept
+            if filtered.dropped > 0 {
+                CLI.printError(
+                    "Skipped \(filtered.dropped) system item(s) that need the administrator password; re-run in a terminal or pass --allow-admin."
+                )
+            }
+        }
         let plan = CleanupPlan(result: result, selectedPaths: selected)
 
         guard !plan.isEmpty else {

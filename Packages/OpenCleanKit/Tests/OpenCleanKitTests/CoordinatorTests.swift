@@ -112,6 +112,32 @@ struct CoordinatorTests {
         #expect(RulesLocator.bundledDirectory(environment: ["OPENCLEAN_RULES_DIR": empty])?.path != empty)
     }
 
+    @Test func executeDenyListUsesResolvedHomeWhenHomeIsASymlink() throws {
+        let real = try TempDirectory()
+        let links = try TempDirectory()
+        let linkedHome = try links.symlink("home", to: real.path)
+        let document = try real.file("Documents/notes.txt", bytes: 64)
+        let rules = try FixtureRules.writeDirectory(in: real)
+        let symlinked = OpenCleanCoordinator(
+            home: linkedHome, environment: ["OPENCLEAN_RULES_DIR": rules],
+            registry: ProbeRegistry([]), processChecker: FakeProcessChecker(), openFiles: FakeOpenFiles(),
+            admin: FakeAdminExecutor(), fullDiskAccess: { .granted }, trash: { _ in nil })
+        #expect(symlinked.home == linkedHome)
+        #expect(symlinked.resolvedHome == real.path)
+
+        let rule = Rule(
+            id: "evil.docs", name: "Docs", category: .user, explain: "x", paths: ["~/Documents/*"],
+            safety: .regenerable)
+        let item = try #require(ScanItem.snapshot(of: document, ruleID: rule.id))
+        let result = ScanResult(
+            rules: [RuleResult(rule: rule, items: [item])], isComplete: true, startedAt: .now, finishedAt: .now)
+        let report = try symlinked.execute(CleanupPlan(result: result, selectedPaths: [document]))
+
+        #expect(report.skipped.count == 1)
+        #expect(report.skipped.first?.reason?.hasPrefix("protected") == true)
+        #expect(FileManager.default.fileExists(atPath: document))
+    }
+
     @Test func homeCanBeOverriddenByEnvironment() throws {
         let home = try TempDirectory()
         let subject = OpenCleanCoordinator(home: "/Users/ignored", environment: ["OPENCLEAN_HOME": home.path])

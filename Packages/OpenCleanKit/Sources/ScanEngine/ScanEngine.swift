@@ -79,10 +79,15 @@ public struct ScanEngine: Sendable {
     }
 
     /// Keeps each path once: an item is dropped when an earlier rule already claimed it,
-    /// one of its ancestors, or one of its descendants.
+    /// one of its ancestors, or one of its descendants. Report-only items are always kept and claim
+    /// their path first (regardless of rule order), so nothing removable equals, contains or sits inside them.
     static func removeOverlaps(_ results: inout [RuleResult]) {
         var claimed = Set<String>()
         var claimedAncestors = Set<String>()
+        for item in results.flatMap(\.items) where item.reportOnly && item.path.hasPrefix("/") {
+            claimed.insert(item.path)
+            claimedAncestors.formUnion(ancestorPaths(of: item.path))
+        }
         for index in results.indices {
             results[index].items = results[index].items.filter { item in
                 if item.reportOnly { return true }

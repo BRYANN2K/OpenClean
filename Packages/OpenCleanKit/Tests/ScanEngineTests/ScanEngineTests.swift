@@ -66,6 +66,20 @@ struct ScanEngineTests {
         #expect(result.rule("caches")?.items.map(\.path) == [home.path + "/Library/Caches/other"])
     }
 
+    @Test(arguments: [false, true])
+    func reportOnlyItemsBlockBroaderRemovableItems(pathRuleFirst: Bool) async throws {
+        let home = try TempDirectory()
+        let image = try home.file("Docker/Docker.raw", bytes: 4_096)
+        let probe = StubProbe(findings: [ProbeFinding(path: image, reportOnly: true, hint: "Use docker prune.")])
+        let docker = probeRule("docker", probe: StubProbe.id)
+        let broad = pathRule("broad", ["~/Docker"])
+        let rules = pathRuleFirst ? [broad, docker] : [docker, broad]
+        let result = await ScanEngine(registry: ProbeRegistry([probe])).scan(rules, context: context(home))
+        #expect(result.rule("docker")?.items.map(\.path) == [image])
+        #expect(result.rule("docker")?.items.first?.reportOnly == true)
+        #expect(result.rule("broad")?.items.isEmpty == true)
+    }
+
     @Test func probeFindingsPassTheSameSafetyChecks() async throws {
         let home = try TempDirectory()
         let device = home.path + "/Library/Developer/CoreSimulator/Devices/ABC"

@@ -38,4 +38,22 @@ struct CleanSelectionTests {
                 == ["/a/1", "/b/1", "/c/1"])
         #expect(CleanSelection.paths(in: result(), includeReview: false, explicitRuleIDs: ["c.caution"]) == ["/a/1"])
     }
+
+    @Test func excludingAdminDropsOnlyAdminItems() {
+        let admin = Rule(
+            id: "s.admin", name: "S", category: .system, explain: "x", paths: ["/s/*"], safety: .regenerable,
+            requires: [.admin])
+        let item = ScanItem(
+            path: "/s/1", ruleID: admin.id, size: 1, device: 1, inode: 1, modificationDate: .now, ownerUID: 0)
+        var withAdmin = result()
+        withAdmin.rules.append(RuleResult(rule: admin, items: [item]))
+
+        let filtered = CleanSelection.excludingAdmin(["/a/1", "/b/1", "/s/1"], in: withAdmin)
+        #expect(filtered.kept == ["/a/1", "/b/1"])
+        #expect(filtered.dropped == 1)
+
+        let untouched = CleanSelection.excludingAdmin(["/a/1"], in: withAdmin)
+        #expect(untouched.kept == ["/a/1"])
+        #expect(untouched.dropped == 0)
+    }
 }

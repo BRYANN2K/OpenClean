@@ -66,6 +66,32 @@ struct CleanCLITests {
         }
     }
 
+    @Test func adminItemsAreSkippedWhenNotATerminal() throws {
+        try CLIFixtures.withHome { home, env in
+            let userRules = try home.directory("Library/Application Support/OpenClean/rules")
+            try """
+            pack: syslike
+            version: 1
+            rules:
+              - id: syslike.files
+                name: System-like files
+                category: system
+                explain: Test files that need the administrator password.
+                paths: ["~/SysLike/*"]
+                safety: regenerable
+                requires: [admin]
+            """.write(toFile: userRules + "/syslike.yaml", atomically: true, encoding: .utf8)
+            let file = try home.file("SysLike/blob", bytes: 10)
+            let run = try CLIBinary.run(["clean", "--yes"], environment: env)
+            #expect(run.status == 0, "\(run.stdout)\n\(run.stderr)")
+            #expect(
+                run.stderr.contains(
+                    "Skipped 1 system item(s) that need the administrator password; re-run in a terminal or pass --allow-admin."
+                ))
+            #expect(FileManager.default.fileExists(atPath: file))
+        }
+    }
+
     @Test func unknownRuleIDIsAnError() throws {
         try CLIFixtures.withHome { _, env in
             let run = try CLIBinary.run(["clean", "--rule", "nope", "--dry-run"], environment: env)

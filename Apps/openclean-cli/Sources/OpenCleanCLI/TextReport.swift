@@ -79,6 +79,7 @@ public enum TextReport {
         )
         if !plan.adminRequests.isEmpty {
             lines.append("  \(plan.adminRequests.count) system item(s) need your administrator password.")
+            for request in plan.adminRequests { lines.append("    \(request.item.path)") }
         }
         lines.append("Files that changed since the scan or are open in another app are skipped automatically.")
         return lines.joined(separator: "\n")

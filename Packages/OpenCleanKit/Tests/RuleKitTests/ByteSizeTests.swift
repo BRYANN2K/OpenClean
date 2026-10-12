@@ -16,4 +16,15 @@ struct ByteSizeTests {
         #expect(ByteSize.parse("-5MB") == nil)
         #expect(ByteSize.parse("") == nil)
     }
+
+    @Test func rejectsValuesThatDoNotFitInt64() {
+        #expect(ByteSize.parse("1e30TB") == nil)
+        #expect(ByteSize.parse("inf") == nil)
+        #expect(ByteSize.parse("nan") == nil)
+        #expect(ByteSize.parse("infTB") == nil)
+        #expect(ByteSize.parse("nanMB") == nil)
+        #expect(ByteSize.parse("9300000000000000000B") == nil)
+        // Exactly 2^63 written with a unit: Double(Int64.max) rounds to this value, so `<=` would still trap.
+        #expect(ByteSize.parse("9223372036854775808B") == nil)
+    }
 }

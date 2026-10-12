@@ -67,4 +67,23 @@ struct QuarantineStoreTests {
             try QuarantineStore(root: dir.url).read(id: "nope")
         }
     }
+
+    @Test func newerManifestSchemaIsRejectedAndListedAsDamaged() throws {
+        let dir = try TempDirectory()
+        let store = QuarantineStore(root: dir.url)
+        let session = try store.createSession()
+        let url = store.manifestURL(session.id)
+        var json = try #require(try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
+        json["schema"] = 2
+        try JSONSerialization.data(withJSONObject: json).write(to: url)
+
+        #expect(throws: QuarantineError.unsupportedSchema(2)) { try store.read(id: session.id) }
+        let listings = store.listSessions()
+        #expect(listings.count == 1)
+        if case .damaged(let id, _) = listings.first {
+            #expect(id == session.id)
+        } else {
+            Issue.record("expected a damaged listing, got \(String(describing: listings.first))")
+        }
+    }
 }
