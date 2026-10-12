@@ -13,13 +13,18 @@ enum MenuBarSettings {
 /// Samples only while a figure is shown (or the popover is open).
 struct MenuBarLabel: View {
     @Environment(PerformanceModel.self) private var model
-    @AppStorage(MenuBarSettings.metricKey) private var metricRaw = MenuBarMetric.cpu.rawValue
+    @AppStorage(MenuBarSettings.metricKey) private var metricRaw = MenuBarMetric.cpuAndMemory.rawValue
 
     var body: some View {
-        let metric = MenuBarMetric(rawValue: metricRaw) ?? .cpu
+        let metric = MenuBarMetric(rawValue: metricRaw) ?? .cpuAndMemory
         HStack(spacing: 4) {
             Image(nsImage: MenuBarGlyph.image)
-            if metric != .none {
+            if metric == .cpuAndMemory {
+                Image(systemName: "cpu")
+                Text(formatPercent(model.cpu)).monospacedDigit()
+                Image(systemName: "memorychip")
+                Text(formatPercent(model.memory?.usedFraction)).monospacedDigit()
+            } else if metric != .none {
                 Text(text(for: metric)).monospacedDigit()
             }
         }
@@ -35,6 +40,8 @@ struct MenuBarLabel: View {
         case .none: ""
         case .cpu: formatPercent(model.cpu)
         case .memory: formatPercent(model.memory?.usedFraction)
+        case .cpuAndMemory:
+            "CPU \(formatPercent(model.cpu)), memory \(formatPercent(model.memory?.usedFraction))"
         case .network: "↓" + formatRate(model.network?.receivedPerSecond)
         }
     }

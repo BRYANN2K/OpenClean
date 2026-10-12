@@ -18,7 +18,7 @@ public struct MetricPoint: Identifiable, Sendable, Equatable {
 
 /// What the menu bar label shows next to the glyph.
 public enum MenuBarMetric: String, CaseIterable, Identifiable, Sendable {
-    case none, cpu, memory, network
+    case none, cpu, memory, cpuAndMemory, network
 
     public var id: String { rawValue }
 
@@ -27,6 +27,7 @@ public enum MenuBarMetric: String, CaseIterable, Identifiable, Sendable {
         case .none: "Icon only"
         case .cpu: "CPU"
         case .memory: "Memory"
+        case .cpuAndMemory: "CPU and memory"
         case .network: "Network"
         }
     }
