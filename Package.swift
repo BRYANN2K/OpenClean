@@ -74,6 +74,16 @@ let package = Package(
             path: "Packages/OpenCleanKit/Tests/QuarantineTests"
         ),
         .target(
+            name: "SpaceKit",
+            dependencies: ["RuleKit", "ScanEngine", "Quarantine"],
+            path: "Packages/OpenCleanKit/Sources/SpaceKit"
+        ),
+        .testTarget(
+            name: "SpaceKitTests",
+            dependencies: ["SpaceKit", "Quarantine", "RuleKit", "ScanEngine", "TestSupport"],
+            path: "Packages/OpenCleanKit/Tests/SpaceKitTests"
+        ),
+        .target(
             name: "Permissions",
             path: "Packages/OpenCleanKit/Sources/Permissions"
         ),
@@ -84,13 +94,16 @@ let package = Package(
         ),
         .target(
             name: "OpenCleanKit",
-            dependencies: ["RuleKit", "ScanEngine", "Probes", "Privilege", "Quarantine", "Permissions", "ProcessKit"],
+            dependencies: [
+                "RuleKit", "ScanEngine", "Probes", "Privilege", "Quarantine", "Permissions", "ProcessKit", "SpaceKit",
+            ],
             path: "Packages/OpenCleanKit/Sources/OpenCleanKit"
         ),
         .testTarget(
             name: "OpenCleanKitTests",
             dependencies: [
-                "OpenCleanKit", "RuleKit", "ScanEngine", "Probes", "Quarantine", "Permissions", "TestSupport",
+                "OpenCleanKit", "RuleKit", "ScanEngine", "Probes", "Quarantine", "Permissions", "SpaceKit",
+                "TestSupport",
             ],
             path: "Packages/OpenCleanKit/Tests/OpenCleanKitTests"
         ),
@@ -115,17 +128,21 @@ let package = Package(
         ),
         .target(
             name: "OpenCleanAppModel",
-            dependencies: ["OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions"],
+            dependencies: ["OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "SpaceKit"],
             path: "Apps/OpenClean/Sources/OpenCleanAppModel"
         ),
         .testTarget(
             name: "OpenCleanAppModelTests",
-            dependencies: ["OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Permissions", "TestSupport"],
+            dependencies: [
+                "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Permissions", "SpaceKit", "TestSupport",
+            ],
             path: "Apps/OpenClean/Tests/OpenCleanAppModelTests"
         ),
         .executableTarget(
             name: "OpenCleanApp",
-            dependencies: ["OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions"],
+            dependencies: [
+                "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "SpaceKit",
+            ],
             path: "Apps/OpenClean/Sources/OpenCleanApp"
         ),
     ]
