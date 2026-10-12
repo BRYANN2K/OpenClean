@@ -6,6 +6,7 @@ import ProcessKit
 import Quarantine
 import RuleKit
 import ScanEngine
+import Updater
 
 /// The single entry point the app and the CLI use. Holds no mutable state.
 public struct OpenCleanCoordinator: Sendable {
@@ -21,6 +22,9 @@ public struct OpenCleanCoordinator: Sendable {
     let admin: any AdminExecutor
     let accessCheck: @Sendable () -> FullDiskAccessStatus
     let trash: TrashOperation
+    /// Where update checks go: the GitHub API, or `OPENCLEAN_UPDATE_FEED` (dev override, allows file://).
+    public let updateFeedURL: URL
+    public let updateHostPolicy: UpdateHostPolicy
 
     public init(
         home: String = NSHomeDirectory(),
@@ -44,6 +48,7 @@ public struct OpenCleanCoordinator: Sendable {
         self.admin = admin
         accessCheck = fullDiskAccess ?? { FullDiskAccessChecker(home: resolvedHome).status() }
         self.trash = trash
+        (updateFeedURL, updateHostPolicy) = ReleaseFeed.source(environment: environment)
     }
 
     public var settingsStore: SettingsStore { SettingsStore(url: paths.settingsFile) }
