@@ -38,6 +38,13 @@ No accounts, no analytics, no network access — every cleaning rule is readable
 
 - **Smart Scan** — one click to find System Junk, user caches and logs, browser caches, Trash, Mail
   attachments and old iOS backups.
+- **Uninstaller** — remove apps together with their leftovers (Application Support, caches, preferences,
+  containers, launch agents); everything goes to quarantine so an uninstall can be undone.
+- **Space Lens** — an interactive disk space map, a large & old files finder and a duplicate file finder;
+  removals go to the macOS Trash and nothing is ever pre-selected.
+- **Performance & menu bar monitor** — live CPU, memory, disk and network in the menu bar, heavy apps with
+  Quit/Force Quit, login items and launch agents, and one-click maintenance (flush DNS, reindex Spotlight,
+  rebuild Launch Services, thin Time Machine snapshots).
 - **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; npm, Yarn, pnpm,
   pip, Cargo, Gradle, CocoaPods and Homebrew caches; Docker disk image reporting.
 - **AI model cleanup** — Ollama, LM Studio and Hugging Face caches.
