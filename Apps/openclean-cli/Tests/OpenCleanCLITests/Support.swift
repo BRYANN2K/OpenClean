@@ -1,4 +1,5 @@
 import Foundation
+import RuleKit
 import Testing
 import TestSupport
 
@@ -34,6 +35,14 @@ enum CLIBinary {
 
     /// Runs the built `openclean` binary with stdin closed (never a TTY).
     static func run(_ arguments: [String], environment: [String: String]) throws -> CLIRun {
+        guard let home = environment["OPENCLEAN_HOME"], let realHome = realPath(home),
+            let realTemp = realPath(NSTemporaryDirectory()), pathIsWithin(realHome, realTemp)
+        else {
+            throw CocoaError(
+                .fileReadInvalidFileName,
+                userInfo: [NSLocalizedDescriptionKey:
+                    "CLIBinary.run refuses to run: OPENCLEAN_HOME must be set to a directory inside NSTemporaryDirectory()"])
+        }
         guard FileManager.default.isExecutableFile(atPath: url.path) else {
             throw CocoaError(.fileNoSuchFile, userInfo: [NSFilePathErrorKey: url.path + " (run `swift build` first)"])
         }
@@ -41,6 +50,7 @@ enum CLIBinary {
         process.executableURL = url
         process.arguments = arguments
         process.environment = ProcessInfo.processInfo.environment.merging(environment) { _, new in new }
+            .merging(["HOME": home, "CFFIXED_USER_HOME": home]) { _, new in new }
         let out = Pipe()
         let err = Pipe()
         process.standardOutput = out
@@ -57,11 +67,12 @@ enum CLIBinary {
 }
 
 enum CLIFixtures {
-    /// A temp home with the fixture rule pack, plus the environment that points the CLI at it.
-    static func home() throws -> (TempDirectory, [String: String]) {
+    /// Runs `body` with a fixture home that stays alive for the whole call.
+    static func withHome<T>(_ body: (TempDirectory, [String: String]) throws -> T) throws -> T {
         let home = try TempDirectory()
         let rules = try FixtureRules.writeDirectory(in: home)
-        return (home, ["OPENCLEAN_HOME": home.path, "OPENCLEAN_RULES_DIR": rules])
+        let environment = ["OPENCLEAN_HOME": home.path, "OPENCLEAN_RULES_DIR": rules]
+        return try withExtendedLifetime(home) { try body(home, environment) }
     }
 
     static func json(_ text: String) throws -> [String: Any] {
