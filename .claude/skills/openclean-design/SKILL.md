@@ -51,6 +51,7 @@ New modules get their own backdrop case: a dark top-leading color moving to a mi
 - `ProgressRing(fraction:lineWidth:)`: around the orb while scanning and in small free-space indicators.
 - `StatPill(text:) { icon }`: small status at the top right (e.g. free space). One or two at most.
 - `CategoryIcon(category:size:)`: gradient tile + white SF Symbol per `RuleCategory`. A new category must add its symbol and gradient pair in `CategoryIcon.style(for:)` (bright top, darker bottom, same lightness as the others).
+- `SidebarRow`: sidebar destinations. Selected = white 16% fill, mint icon, semibold label; hover = white 7%. Never use `List(selection:)` for navigation — it paints the macOS accent colour (often blue).
 - `SafetyTag(safety:)`, `CheckboxButton` (unselected: solid white outline, no tick; selected: accent fill, deep-teal tick), `StorageCard`, `AccessBanner`, `ProblemsBanner`.
 - `AppIconView`, `LogoGlyph`, `LogoRing`, `Spark`: the brand marks.
 

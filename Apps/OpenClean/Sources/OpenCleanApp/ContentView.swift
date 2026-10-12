@@ -46,21 +46,17 @@ struct ContentView: View {
         @Bindable var model = model
         @Bindable var navigation = navigation
         NavigationSplitView {
-            List(selection: $navigation.selection) {
-                Section {
+            // Custom rows instead of List selection: the system list paints selection in the macOS accent
+            // colour (usually blue), which clashes with the app's palette.
+            ScrollView {
+                VStack(spacing: 2) {
                     ForEach(SidebarItem.allCases.filter(\.isAvailable)) { item in
-                        Label(item.title, systemImage: item.symbol).tag(item)
-                    }
-                }
-                if SidebarItem.allCases.contains(where: { !$0.isAvailable }) {
-                    Section("Coming soon") {
-                        ForEach(SidebarItem.allCases.filter { !$0.isAvailable }) { item in
-                            Label(item.title, systemImage: item.symbol)
-                                .foregroundStyle(Theme.textTertiary)
-                                .selectionDisabled()
+                        SidebarRow(item: item, isSelected: (navigation.selection ?? .smartScan) == item) {
+                            navigation.selection = item
                         }
                     }
                 }
+                .padding(.horizontal, 10)
             }
             .scrollContentBackground(.hidden)
             .background(Theme.sidebar.opacity(0.2))
@@ -122,6 +118,40 @@ struct ContentView: View {
         case .smartScan where model.phase == .finished: .success
         default: .scan
         }
+    }
+}
+
+/// One sidebar destination. Selected: soft white fill, mint icon, semibold label.
+struct SidebarRow: View {
+    let item: SidebarItem
+    let isSelected: Bool
+    let action: () -> Void
+    @State private var hovering = false
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                Image(systemName: item.symbol)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(isSelected ? Theme.accent : Theme.textSecondary)
+                    .frame(width: 20)
+                Text(item.title)
+                    .font(.system(size: 13, weight: isSelected ? .semibold : .regular))
+                    .foregroundStyle(.white)
+                Spacer()
+            }
+            .padding(.horizontal, 10)
+            .frame(height: 32)
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(.white.opacity(isSelected ? 0.16 : hovering ? 0.07 : 0))
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering = $0 }
+        .animation(.easeOut(duration: 0.15), value: isSelected)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 
