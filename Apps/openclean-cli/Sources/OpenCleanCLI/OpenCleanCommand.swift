@@ -6,7 +6,7 @@ public struct OpenCleanCommand: ParsableCommand {
     public static let configuration = CommandConfiguration(
         commandName: "openclean",
         abstract: "Transparent, open-source cleanup for macOS.",
-        version: "0.1.0",
+        version: openCleanVersion,
         subcommands: [
             ScanCommand.self, CleanCommand.self, HistoryCommand.self, RestoreCommand.self,
             RulesCommand.self, ScheduleCommand.self, PurgeCommand.self,

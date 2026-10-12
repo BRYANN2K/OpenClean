@@ -78,6 +78,7 @@ cli-zip: build
 # Everything a GitHub release uploads, in build/release/ (cleared first so no stale assets ship).
 release-assets:
 	rm -rf "$(RELEASE_DIR)"
+	sed -i '' 's/^public let openCleanVersion = .*/public let openCleanVersion = "$(VERSION)"/' Apps/openclean-cli/Sources/OpenCleanCLI/Version.swift
 	$(MAKE) dmg cli-zip VERSION="$(VERSION)" BUILD_NUMBER="$(BUILD_NUMBER)" ARCH_FLAGS="$(ARCH_FLAGS)"
 	cd "$(RELEASE_DIR)" && shasum -a 256 "OpenClean-$(VERSION).dmg" "openclean-cli-$(VERSION).zip" > SHA256SUMS.txt
 	cat "$(RELEASE_DIR)/SHA256SUMS.txt"

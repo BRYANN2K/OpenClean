@@ -13,14 +13,15 @@ swift test --filter "PreDeleteCheckerTests/skipsMissingItem"   # one test
 make lint                        # swift format lint --strict + `openclean rules lint Rules/*.yaml`
 swift format --in-place --recursive Package.swift Packages Apps   # fix formatting (config: .swift-format)
 make app                         # build/OpenClean.app (release, ad-hoc signed); `open build/OpenClean.app`
-make dist VERSION=x.y.z ARCH_FLAGS="--arch arm64 --arch x86_64"   # release zips (what CI's release job runs)
+make release-assets VERSION=x.y.z ARCH_FLAGS="--arch arm64 --arch x86_64"   # DMG + CLI zip + SHA256SUMS (what CI's release job runs)
+bash scripts/tests/test-next-version.sh   # tests for the auto-versioning script
 swift run openclean scan         # CLI against your real home — read-only; `clean` is NOT
 ```
 
 - CLI integration tests (`Apps/openclean-cli/Tests`) execute the built binary at `.build/debug/openclean`, so run `swift build` before `swift test` after changing CLI code, or they test a stale binary.
 - Golden JSON files (`Apps/openclean-cli/Tests/OpenCleanCLITests/Golden/`) are the `--json` contract. Re-record with `OPENCLEAN_RECORD_GOLDEN=1 swift test --filter JSONReportTests`, then review the diff by hand.
 - Dev overrides honoured by `OpenCleanCoordinator`: `OPENCLEAN_HOME` (pretend home; also moves the quarantine/settings dir) and `OPENCLEAN_RULES_DIR` (bundled rule packs). Use them to run the CLI against a temp home.
-- CI (`.github/workflows/ci.yml`, macos-15) runs build, test, `make lint`, `make app`. Pushing a `v*` tag runs the release workflow and publishes zips.
+- CI (`.github/workflows/ci.yml`, macos-15) runs build, test, `make lint`, `make app` and the versioning-script tests. Every push to `main` runs `.github/workflows/release.yml`: `scripts/next-version.sh` derives the next version from Conventional Commits since the last `vX.Y.Z` tag (fix/perf → patch, feat → minor, breaking → major; minor while 0.x; docs/chore-only → no release), then it builds the universal DMG + CLI zip, tags, and publishes a GitHub release. Commit types therefore decide versions — pick them carefully. `make release-assets` stamps `Version.swift` (CLI) and the bundle's Info.plist with the version.
 
 ## Architecture
 
