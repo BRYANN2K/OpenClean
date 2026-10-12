@@ -69,15 +69,6 @@ extension OsascriptAdminExecutor: MaintenanceAdminExecutor {
         } catch {
             return .failed("\(error)")
         }
-        let script = AdminCommandBuilder.appleScript(forShellCommand: text)
-        do {
-            let output = try runner.run("/usr/bin/osascript", ["-e", script])
-            if output.status == 0 { return .succeeded }
-            let message = output.stderrText.trimmingCharacters(in: .whitespacesAndNewlines)
-            if message.hasSuffix("(-128)") { return .cancelled }
-            return .failed(message.isEmpty ? "exit status \(output.status)" : message)
-        } catch {
-            return .failed("\(error)")
-        }
+        return runPrompted(text)
     }
 }

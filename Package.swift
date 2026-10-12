@@ -55,12 +55,12 @@ let package = Package(
         ),
         .target(
             name: "Privilege",
-            dependencies: ["ProcessKit"],
+            dependencies: ["ProcessKit", "RuleKit"],
             path: "Packages/OpenCleanKit/Sources/Privilege"
         ),
         .testTarget(
             name: "PrivilegeTests",
-            dependencies: ["Privilege", "ProcessKit", "TestSupport"],
+            dependencies: ["Privilege", "ProcessKit", "RuleKit", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/PrivilegeTests"
         ),
         .target(

@@ -34,3 +34,21 @@ public struct OsascriptAdminExecutor: AdminExecutor {
         }
     }
 }
+
+extension OsascriptAdminExecutor {
+    /// Shows one administrator prompt for already-validated shell text and maps the result.
+    /// Only typed commands (`AppBundleAdminMove`, `MaintenanceAdminCommand`) call this.
+    func runPrompted(_ shellText: String) -> AdminRunOutcome {
+        let script = AdminCommandBuilder.appleScript(forShellCommand: shellText)
+        do {
+            let output = try runner.run("/usr/bin/osascript", ["-e", script])
+            if output.status == 0 { return .succeeded }
+            let message = output.stderrText.trimmingCharacters(in: .whitespacesAndNewlines)
+            // Only the trailing error code counts; earlier text can contain attacker-chosen path names.
+            if message.hasSuffix("(-128)") { return .cancelled }
+            return .failed(message.isEmpty ? "exit status \(output.status)" : message)
+        } catch {
+            return .failed("\(error)")
+        }
+    }
+}
