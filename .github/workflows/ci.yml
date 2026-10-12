@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Toolchain
         run: swift --version
+      - name: Test release version script
+        run: bash scripts/tests/test-next-version.sh
       - name: Build
         run: swift build
       - name: Test
@@ -20,3 +22,34 @@ jobs:
         run: make lint
       - name: Build app bundle
         run: make app
+
+  # What the release job does, minus signing, notarization, tagging and publishing: the universal DMG,
+  # CLI zip and checksums for the version a merge would release, the asset checks and the release
+  # notes. Ad-hoc signed, so it needs no secrets and runs on forks' PRs too.
+  release-dry-run:
+    if: github.event_name == 'pull_request'
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # next-version.sh walks commits since the last tag
+      - name: Compute version
+        run: |
+          # A PR's checkout is the PR merged into its base, so this is the version merging would
+          # release. With nothing releasable, a placeholder version still exercises the build.
+          version="$(scripts/next-version.sh)"
+          if [ -n "$version" ]; then
+            echo "Merging this would release **$version**." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Merging this would not release (no feat, fix, perf or breaking commits)." >> "$GITHUB_STEP_SUMMARY"
+            version="0.0.0"
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Build universal release assets
+        run: make release-assets VERSION="$VERSION" ARCH_FLAGS="--arch arm64 --arch x86_64"
+      - name: Check assets
+        run: scripts/check-release-assets.sh "$VERSION"
+      - name: Release notes
+        run: |
+          scripts/next-version.sh --notes --version "$VERSION" | tee "$RUNNER_TEMP/release-notes.md"
+          { echo; echo "<details><summary>Release notes</summary>"; echo; cat "$RUNNER_TEMP/release-notes.md"; echo; echo "</details>"; } >> "$GITHUB_STEP_SUMMARY"

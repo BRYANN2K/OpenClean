@@ -39,7 +39,7 @@ New modules get their own backdrop case: a dark top-leading color moving to a mi
 **Type** (system font, set with `.font(.system(size:weight:))`):
 - Screen headline: 30–34 bold. Big number: 56 bold, `.monospacedDigit()`.
 - Section title: 18 bold. Row title: 14–15 semibold. Body/secondary: 14–15 regular in `textSecondary`. Captions: 11–12.
-- Any number that changes (sizes, counts, percentages) uses `.monospacedDigit()`.
+- Any number that changes live (sizes, counts, percentages) uses `.rollingNumber(value)` (Theme.swift): monospaced digits that roll to the new value, off with Reduce Motion. Static numbers just use `.monospacedDigit()`.
 - Wordmark: `Wordmark` view, rounded design, "Open" regular + "Clean" bold.
 
 ## Components (reuse; don't re-create)
@@ -51,6 +51,7 @@ New modules get their own backdrop case: a dark top-leading color moving to a mi
 - `ProgressRing(fraction:lineWidth:)`: around the orb while scanning and in small free-space indicators.
 - `StatPill(text:) { icon }`: small status at the top right (e.g. free space). One or two at most.
 - `CategoryIcon(category:size:)`: gradient tile + white SF Symbol per `RuleCategory`. A new category must add its symbol and gradient pair in `CategoryIcon.style(for:)` (bright top, darker bottom, same lightness as the others).
+- `SidebarRow`: sidebar destinations. Selected = white 16% fill, mint icon, semibold label; hover = white 7%. Never use `List(selection:)` for navigation — it paints the macOS accent colour (often blue).
 - `SafetyTag(safety:)`, `CheckboxButton` (unselected: solid white outline, no tick; selected: accent fill, deep-teal tick), `StorageCard`, `AccessBanner`, `ProblemsBanner`.
 - `AppIconView`, `LogoGlyph`, `LogoRing`, `Spark`: the brand marks.
 
@@ -94,6 +95,34 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 - Every non-home screen has a way back. Results has "Start over" (chevron, top left, Esc) that discards the results without touching files; summaries have Done.
 - Size summaries use `splitSummary(now:quarantine:)`, which leaves out a zero side ("81.9 MB freed now", not "… · Zero KB to quarantine").
 - Dates in lists read "Today, 5:13 PM" or "Yesterday, …", never a numeric date. Quarantined sessions show "N days left" with a thin accent progress bar.
+
+## Settings and Software Update
+
+- List row selection is a square, edge-to-edge fill drawn with an explicit `.background { Rectangle().fill(…) }`. A bare `.background(color)` inside a rounded container gets rounded corners on recent macOS, which clashes with the row dividers. Prefer a tappable row (`.onTapGesture` + `.accessibilityAction`) over a plain-style `Button` for list rows.
+- Every switch, stepper or picker sits at the trailing edge of its row, with its label on the left (`Text` + `Spacer()` + control with `.labelsHidden()`); never let a `Toggle` lay out its own label next to the switch.
+- Settings is a page in the main window, opened from the sidebar row under the storage card or ⌘, (there is no separate Settings window). Sections are glass panels of rows: title (+ optional one-line detail) on the left, a switch, stepper, picker or capsule button on the right. New preferences go into the matching section, not into module screens.
+- Update availability is a glass banner at the top of the detail area (like the Full Disk Access banner); the Software Update sheet carries the notes, progress and Install and Relaunch. Never install without the user pressing Install and Relaunch.
+- Sessions created by an app update or a removed launch agent are kept for undo but don't count as cleanups in totals (`CleanupStats.maintenanceRuleIDs`).
+
+## Onboarding
+
+- First launch shows `OnboardingView` instead of the main window until `OnboardingModel.finish` succeeds. It finishes only when every feature step has been seen **and** Full Disk Access is granted; there is no skip. Bump `OnboardingModel.currentVersion` to show it again after a release that changes it; Help → Welcome Tour replays it.
+- Each step is visual (≈270 pt tall) + eyebrow + title + one paragraph, on the backdrop of the module it explains. Visuals are decorative (`accessibilityHidden`), loop with `PhaseAnimator` through `LoopingPhases`, and hold a still frame with Reduce Motion.
+- A new module gets a new step: add an `OnboardingStep` case (mark it `isFeature`), a page in `OnboardingView.page(for:)` and a visual in `OnboardingVisuals.swift`, and update the design canvas board.
+- `CapsuleButtonStyle` dims to 40% when disabled; use `.disabled` rather than hiding a button that is temporarily blocked.
+
+## Software Update
+
+- **Banner** (`UpdateBanner`, `SoftwareUpdateView.swift`): same glass banner as `AccessBanner` (radius 14, 16 pt inset), placed directly under it in the detail area. Accent `arrow.down.circle.fill`, "OpenClean 0.3.0 is available", one line of secondary text, then **What's New** (plain capsule) and **Update** (prominent capsule). Hidden after Skip This Version, and until next launch after Remind Me Later.
+- **Sheet** (`SoftwareUpdateSheet`): 560 pt wide on the `.scan` backdrop, dark. `AppIconView(size: 64)` beside an 18 pt bold title and a 14 pt secondary subtitle ("OpenClean 0.3.0 is available — you have 0.2.0."). Release notes in a 200 pt scrolling glass panel (radius 12) under a "What's New" caption, rendered from Markdown via `ReleaseNotes.blocks` (headings semibold, bullets with an accent dot). One prominent capsule per state, bound to `.defaultAction`; the dismissive one gets `.cancelAction`.
+- **Flow in the same sheet:** Checking… (small spinner + caption) → available (Skip This Version on the left; Remind Me Later, **Download & Install** on the right) → a thin accent capsule bar with "12.4 MB of 18.1 MB · 3.2 MB/s" (`rollingNumber`) and Cancel → Verifying… → **Install and Relaunch**, with a glass note that the current version is kept in History and that Full Disk Access must be allowed again. When an in-place install isn't possible, the note is gold and explains why, and the prominent button is **Open Installer**. Errors are the subtitle, in plain words, with Download from GitHub, Close and **Retry**.
+- Up to date reads "You're up to date" / "OpenClean 0.2.0 is the newest version." Never show version numbers as a score or badge.
+
+## Uninstaller: apps that need a password
+
+- Apps owned by the system (`AppStatus.needsAdministrator`) get a gold **Needs password** `UninstallerTag` in the list and on the bundle row (Running wins while the app is open). The detail panel adds a gold `lock.fill` notice; the bottom-bar caption ends in "· needs your password".
+- The confirmation sheet adds one `lock` line: "macOS will ask for your administrator password to move <App> to quarantine. If you restore it later, it comes back owned by you." The working screen says "Waiting for your password, then moving <App> to quarantine…".
+- A cancelled password prompt is not an error: summary orb `arrow.uturn.backward`, headline "Uninstall cancelled", one `textSecondary` line "Nothing was moved. <App> is still in your Applications folder." No gold, no alert.
 
 ## Accessibility checklist
 

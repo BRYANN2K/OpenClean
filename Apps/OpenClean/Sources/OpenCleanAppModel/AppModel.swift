@@ -35,10 +35,15 @@ public final class AppModel {
     @ObservationIgnored private let signatureTracker: SignatureTracker
     @ObservationIgnored private var scanTask: Task<Void, Never>?
     @ObservationIgnored private var settingsGeneration = 0
+    @ObservationIgnored private let diskSpace: @Sendable (URL) -> DiskSpace?
 
-    public init(coordinator: OpenCleanCoordinator, signatureTracker: SignatureTracker) {
+    public init(
+        coordinator: OpenCleanCoordinator, signatureTracker: SignatureTracker,
+        diskSpace: @escaping @Sendable (URL) -> DiskSpace? = { DiskSpace.volume(containing: $0) }
+    ) {
         self.coordinator = coordinator
         self.signatureTracker = signatureTracker
+        self.diskSpace = diskSpace
         settings = coordinator.settingsStore.load()
     }
 
@@ -72,7 +77,8 @@ public final class AppModel {
     }
 
     public func refreshDisk() {
-        disk = DiskSpace.volume(containing: URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true))
+        // The coordinator's home, so OPENCLEAN_HOME (a pretend home, maybe on another volume) is honoured.
+        disk = diskSpace(URL(fileURLWithPath: coordinator.canonicalHome, isDirectory: true))
     }
 
     // MARK: Stats

@@ -54,16 +54,23 @@ struct StorageCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let disk {
-                HStack(alignment: .firstTextBaseline) {
-                    Text("\(formatCapacity(disk.available)) free").font(.system(size: 13, weight: .semibold))
-                        .lineLimit(1)
-                    Spacer(minLength: 4)
-                    Text("of \(formatCapacity(disk.total))")
-                        .lineLimit(1)
-                        .font(.system(size: 11))
-                        .foregroundStyle(Theme.textSecondary)
+                // Free space and total on one line when the sidebar is wide enough; otherwise just free space.
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("\(formatCapacity(disk.available)) free")
+                            .font(.system(size: 13, weight: .semibold))
+                            .fixedSize()
+                        Spacer(minLength: 4)
+                        Text("of \(formatCapacity(disk.total))")
+                            .font(.system(size: 11))
+                            .foregroundStyle(Theme.textSecondary)
+                            .fixedSize()
+                    }
+                    Text("\(formatCapacity(disk.available)) free")
+                        .font(.system(size: 13, weight: .semibold))
+                        .fixedSize()
                 }
-                .monospacedDigit()
+                .rollingNumber(disk.available)
                 ProgressView(value: disk.freeFraction)
                     .progressViewStyle(.linear)
                     .tint(Theme.accent)
@@ -84,6 +91,7 @@ struct StorageCard: View {
 
 struct AccessBanner: View {
     @Environment(AppModel.self) private var model
+    @Environment(UpdateModel.self) private var updates
 
     var body: some View {
         if model.accessAdvice != .ok {
@@ -110,12 +118,19 @@ struct AccessBanner: View {
     }
 
     private var title: String {
-        model.accessAdvice == .regrantAfterRebuild
+        if updates.updatedFrom != nil {
+            return "OpenClean was updated. Allow Full Disk Access again"
+        }
+        return model.accessAdvice == .regrantAfterRebuild
             ? "Full Disk Access needs to be granted again" : "Full Disk Access is off"
     }
 
     private var message: String {
-        model.accessAdvice == .regrantAfterRebuild
+        if updates.updatedFrom != nil {
+            return
+                "macOS treats each new version of OpenClean as a new app. In Settings, remove OpenClean from the Full Disk Access list, add it again, then click Check Again."
+        }
+        return model.accessAdvice == .regrantAfterRebuild
             ? "This build of OpenClean has a new signature, so macOS no longer recognises the earlier permission. Remove OpenClean from the list in Settings, add it again, then click Check Again."
             : "Trash, Mail, Safari and iOS backups can only be scanned with Full Disk Access."
     }

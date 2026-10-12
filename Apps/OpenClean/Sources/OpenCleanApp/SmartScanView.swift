@@ -99,11 +99,11 @@ struct ScanningView: View {
                 .padding(.top, 28)
             Text("\(Int(fraction * 100))%")
                 .font(.system(size: 56, weight: .bold))
-                .monospacedDigit()
-                .contentTransition(.numericText())
+                .rollingNumber(Int(fraction * 100))
             if let progress = model.progress {
                 Text("\(progress.finished) of \(progress.total) rules checked")
                     .font(.system(size: 14))
+                    .rollingNumber(progress.finished)
                     .foregroundStyle(Theme.textSecondary)
             }
 
@@ -168,9 +168,13 @@ struct ResultsView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(headline)
                             .font(.system(size: 30, weight: .bold))
-                        Text("Safe items are picked for you. Review items go to quarantine first, so you can undo.")
-                            .font(.system(size: 14))
-                            .foregroundStyle(Theme.textSecondary)
+                        Text(
+                            (model.result?.totalSize ?? 0) > 0
+                                ? "Safe items are picked for you. Review items go to quarantine first, so you can undo."
+                                : "Caches, logs and leftovers look tidy. Scan again any time."
+                        )
+                        .font(.system(size: 14))
+                        .foregroundStyle(Theme.textSecondary)
                     }
                     if let result = model.result, !result.isComplete {
                         Label(

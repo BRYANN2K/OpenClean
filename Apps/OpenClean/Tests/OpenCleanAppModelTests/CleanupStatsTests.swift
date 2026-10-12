@@ -45,4 +45,20 @@ struct CleanupStatsTests {
         #expect(stats.lastCleanup == newer.createdAt)
     }
 
+    @Test func appUpdatesAndRemovedAgentsAreNotCleanups() {
+        func session(_ ruleID: String) -> SessionManifest {
+            SessionManifest(
+                id: UUID().uuidString, createdAt: Date(),
+                entries: [
+                    ManifestEntry(
+                        id: 0, originalPath: "/Applications/OpenClean.app", storedPath: nil, size: 50_000_000,
+                        ruleID: ruleID, mode: .quarantine, outcome: .quarantined, reason: nil)
+                ])
+        }
+        let stats = CleanupStats(history: [
+            session("update.previous-version"), session("performance.launch-agent"), session("user.app-caches"),
+        ])
+        #expect(stats.cleanups == 1)
+        #expect(stats.totalFreedBytes == 50_000_000)
+    }
 }

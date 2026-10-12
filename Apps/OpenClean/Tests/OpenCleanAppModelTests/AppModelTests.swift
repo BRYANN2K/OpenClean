@@ -39,6 +39,29 @@ struct AppModelTests {
             coordinator: coordinator, signatureTracker: SignatureTracker(defaults: defaults, currentSignature: "test"))
     }
 
+    @Test func diskSpaceIsReadForTheCoordinatorsHome() throws {
+        let temp = try TempDirectory()
+        let real = try temp.directory("RealHome")
+        let link = try temp.symlink("LinkedHome", to: real)
+        let coordinator = OpenCleanCoordinator(
+            home: NSHomeDirectory(), environment: ["OPENCLEAN_HOME": link], registry: ProbeRegistry([]),
+            processChecker: FakeProcessChecker(), openFiles: FakeOpenFiles(), admin: FakeAdminExecutor(),
+            fullDiskAccess: { .granted }, trash: { _ in nil })
+        let suite = "openclean.appmodel.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+        let asked = LockedPaths()
+        let model = AppModel(
+            coordinator: coordinator, signatureTracker: SignatureTracker(defaults: defaults, currentSignature: "test"),
+            diskSpace: { url in
+                asked.append(url.path)
+                return DiskSpace(available: 1, total: 2)
+            })
+        model.refreshDisk()
+        #expect(asked.paths == [real])
+        #expect(model.disk == DiskSpace(available: 1, total: 2))
+    }
+
     @Test func launchLoadsRulesAccessAndHistory() throws {
         let home = try TempDirectory()
         let model = try makeModel(home)
@@ -318,4 +341,11 @@ struct AppModelTests {
         #expect(FileManager.default.fileExists(atPath: cache))
         #expect(model.history.isEmpty)
     }
+}
+
+final class LockedPaths: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: [String] = []
+    var paths: [String] { lock.withLock { stored } }
+    func append(_ path: String) { lock.withLock { stored.append(path) } }
 }

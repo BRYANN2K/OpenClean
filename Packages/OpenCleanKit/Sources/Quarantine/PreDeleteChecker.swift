@@ -15,6 +15,7 @@ public enum SkipReason: Sendable, Equatable, CustomStringConvertible {
     case adminBatchFull
     case adminUnsafeParent
     case adminRequiresImmediate
+    case appNotMoved
 
     public var description: String {
         switch self {
@@ -30,6 +31,7 @@ public enum SkipReason: Sendable, Equatable, CustomStringConvertible {
         case .adminBatchFull: "too many system items for one prompt; run cleanup again"
         case .adminUnsafeParent: "a parent folder is not protected by the system"
         case .adminRequiresImmediate: "system items can only be deleted, not quarantined"
+        case .appNotMoved: "the app was not moved, so this was left in place"
         }
     }
 }
@@ -42,10 +44,16 @@ public struct PreDeleteChecker: Sendable {
     let processChecker: any ProcessChecker
     /// Canonical keys of open paths plus all their ancestors; nil when open files could not be determined.
     let busy: Set<[UInt8]>?
+    /// Set only for an uninstall request: lets that one app bundle past the application-bundle rule.
+    let exemption: UninstallBundleExemption?
 
-    public init(denyList: DenyList, processChecker: any ProcessChecker, openPaths: Set<String>?) {
+    public init(
+        denyList: DenyList, processChecker: any ProcessChecker, openPaths: Set<String>?,
+        exemption: UninstallBundleExemption? = nil
+    ) {
         self.denyList = denyList
         self.processChecker = processChecker
+        self.exemption = exemption
         guard let openPaths else {
             busy = nil
             return
@@ -66,7 +74,10 @@ public struct PreDeleteChecker: Sendable {
         {
             return .changedSinceScan
         }
-        if let reason = denyList.denialReason(for: item.path) { return .protected(reason) }
+        if let reason = denyList.denialReason(for: item.path), exemption?.permits(item.path, deniedFor: reason) != true
+        {
+            return .protected(reason)
+        }
         if let app = rule.conditions.appNotRunning.first(where: { processChecker.isRunning(bundleID: $0) }) {
             return .appRunning(app)
         }

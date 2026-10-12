@@ -1,22 +1,205 @@
 name: Release
 
+# Every push (merge) to main computes the next version from the Conventional Commits since the last
+# vX.Y.Z tag (scripts/next-version.sh; rules in CONTRIBUTING.md "Releases & versioning"). When a
+# release is due, this workflow builds, tests, tags and publishes it; otherwise it stops after the
+# version job.
+#
+# Build, tag and release all live in this one workflow on purpose: a tag pushed with GITHUB_TOKEN does
+# not trigger other workflows (GitHub suppresses runs caused by GITHUB_TOKEN), so a separate
+# tag-triggered release workflow would never fire.
+
 on:
   push:
-    tags: ["v*"]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Force a release with this version (X.Y.Z, no leading v). Leave empty to compute it from commits."
+        required: false
+        default: ""
 
 permissions:
   contents: write
 
+# Serialise releases so two quick merges can't compute the same version. A run waits for the one in
+# progress (which pushes its tag first); if several are queued, only the newest waits, and it covers
+# all commits since the last tag anyway.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
-  release:
+  version:
+    name: Compute version
+    if: github.ref == 'refs/heads/main'
     runs-on: macos-15
+    outputs:
+      version: ${{ steps.next.outputs.version }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history and tags: next-version.sh walks commits since the last tag
+      - name: Test version script
+        run: bash scripts/tests/test-next-version.sh
+      - name: Compute next version
+        id: next
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            version="${INPUT_VERSION#v}"
+            if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+              echo "::error::version input must look like 1.2.3, got '$INPUT_VERSION'"
+              exit 1
+            fi
+          else
+            version="$(scripts/next-version.sh)"
+          fi
+          if [ -n "$version" ] && tag_sha="$(git rev-parse -q --verify "refs/tags/v$version^{commit}")"; then
+            if [ "$tag_sha" != "$GITHUB_SHA" ]; then
+              echo "::error::tag v$version already exists on $tag_sha"
+              exit 1
+            fi
+            echo "::notice::tag v$version already points at this commit; re-running the release"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ -n "$version" ]; then
+            echo "Releasing **$version** (previous: $(scripts/next-version.sh --previous))." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No release: no feat, fix, perf or breaking commits since the last tag." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  release:
+    name: Build and publish ${{ needs.version.outputs.version }}
+    needs: version
+    if: needs.version.outputs.version != ''
+    runs-on: macos-15
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      # Releases are always Developer ID signed and notarized. Without every secret the job stops here,
+      # before anything is built, tagged or published (see CONTRIBUTING.md "Signing and notarization").
+      - name: Check signing secrets
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          DEVELOPER_ID_P12: ${{ secrets.DEVELOPER_ID_P12 }}
+          DEVELOPER_ID_P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
+        run: |
+          missing=""
+          for name in APPLE_TEAM_ID APPLE_API_KEY_ID APPLE_API_ISSUER_ID APPLE_API_KEY_P8 DEVELOPER_ID_P12 DEVELOPER_ID_P12_PASSWORD; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::missing repository secrets:$missing. Nothing was released."
+            exit 1
+          fi
+          if ! printf '%s' "$APPLE_TEAM_ID" | grep -Eq '^[A-Z0-9]{10}$'; then
+            echo "::error::APPLE_TEAM_ID must be ten upper-case letters or digits"
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # release notes need history and tags; BUILD_NUMBER is the commit count
+      - name: Toolchain
+        run: swift --version
+      - name: Build
+        run: swift build
       - name: Test
-        run: swift build && swift test
-      - name: Build universal app and CLI
-        run: make dist VERSION="${GITHUB_REF_NAME#v}" ARCH_FLAGS="--arch arm64 --arch x86_64"
-      - name: Publish release
+        run: swift test
+      - name: Lint code and rule packs
+        run: make lint
+      # A throwaway keychain holding only the Developer ID Application identity, removed at the end of
+      # the job. codesign finds it through the user search list.
+      - name: Import Developer ID certificate
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          DEVELOPER_ID_P12: ${{ secrets.DEVELOPER_ID_P12 }}
+          DEVELOPER_ID_P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
+        run: |
+          keychain="$RUNNER_TEMP/openclean-signing.keychain-db"
+          keychain_password="$(uuidgen)"
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          printf '%s' "$DEVELOPER_ID_P12" | base64 --decode > "$RUNNER_TEMP/developer-id.p12"
+          security import "$RUNNER_TEMP/developer-id.p12" -k "$keychain" -f pkcs12 \
+            -P "$DEVELOPER_ID_P12_PASSWORD" -T /usr/bin/codesign
+          rm -f "$RUNNER_TEMP/developer-id.p12"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain" >/dev/null
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          identity="$(security find-identity -v -p codesigning "$keychain" \
+            | sed -n "s/.*\"\(Developer ID Application: .* ($APPLE_TEAM_ID)\)\"$/\1/p" | head -n 1)"
+          if [ -z "$identity" ]; then
+            echo "::error::DEVELOPER_ID_P12 holds no valid Developer ID Application identity for team $APPLE_TEAM_ID"
+            security find-identity -v -p codesigning "$keychain"
+            exit 1
+          fi
+          echo "Signing as: $identity"
+          echo "SIGN_IDENTITY=$identity" >> "$GITHUB_ENV"
+          echo "SIGNING_KEYCHAIN=$keychain" >> "$GITHUB_ENV"
+      - name: Build universal release assets
+        run: make release-assets VERSION="$VERSION" ARCH_FLAGS="--arch arm64 --arch x86_64" SIGN_IDENTITY="$SIGN_IDENTITY"
+      # notarytool exits 0 for a rejected submission too, so the status is read from its JSON output.
+      # The DMG gets the ticket stapled (offline first launch); a bare CLI binary can't hold one, so the
+      # zip is notarized and Gatekeeper fetches its ticket online. Stapling changes the DMG, so the
+      # checksums are written again afterwards.
+      - name: Notarize and staple
+        env:
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+        run: |
+          key="$RUNNER_TEMP/AuthKey_$APPLE_API_KEY_ID.p8"
+          printf '%s\n' "$APPLE_API_KEY_P8" > "$key"
+          chmod 600 "$key"
+          auth=(--key "$key" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER_ID")
+          for asset in "build/release/OpenClean-$VERSION.dmg" "build/release/openclean-cli-$VERSION.zip"; do
+            echo "Notarizing $asset"
+            result="$RUNNER_TEMP/notarize-$(basename "$asset").json"
+            xcrun notarytool submit "$asset" "${auth[@]}" --wait --timeout 1h --output-format json | tee "$result"
+            status="$(plutil -extract status raw -o - "$result" 2>/dev/null || true)"
+            if [ "$status" != "Accepted" ]; then
+              echo "::error::notarization of $(basename "$asset") ended with status '${status:-unknown}'"
+              id="$(plutil -extract id raw -o - "$result" 2>/dev/null || true)"
+              [ -z "$id" ] || xcrun notarytool log "$id" "${auth[@]}" || true
+              exit 1
+            fi
+          done
+          rm -f "$key"
+          xcrun stapler staple "build/release/OpenClean-$VERSION.dmg"
+          make checksums VERSION="$VERSION"
+      - name: Check assets
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: scripts/check-release-assets.sh "$VERSION" --team "$APPLE_TEAM_ID"
+      - name: Write release notes
+        run: scripts/next-version.sh --notes --version "$VERSION" > "$RUNNER_TEMP/release-notes.md"
+      - name: Tag v${{ needs.version.outputs.version }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "tag v$VERSION already exists at this commit"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "v$VERSION" -m "OpenClean $VERSION" "$GITHUB_SHA"
+            git push origin "refs/tags/v$VERSION"
+          fi
+      - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" build/OpenClean-*.zip build/openclean-cli-*.zip --generate-notes
+        run: |
+          gh release create "v$VERSION" build/release/* \
+            --title "OpenClean $VERSION" \
+            --notes-file "$RUNNER_TEMP/release-notes.md" \
+            --verify-tag
+      - name: Remove signing keychain
+        if: always()
+        run: |
+          if [ -n "${SIGNING_KEYCHAIN:-}" ]; then security delete-keychain "$SIGNING_KEYCHAIN" || true; fi
+          rm -f "$RUNNER_TEMP"/AuthKey_*.p8 "$RUNNER_TEMP/developer-id.p12"
+      # TODO: bump Formula/openclean.rb (stable url + sha256 of the source tarball) after a release.
+      # Out of scope for now; the formula only supports --HEAD installs.

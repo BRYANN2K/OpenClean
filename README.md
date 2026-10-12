@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="docs/brand/logo.svg" width="112" alt="OpenClean app icon">
+  <img src="docs/brand/hero.jpg" alt="OpenClean — the free, open-source Mac cleaner: Smart Scan, Uninstaller, Space Lens, duplicates, Performance and a menu bar monitor, with undo">
 </p>
-
-<h1 align="center">OpenClean</h1>
 
 <p align="center">
   <strong>Free, open-source Mac cleaner — a transparent CleanMyMac alternative for macOS.</strong><br>
@@ -10,34 +8,29 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/leoAnimesh/OpenClean/releases/latest"><img src="https://img.shields.io/github/v/release/leoAnimesh/OpenClean?label=download&color=12A88B" alt="Latest release"></a>
   <a href="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml"><img src="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/macOS-14%2B-0A4756" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white" alt="Swift 6">
-  <img src="https://img.shields.io/badge/SwiftUI-native-12A88B" alt="Native SwiftUI">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="GPL-3.0"></a>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/home.png" width="860" alt="OpenClean Smart Scan home screen on macOS">
 </p>
 
 OpenClean is a native macOS disk cleanup app and command-line tool. Smart Scan finds caches, logs,
 developer-tool and AI-tool leftovers you can safely remove, shows you exactly why each item is safe, and
 keeps anything that is not trivially regenerable in a quarantine you can restore from for 7 days.
-No accounts, no analytics, no network access — every cleaning rule is readable YAML.
-
-## Screenshots
-
-| Smart Scan results | Cleanup complete |
-|---|---|
-| <img src="docs/screenshots/results.png" alt="OpenClean scan results with safe and review categories"> | <img src="docs/screenshots/complete.png" alt="OpenClean cleanup summary with freed space and quarantine"> |
-| **Scanning** | **History & restore** |
-| <img src="docs/screenshots/scanning.png" alt="OpenClean scanning progress"> | <img src="docs/screenshots/history.png" alt="OpenClean cleanup history with quarantine countdown and restore"> |
+No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 
 ## Features
 
 - **Smart Scan** — one click to find System Junk, user caches and logs, browser caches, Trash, Mail
   attachments and old iOS backups.
+- **Uninstaller** — remove apps together with their leftovers (Application Support, caches, preferences,
+  containers, launch agents); everything goes to quarantine so an uninstall can be undone.
+- **Space Lens** — an interactive disk space map, a large & old files finder and a duplicate file finder;
+  removals go to the macOS Trash and nothing is ever pre-selected.
+- **Performance & menu bar monitor** — live CPU, memory, disk and network in the menu bar, heavy apps with
+  Quit/Force Quit, login items and launch agents, and one-click maintenance (flush DNS, reindex Spotlight,
+  rebuild Launch Services, thin Time Machine snapshots).
 - **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; npm, Yarn, pnpm,
   pip, Cargo, Gradle, CocoaPods and Homebrew caches; Docker disk image reporting.
 - **AI model cleanup** — Ollama, LM Studio and Hugging Face caches.
@@ -45,6 +38,8 @@ No accounts, no analytics, no network access — every cleaning rule is readable
   quarantine with **History and Restore** (undo for 1–90 days).
 - **Transparent rules** — every rule explains itself in the app; write and lint your own YAML packs.
 - **CLI with JSON output** — script `openclean scan` / `clean` in CI or dotfiles.
+- **Software Update** — OpenClean checks GitHub once a day for a new release (you can turn this off),
+  downloads and verifies it, installs it in place and relaunches; the previous version stays in History.
 - **Native and private** — Swift 6 + SwiftUI, no telemetry, GPL-3.0.
 
 ## Why OpenClean
@@ -55,11 +50,35 @@ No accounts, no analytics, no network access — every cleaning rule is readable
 | Most removals are permanent | Quarantine with History and Restore |
 | Cleaning logic is a black box | Every rule is readable YAML with an explanation, shown in the app |
 | Rules come only from the vendor | Community rule packs, linted in CI; add your own |
-| Analytics, accounts, upsell | No network access at all |
+| Analytics, accounts, upsell | No analytics or accounts; the only network use is the daily update check |
 | GUI only | App and a scriptable CLI with JSON output |
 | General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face cleanup |
 
-## Install (build from source)
+## Install
+
+### Download (recommended)
+
+Get the latest `OpenClean-X.Y.Z.dmg` from the
+[Releases page](https://github.com/leoAnimesh/OpenClean/releases/latest), open it and drag OpenClean onto
+Applications. It's a universal build (Apple silicon and Intel) and needs macOS 14 or later. The same
+release has `openclean-cli-X.Y.Z.zip` (the CLI plus its rule packs) and `SHA256SUMS.txt`
+(`shasum -a 256 -c SHA256SUMS.txt`).
+
+Releases are signed with a Developer ID and notarized by Apple, so they open like any other app.
+
+Releases are published automatically when changes are merged to `main` (see
+[CONTRIBUTING.md](CONTRIBUTING.md#releases--versioning)).
+
+### Updates and privacy
+
+OpenClean checks api.github.com once a day for a new release (you can turn this off in Settings → Updates
+or on the last onboarding step); **OpenClean → Check for Updates…** always works. The check sends only
+`User-Agent: OpenClean/<version>`; nothing about you or your files is sent. Updates are downloaded only
+from GitHub, checked against the release's `SHA256SUMS.txt` and the app's code signature, and installed in
+place; your previous version is kept in History, so you can restore it. An update must be signed by the
+same Apple developer team as the app you have. Apart from this, OpenClean makes no network requests.
+
+### Build from source
 
 Requires macOS 14+ and Xcode 16+.
 
@@ -76,14 +95,12 @@ brew tap leoanimesh/openclean https://github.com/leoAnimesh/OpenClean
 brew install --HEAD openclean
 ```
 
-Releases on GitHub include an unsigned app zip and the CLI. Because the app is not notarized, right-click
-→ Open the first time.
-
 ### Full Disk Access
 
 Trash, Mail, Safari and iOS backups live in protected folders. Grant access in
-System Settings → Privacy & Security → Full Disk Access. Each rebuild of an unsigned app gets a new
-signature, so after updating, remove OpenClean from that list and add it again; the app tells you when.
+System Settings → Privacy & Security → Full Disk Access. The grant survives updates of the released app.
+A build from source is signed ad hoc, so each rebuild gets a new signature: remove OpenClean from that
+list and add it again; the app tells you when.
 
 ## Using the CLI
 

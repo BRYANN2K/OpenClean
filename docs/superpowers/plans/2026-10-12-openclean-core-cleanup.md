@@ -24,7 +24,7 @@
 - `requires: admin` only on `regenerable` rules, and those always delete immediately (no root-owned data in quarantine).
 - Quarantine root: `~/Library/Application Support/OpenClean/Quarantine/<session-id>/`; retention default 7 days, range 1–90.
 - CLI JSON carries `"schema": 1`. Exit codes: `0` success, `1` error or aborted, `2` completed with skipped items.
-- App bundle id `io.github.leoanimesh.OpenClean`; LaunchAgent label `io.github.leoanimesh.openclean.purge`.
+- App bundle id `com.openclean`; LaunchAgent label `com.openclean.purge`.
 - Commits are authored by the repo-local identity `leoAnimesh <mondalarup808@gmail.com>` (already configured) and end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ## Spec Clarifications Made in This Plan
@@ -4212,13 +4212,13 @@ struct RestoreAndPurgeTests {
         #expect(schedule.isEnabled)
         let plist = try PropertyListSerialization.propertyList(
             from: Data(contentsOf: schedule.plistURL), format: nil) as? [String: Any]
-        #expect(plist?["Label"] as? String == "io.github.leoanimesh.openclean.purge")
+        #expect(plist?["Label"] as? String == "com.openclean.purge")
         #expect(plist?["ProgramArguments"] as? [String] == ["/usr/local/bin/openclean", "purge"])
         #expect(runner.calls.contains(["/bin/launchctl", "bootstrap", "gui/501", schedule.plistURL.path]))
 
         try schedule.disable()
         #expect(!schedule.isEnabled)
-        #expect(runner.calls.last == ["/bin/launchctl", "bootout", "gui/501/io.github.leoanimesh.openclean.purge"])
+        #expect(runner.calls.last == ["/bin/launchctl", "bootout", "gui/501/com.openclean.purge"])
     }
 }
 ```
@@ -4398,7 +4398,7 @@ public enum ScheduleError: Error, Equatable {
 
 /// Optional daily purge via a per-user LaunchAgent. Off by default.
 public struct PurgeSchedule: Sendable {
-    public static let label = "io.github.leoanimesh.openclean.purge"
+    public static let label = "com.openclean.purge"
     let launchAgents: URL
     let runner: any CommandRunner
     let uid: uid_t
@@ -7238,7 +7238,7 @@ Append to `Package.swift` `targets:`:
     <key>CFBundleExecutable</key>
     <string>OpenClean</string>
     <key>CFBundleIdentifier</key>
-    <string>io.github.leoanimesh.OpenClean</string>
+    <string>com.openclean</string>
     <key>CFBundleName</key>
     <string>OpenClean</string>
     <key>CFBundleDisplayName</key>

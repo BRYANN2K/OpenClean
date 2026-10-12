@@ -44,7 +44,7 @@ enum Theme {
 
 /// Which backdrop a screen sits on.
 enum Backdrop {
-    case scan, success, history
+    case scan, success, history, uninstaller, spaceLens, performance
 
     var gradient: LinearGradient {
         let colors: [UInt32] =
@@ -52,6 +52,9 @@ enum Backdrop {
             case .scan: [0x082A33, 0x0B4A4C, 0x12795F]
             case .success: [0x0A3A3E, 0x0F6656, 0x1FA67A]
             case .history: [0x0C1B33, 0x15335A, 0x1F5A7A]
+            case .uninstaller: [0x22102E, 0x3D1A52, 0x6A3478]
+            case .spaceLens: [0x0F1638, 0x1E2B66, 0x34489A]
+            case .performance: [0x2A1407, 0x52290E, 0x8A4E1A]
             }
         return LinearGradient(
             colors: colors.map { Color(hex: $0) }, startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -74,6 +77,27 @@ struct GlassPanel: ViewModifier {
 extension View {
     func glassPanel(radius: CGFloat = Theme.panelRadius) -> some View {
         modifier(GlassPanel(radius: radius))
+    }
+}
+
+// MARK: Live numbers
+
+/// Rolls digits when a live number changes (sizes, counts, percentages). Off with Reduce Motion.
+struct RollingNumber<Value: Equatable>: ViewModifier {
+    let value: Value
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .monospacedDigit()
+            .contentTransition(reduceMotion ? .identity : .numericText())
+            .animation(reduceMotion ? nil : .snappy(duration: 0.4), value: value)
+    }
+}
+
+extension View {
+    func rollingNumber<Value: Equatable>(_ value: Value) -> some View {
+        modifier(RollingNumber(value: value))
     }
 }
 
@@ -120,6 +144,21 @@ struct CapsuleButtonStyle: ButtonStyle {
     var prominent = false
 
     func makeBody(configuration: Configuration) -> some View {
+        Pill(configuration: configuration, prominent: prominent)
+    }
+
+    private struct Pill: View {
+        let configuration: Configuration
+        let prominent: Bool
+        @Environment(\.isEnabled) private var isEnabled
+
+        var body: some View {
+            CapsuleButtonStyle.body(configuration, prominent: prominent)
+                .opacity(isEnabled ? 1 : 0.4)
+        }
+    }
+
+    fileprivate static func body(_ configuration: Configuration, prominent: Bool) -> some View {
         configuration.label
             .font(.system(size: 14, weight: prominent ? .semibold : .medium))
             .foregroundStyle(prominent ? Theme.deepTeal : .white)
@@ -351,4 +390,25 @@ struct SafetyTag: View {
         case .caution: Theme.coral
         }
     }
+}
+
+// MARK: Space Lens
+
+extension Theme {
+    /// Segment colors for the space map, one per top-level folder in turn. Bright, similar lightness,
+    /// and distinct from each other on the indigo backdrop.
+    static let spaceMapPalette: [Color] = [
+        Color(hex: 0x7DF5C8),  // mint (accent)
+        Color(hex: 0x62BFFF),  // sky
+        Color(hex: 0xB3A6FF),  // lavender
+        Color(hex: 0xFF8FAB),  // rose
+        Color(hex: 0xFFC56E),  // amber
+        Color(hex: 0x55E3D2),  // aqua
+        Color(hex: 0xFFB894),  // coral
+        Color(hex: 0x9BE68F),  // leaf
+    ]
+    /// "Other" aggregates and unreadable folders in the space map.
+    static let spaceMapMuted = Color(hex: 0xBFC8D1)
+    /// The map's center disc.
+    static let spaceMapCenter = Color(hex: 0x0F1638, opacity: 0.6)
 }

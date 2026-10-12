@@ -42,7 +42,7 @@ public enum AdminCommandBuilder {
 
     /// Byte-based on purpose: String/Character views merge "/" with a following combining mark,
     /// which would hide separators and let "." / ".." components through.
-    private static func isCanonicalAbsolute(_ path: String) -> Bool {
+    static func isCanonicalAbsolute(_ path: String) -> Bool {
         let bytes = path.utf8
         guard bytes.first == 0x2F, bytes.count > 1, bytes.last != 0x2F else { return false }
         if bytes.contains(where: { $0 == 0x00 || $0 == 0x0A || $0 == 0x0D }) { return false }
