@@ -17,6 +17,7 @@ public struct CommandOutput: Sendable, Equatable {
 
 public enum CommandError: Error, Equatable {
     case launchFailed(String)
+    case timedOut(String)
 }
 
 /// Runs an executable directly (never through a shell) and captures its output.
@@ -25,7 +26,12 @@ public protocol CommandRunner: Sendable {
 }
 
 public struct ProcessCommandRunner: CommandRunner {
-    public init() {}
+    let timeout: TimeInterval?
+
+    /// `timeout` is in seconds; `nil` waits forever.
+    public init(timeout: TimeInterval? = 60) {
+        self.timeout = timeout
+    }
 
     public func run(_ executable: String, _ arguments: [String]) throws -> CommandOutput {
         let process = Process()
@@ -42,6 +48,19 @@ public struct ProcessCommandRunner: CommandRunner {
             throw CommandError.launchFailed("\(executable): \(error.localizedDescription)")
         }
 
+        let timedOut = Flag()
+        var timer: DispatchWorkItem?
+        if let timeout {
+            let item = DispatchWorkItem { [process] in
+                if process.isRunning {
+                    timedOut.set()
+                    process.terminate()
+                }
+            }
+            timer = item
+            DispatchQueue.global().asyncAfter(deadline: .now() + timeout, execute: item)
+        }
+
         // Drain stderr on another thread so a full pipe buffer can never deadlock the child.
         let stderrHandle = stderrPipe.fileHandleForReading
         let stderrBox = DataBox()
@@ -54,6 +73,10 @@ public struct ProcessCommandRunner: CommandRunner {
         let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
         group.wait()
         process.waitUntilExit()
+        timer?.cancel()
+        if timedOut.get() {
+            throw CommandError.timedOut("\(executable) exceeded \(timeout ?? 0)s")
+        }
         return CommandOutput(status: process.terminationStatus, stdout: stdoutData, stderr: stderrBox.get())
     }
 }
@@ -64,4 +87,12 @@ private final class DataBox: @unchecked Sendable {
 
     func set(_ value: Data) { lock.withLock { data = value } }
     func get() -> Data { lock.withLock { data } }
+}
+
+private final class Flag: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = false
+
+    func set() { lock.withLock { value = true } }
+    func get() -> Bool { lock.withLock { value } }
 }
