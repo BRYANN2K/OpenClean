@@ -48,10 +48,10 @@ public struct RuleLinter: Sendable {
         if rule.id.range(of: #"^[a-z0-9]+([.-][a-z0-9]+)*$"#, options: .regularExpression) == nil {
             problems.append("id must be lowercase words separated by . or - (e.g. xcode.derived-data)")
         }
-        if rule.name.trimmingCharacters(in: .whitespaces).isEmpty {
+        if rule.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             problems.append("name is empty")
         }
-        if rule.explain.trimmingCharacters(in: .whitespaces).isEmpty {
+        if rule.explain.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             problems.append("explain is empty: say why removing this is safe")
         }
 

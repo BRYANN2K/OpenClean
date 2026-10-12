@@ -33,15 +33,28 @@ struct RuleLinterTests {
         #expect(messages(rule(explain: "  ")).contains { $0.hasPrefix("explain is empty") })
     }
 
+    @Test func newlineOnlyExplanationIsEmpty() {
+        #expect(messages(rule(explain: "\n")).contains { $0.hasPrefix("explain is empty") })
+    }
+
     @Test func requiresExactlyOneOfPathsOrProbe() {
         #expect(messages(rule(paths: [])).contains("needs either paths or probe"))
         #expect(messages(rule(probe: "xcode.simulators")).contains("use paths or probe, not both"))
         #expect(messages(rule(paths: [], probe: "nope")).contains("unknown probe nope"))
     }
 
-    @Test(arguments: ["~/Documents/*", "~/*", "/System/Library/Caches/*", "~/Library/*", "/Applications/*", "*/x"])
-    func rejectsProtectedOrRelativePaths(pattern: String) {
-        #expect(!messages(rule(paths: [pattern])).isEmpty, "expected \(pattern) to be rejected")
+    @Test(arguments: [
+        "~/Documents/*", "~/*", "/System/Library/Caches/*", "~/Library/*", "/Applications/*",
+        "~/Library/Caches/../Mail/*", "~/documents/*", "~//Documents/*", "/Users/*/Documents/*",
+        "~/Library/Mobile Documents/*",
+    ])
+    func rejectsProtectedPaths(pattern: String) {
+        #expect(messages(rule(paths: [pattern])).contains { $0.contains("protected location") },
+                "expected \(pattern) to be protected")
+    }
+
+    @Test func rejectsRelativePaths() {
+        #expect(messages(rule(paths: ["*/x"])).contains { $0.hasPrefix("path must start with") })
     }
 
     @Test func rejectsTrailingDoubleStar() {
