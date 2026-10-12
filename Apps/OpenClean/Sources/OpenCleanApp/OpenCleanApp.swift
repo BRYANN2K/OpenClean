@@ -3,6 +3,7 @@ import OpenCleanAppModel
 import OpenCleanKit
 import Permissions
 import SwiftUI
+import Updater
 
 @main
 struct OpenCleanApp: App {
@@ -10,6 +11,7 @@ struct OpenCleanApp: App {
     @State private var uninstaller: UninstallerModel
     @State private var spaceLens: SpaceLensModel
     @State private var performance: PerformanceModel
+    @State private var updates: UpdateModel
     @State private var navigation = AppNavigation()
     @State private var onboarding = OnboardingModel(defaults: .standard)
     @AppStorage(MenuBarSettings.enabledKey) private var menuBarEnabled = true
@@ -24,6 +26,14 @@ struct OpenCleanApp: App {
         _uninstaller = State(initialValue: UninstallerModel(coordinator: coordinator))
         _spaceLens = State(initialValue: SpaceLensModel(coordinator: coordinator))
         _performance = State(initialValue: PerformanceModel(coordinator: coordinator))
+        let bundleID = Bundle.main.bundleIdentifier ?? "io.github.leoanimesh.OpenClean"
+        _updates = State(
+            initialValue: UpdateModel(
+                coordinator: coordinator, settings: UpdateSettingsStore(defaults: .standard),
+                client: coordinator.makeUpdateHTTPClient(),
+                installer: coordinator.selfUpdateInstaller(bundleIdentifier: bundleID),
+                currentVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
+                currentAppPath: Bundle.main.bundlePath, relaunch: { AppRelauncher.relaunch($0) }))
         // Needed when started with `swift run`; harmless inside OpenClean.app.
         NSApplication.shared.setActivationPolicy(.regular)
     }
@@ -44,8 +54,15 @@ struct OpenCleanApp: App {
             .environment(performance)
             .environment(navigation)
             .environment(onboarding)
+            .environment(updates)
             .frame(minWidth: 1200, minHeight: 720)
-            .task { model.onLaunch() }
+            .sheet(isPresented: $updates.isSheetPresented) {
+                SoftwareUpdateSheet().environment(updates)
+            }
+            .task {
+                model.onLaunch()
+                updates.onLaunch()
+            }
         }
         .windowStyle(.hiddenTitleBar)
         // Open at a comfortable size and never let the window shrink below the layout's minimum.
@@ -54,6 +71,9 @@ struct OpenCleanApp: App {
         .commands {
             // No "Hide Sidebar" menu item: the sidebar is always shown.
             CommandGroup(replacing: .sidebar) {}
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesButton(updates: updates)
+            }
             CommandGroup(before: .help) {
                 Button("Welcome Tour…") { onboarding.restart() }
                     .disabled(!onboarding.isCompleted)
@@ -71,6 +91,7 @@ struct OpenCleanApp: App {
         SwiftUI.Settings {
             SettingsView()
                 .environment(model)
+                .environment(updates)
                 .frame(width: 520)
         }
     }

@@ -79,6 +79,7 @@ struct ContentView: View {
         } detail: {
             VStack(spacing: 0) {
                 AccessBanner()
+                UpdateBanner()
                 ProblemsBanner()
                 Group {
                     switch navigation.selection ?? .smartScan {

@@ -335,9 +335,11 @@ struct DonePage: View {
     let featuresSeen: Bool
     let granted: Bool
     @AppStorage(MenuBarSettings.enabledKey) private var menuBarEnabled = true
+    @Environment(UpdateModel.self) private var updates
     @State private var shown = false
 
     var body: some View {
+        @Bindable var updates = updates
         VStack(spacing: 0) {
             Orb(size: 150) {
                 CheckmarkShape()
@@ -360,6 +362,18 @@ struct DonePage: View {
                     Text("CPU and memory in the menu bar").font(.system(size: 14))
                     Spacer()
                     Toggle("CPU and memory in the menu bar", isOn: $menuBarEnabled)
+                        .toggleStyle(.switch)
+                        .tint(Theme.accent)
+                        .labelsHidden()
+                }
+                .padding(.horizontal, 16)
+                .frame(minHeight: 48)
+                Divider().overlay(Theme.glassDivider)
+                HStack(spacing: 12) {
+                    Image(systemName: "arrow.down.circle").frame(width: 22)
+                    Text("Check for updates automatically").font(.system(size: 14))
+                    Spacer()
+                    Toggle("Check for updates automatically", isOn: $updates.autoCheck)
                         .toggleStyle(.switch)
                         .tint(Theme.accent)
                         .labelsHidden()

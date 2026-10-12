@@ -91,6 +91,7 @@ struct StorageCard: View {
 
 struct AccessBanner: View {
     @Environment(AppModel.self) private var model
+    @Environment(UpdateModel.self) private var updates
 
     var body: some View {
         if model.accessAdvice != .ok {
@@ -117,12 +118,19 @@ struct AccessBanner: View {
     }
 
     private var title: String {
-        model.accessAdvice == .regrantAfterRebuild
+        if updates.updatedFrom != nil {
+            return "OpenClean was updated. Allow Full Disk Access again"
+        }
+        return model.accessAdvice == .regrantAfterRebuild
             ? "Full Disk Access needs to be granted again" : "Full Disk Access is off"
     }
 
     private var message: String {
-        model.accessAdvice == .regrantAfterRebuild
+        if updates.updatedFrom != nil {
+            return
+                "macOS treats each new version of OpenClean as a new app. In Settings, remove OpenClean from the Full Disk Access list, add it again, then click Check Again."
+        }
+        return model.accessAdvice == .regrantAfterRebuild
             ? "This build of OpenClean has a new signature, so macOS no longer recognises the earlier permission. Remove OpenClean from the list in Settings, add it again, then click Check Again."
             : "Trash, Mail, Safari and iOS backups can only be scanned with Full Disk Access."
     }

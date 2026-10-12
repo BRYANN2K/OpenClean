@@ -5,9 +5,12 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
+    @Environment(UpdateModel.self) private var updates
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         @Bindable var model = model
+        @Bindable var updates = updates
         Form {
             Section("Quarantine") {
                 Stepper("Keep removed files for \(model.retentionDays) days", value: $model.retentionDays, in: 1...90)
@@ -35,6 +38,20 @@ struct SettingsView: View {
             Section("Full Disk Access") {
                 LabeledContent("Status", value: model.accessAdvice == .ok ? "Granted" : "Not granted")
                 Button("Open Privacy Settings") { NSWorkspace.shared.open(FullDiskAccessChecker.settingsURL) }
+            }
+            Section("Updates") {
+                Toggle("Check for updates automatically", isOn: $updates.autoCheck)
+                LabeledContent("Current version", value: updates.currentVersionText)
+                LabeledContent("Last checked", value: updates.lastChecked.map(formatRelativeDay) ?? "Never")
+                Button("Check Now") {
+                    MainWindow.show(openWindow: openWindow)
+                    updates.checkForUpdates()
+                }
+                Text(
+                    "OpenClean asks api.github.com once a day whether a newer release exists, and downloads updates only from GitHub. Nothing about you is sent."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
