@@ -35,15 +35,24 @@ public struct LaunchAgentQuarantine: Sendable {
         self.currentUID = currentUID
     }
 
-    /// Validates `plistPath`, writes the intent to a new session manifest, then moves the file.
+    /// Everything `quarantine` checks before it writes a manifest or moves anything: call it before
+    /// side effects (e.g. stopping the agent) so a refused removal leaves the agent untouched.
+    /// Creates the quarantine root if needed (to compare volumes); moves nothing.
     @discardableResult
-    public func quarantine(plistPath: String, now: Date = .now) throws -> SessionManifest {
+    public func check(plistPath: String) throws -> FileStat {
         try validate(plistPath)
-        let fileManager = FileManager.default
-        try fileManager.createDirectory(at: store.root, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: store.root, withIntermediateDirectories: true)
         guard let stat = FileStat.of(plistPath), FileStat.of(store.root.path)?.device == stat.device else {
             throw LaunchAgentQuarantineError.differentVolume(plistPath)
         }
+        return stat
+    }
+
+    /// Validates `plistPath` (`check`), writes the intent to a new session manifest, then moves the file.
+    @discardableResult
+    public func quarantine(plistPath: String, now: Date = .now) throws -> SessionManifest {
+        let stat = try check(plistPath: plistPath)
+        let fileManager = FileManager.default
 
         var manifest = try store.createSession(now: now)
         let stored = store.itemsDirectory(manifest.id).appendingPathComponent("0")

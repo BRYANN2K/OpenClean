@@ -215,4 +215,25 @@ struct LoginItemsActionTests {
         #expect(FileManager.default.fileExists(atPath: target))
         #expect((try? FileManager.default.destinationOfSymbolicLink(atPath: link)) == target)
     }
+
+    /// A removal the quarantine would refuse must not stop the agent first.
+    @Test func refusedRemovalNeverBootsTheAgentOut() throws {
+        let fixture = try AgentsFixture()
+        let target = try fixture.dir.file("elsewhere/real.plist", bytes: 10)
+        let link = try fixture.dir.symlink("home/Library/LaunchAgents/link.plist", to: target)
+        let symlinked = LaunchItem(
+            path: link, scope: .user, definition: LaunchItemDefinition(label: "link", program: nil), owner: nil,
+            loadState: .loaded(pid: 7), isDisabled: false)
+        #expect(throws: LoginItemsError.quarantineFailed(LaunchAgentQuarantineError.notARegularFile(link).description))
+        {
+            try fixture.service().remove(symlinked)
+        }
+        let folder = try fixture.dir.directory("home/Library/LaunchAgents/folder.plist")
+        let directory = LaunchItem(
+            path: folder, scope: .user, definition: LaunchItemDefinition(label: "folder", program: nil), owner: nil,
+            loadState: .loaded(pid: 8), isDisabled: false)
+        #expect(throws: LoginItemsError.self) { try fixture.service().remove(directory) }
+        #expect(fixture.runner.calls.isEmpty)
+        #expect(fixture.store.listSessions().isEmpty)
+    }
 }
