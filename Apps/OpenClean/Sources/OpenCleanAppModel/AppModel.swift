@@ -33,6 +33,7 @@ public final class AppModel {
     @ObservationIgnored private let coordinator: OpenCleanCoordinator
     @ObservationIgnored private let signatureTracker: SignatureTracker
     @ObservationIgnored private var scanTask: Task<Void, Never>?
+    @ObservationIgnored private var settingsGeneration = 0
 
     public init(coordinator: OpenCleanCoordinator, signatureTracker: SignatureTracker) {
         self.coordinator = coordinator
@@ -76,6 +77,7 @@ public final class AppModel {
         progress = nil
         result = nil
         lastReport = nil
+        let generation = settingsGeneration
         let rules = loadedRules.rules
         let settings = settings
         let coordinator = coordinator
@@ -86,6 +88,13 @@ public final class AppModel {
                 self.progress = update
             }
             let finished = await scanned
+            if generation != self.settingsGeneration {
+                self.result = nil
+                self.selectedPaths = []
+                self.progress = nil
+                self.phase = .idle
+                return
+            }
             self.result = finished
             self.selectedPaths = DefaultSelection.paths(in: finished)
             self.phase = .results
@@ -110,12 +119,19 @@ public final class AppModel {
     public func clean() async {
         guard phase == .results, let plan, !plan.isEmpty else { return }
         phase = .cleaning
+        let generation = settingsGeneration
         let coordinator = coordinator
         do {
             let report = try await Task.detached { try coordinator.execute(plan) }.value
             lastReport = report
-            dropCleanedItems(report)
-            phase = .finished
+            if generation != settingsGeneration {
+                result = nil
+                selectedPaths = []
+                phase = .idle
+            } else {
+                dropCleanedItems(report)
+                phase = .finished
+            }
         } catch {
             errorMessage = error.localizedDescription
             phase = .results
@@ -165,6 +181,7 @@ public final class AppModel {
         if previous.advancedEnabled != settings.advancedEnabled { reloadRules() }
         let invalidates = previous.advancedEnabled != settings.advancedEnabled
             || previous.excludedPaths != settings.excludedPaths
+        if invalidates { settingsGeneration += 1 }
         if invalidates, result != nil, phase != .scanning, phase != .cleaning {
             result = nil
             selectedPaths = []

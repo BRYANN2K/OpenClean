@@ -220,4 +220,30 @@ struct AppModelTests {
         #expect(model.errorMessage != nil)
         #expect(model.phase == .results)
     }
+
+    @Test func settingsChangeDuringScanDiscardsResult() async throws {
+        let home = try TempDirectory()
+        let model = try makeModel(home, registry: ProbeRegistry([SlowAppProbe()]))
+        let userRules = model.paths.userRules.path
+        try FileManager.default.createDirectory(atPath: userRules, withIntermediateDirectories: true)
+        try """
+        pack: slow
+        version: 1
+        rules:
+          - id: slow.rule
+            name: Slow
+            category: developer
+            explain: Takes forever.
+            probe: slow.app-probe
+            safety: review
+        """.write(toFile: userRules + "/slow.yaml", atomically: true, encoding: .utf8)
+        model.onLaunch()
+        model.startScan()
+        try await Task.sleep(for: .milliseconds(150))
+        model.addExclusion("/tmp/keep")
+        model.cancelScan()
+        await model.waitForScan()
+        #expect(model.phase == .idle)
+        #expect(model.result == nil)
+    }
 }
