@@ -116,6 +116,12 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 - **Flow in the same sheet:** Checking… (small spinner + caption) → available (Skip This Version on the left; Remind Me Later, **Download & Install** on the right) → a thin accent capsule bar with "12.4 MB of 18.1 MB · 3.2 MB/s" (`rollingNumber`) and Cancel → Verifying… → **Install and Relaunch**, with a glass note that the current version is kept in History and that Full Disk Access must be allowed again. When an in-place install isn't possible, the note is gold and explains why, and the prominent button is **Open Installer**. Errors are the subtitle, in plain words, with Download from GitHub, Close and **Retry**.
 - Up to date reads "You're up to date" / "OpenClean 0.2.0 is the newest version." Never show version numbers as a score or badge.
 
+## Uninstaller: apps that need a password
+
+- Apps owned by the system (`AppStatus.needsAdministrator`) get a gold **Needs password** `UninstallerTag` in the list and on the bundle row (Running wins while the app is open). The detail panel adds a gold `lock.fill` notice; the bottom-bar caption ends in "· needs your password".
+- The confirmation sheet adds one `lock` line: "macOS will ask for your administrator password to move <App> to quarantine. If you restore it later, it comes back owned by you." The working screen says "Waiting for your password, then moving <App> to quarantine…".
+- A cancelled password prompt is not an error: summary orb `arrow.uturn.backward`, headline "Uninstall cancelled", one `textSecondary` line "Nothing was moved. <App> is still in your Applications folder." No gold, no alert.
+
 ## Accessibility checklist
 
 - Decorative art (`Orb`, `CategoryIcon`, logo) is `accessibilityHidden`; the meaning is in adjacent text.
