@@ -170,7 +170,14 @@ jobs:
             fi
           done
           rm -f "$key"
-          xcrun stapler staple "build/release/OpenClean-$VERSION.dmg"
+          # stapler fetches the ticket from Apple's CDN; a dropped connection or a ticket that hasn't
+          # propagated yet fails it (error 68), so it is retried.
+          for attempt in 1 2 3 4 5; do
+            xcrun stapler staple "build/release/OpenClean-$VERSION.dmg" && break
+            if [ "$attempt" = 5 ]; then exit 1; fi
+            echo "stapling failed, retrying in $((attempt * 20)) s"
+            sleep $((attempt * 20))
+          done
           make checksums VERSION="$VERSION"
       - name: Check assets
         env:
