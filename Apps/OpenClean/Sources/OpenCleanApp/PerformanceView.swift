@@ -49,7 +49,8 @@ struct PerformanceView: View {
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                .frame(maxWidth: 560)
+                // Size to the segments so the bar's leading edge lines up with the title and cards.
+                .fixedSize()
                 .padding(.bottom, 18)
 
                 Group {
