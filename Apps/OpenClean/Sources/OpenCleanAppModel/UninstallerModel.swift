@@ -102,7 +102,7 @@ public final class UninstallerModel {
     /// Apps OpenClean can uninstall, including root-owned ones (they ask for an administrator password).
     /// Apple apps, Utilities, apps without a bundle id and OpenClean itself are left out of the list.
     public var uninstallableApps: [InstalledApp] {
-        apps.filter { $0.status.isRemovable || $0.status == .needsAdministrator }
+        apps.filter(\.status.isRemovable)
     }
 
     public var filteredApps: [InstalledApp] {
@@ -234,6 +234,12 @@ public final class UninstallerModel {
     public var appWasRemoved: Bool {
         guard case .finished(let report) = outcome, let entry = report.manifest.entries.first else { return false }
         return entry.outcome == .quarantined || entry.outcome == .trashed
+    }
+
+    /// True when the administrator password prompt was cancelled: nothing was moved, and that's not an error.
+    public var uninstallWasCancelled: Bool {
+        guard case .finished(let report) = outcome, let entry = report.manifest.entries.first else { return false }
+        return entry.outcome == .failed && entry.reason == SkipReason.adminCancelled.description
     }
 
     /// Leaves the summary and reloads the list, since sizes and the app set have changed.

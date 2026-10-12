@@ -233,7 +233,8 @@ struct UninstallBar: View {
         guard let app = model.selectedApp else { return "Select an app" }
         guard app.status.isRemovable else { return app.status.explanation }
         if model.selectedAppIsRunning { return "Quit \(app.name) to uninstall it" }
-        return "\(app.name) + \(leftoverCount(count)) to quarantine"
+        let summary = "\(app.name) + \(leftoverCount(count)) to quarantine"
+        return app.status.requiresAdministrator ? summary + " · needs your password" : summary
     }
 }
 
@@ -265,6 +266,15 @@ struct UninstallerConfirmSheet: View {
                     row(
                         symbol: "folder", title: leftoverCount(chosen.count),
                         bytes: chosen.reduce(0) { $0 + $1.size })
+                }
+                if app.status.requiresAdministrator {
+                    Label(
+                        "macOS will ask for your administrator password to move \(app.name) to quarantine. If you restore it later, it comes back owned by you.",
+                        systemImage: "lock"
+                    )
+                    .font(.callout)
+                    .lineLimit(3)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 if byName > 0 {
                     Label(

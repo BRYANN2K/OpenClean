@@ -46,7 +46,7 @@ extension InstalledApp {
         case .removable: isRunning ? ("Running", Theme.gold) : nil
         case .appleApp: ("Apple app", Theme.textTertiary)
         case .openClean: ("OpenClean", Theme.textTertiary)
-        case .needsAdministrator: ("Needs administrator", Theme.gold)
+        case .needsAdministrator: isRunning ? ("Running", Theme.gold) : ("Needs password", Theme.gold)
         case .listOnly: ("Utilities", Theme.textTertiary)
         case .noBundleID: ("No bundle ID", Theme.textTertiary)
         }

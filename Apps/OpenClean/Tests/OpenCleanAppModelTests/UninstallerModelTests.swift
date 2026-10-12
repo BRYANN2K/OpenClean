@@ -10,11 +10,13 @@ import Testing
 
 @MainActor
 struct UninstallerModelTests {
-    func makeModel(_ home: TempDirectory, running: Set<String> = []) -> UninstallerModel {
+    func makeModel(
+        _ home: TempDirectory, running: Set<String> = [], admin: FakeAdminExecutor = FakeAdminExecutor()
+    ) -> UninstallerModel {
         let coordinator = OpenCleanCoordinator(
             home: home.path, environment: [:], registry: ProbeRegistry([]),
             processChecker: FakeProcessChecker(running: running), openFiles: FakeOpenFiles(),
-            admin: FakeAdminExecutor(), fullDiskAccess: { .granted }, trash: { _ in nil })
+            admin: admin, fullDiskAccess: { .granted }, trash: { _ in nil })
         return UninstallerModel(coordinator: coordinator, lastUsed: nil, systemLibrary: home.path + "/SystemLibrary")
     }
 
@@ -94,5 +96,32 @@ struct UninstallerModelTests {
         model.toggle(daemon)
         #expect(model.selectedLeftovers.isEmpty)
         #expect(model.leftoverGroups.isEmpty)
+    }
+
+    @Test func appThatNeedsAdministratorIsListedAndACancelledPromptIsCalm() async throws {
+        let home = try TempDirectory()
+        let foo = try makeApp(home, "Foo", id: "com.example.foo")
+        let applications = home.path + "/Applications"
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: applications)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: applications) }
+        let admin = FakeAdminExecutor(outcome: .cancelled)
+        let model = makeModel(home, admin: admin)
+        model.load()
+        await model.waitForLoad()
+
+        let app = try #require(model.uninstallableApps.first)
+        #expect(app.status == .needsAdministrator)
+        model.select(app)
+        await model.waitForLeftovers()
+        #expect(model.canUninstall)
+        #expect(model.selectedBytes == app.size)
+
+        await model.uninstall()
+        #expect(model.phase == .finished)
+        #expect(admin.bundleMoves.count == 1)
+        #expect(!model.appWasRemoved)
+        #expect(model.uninstallWasCancelled)
+        #expect(model.errorMessage == nil)
+        #expect(FileStat.of(foo) != nil)
     }
 }

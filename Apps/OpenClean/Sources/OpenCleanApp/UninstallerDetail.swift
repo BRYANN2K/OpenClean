@@ -58,6 +58,12 @@ struct UninstallerDetailView: View {
                     .fixedSize()
                     .disabled(isQuitting)
             }
+        } else if app.status.requiresAdministrator {
+            notice(
+                symbol: "lock.fill",
+                text:
+                    "\(app.name) is owned by the system. macOS will ask for your administrator password to move it to quarantine.",
+                tint: Theme.gold)
         }
     }
 
@@ -112,7 +118,9 @@ struct UninstallerDetailView: View {
                 UninstallerItemRow(
                     title: (app.path as NSString).lastPathComponent,
                     folder: ((app.path as NSString).deletingLastPathComponent as NSString).abbreviatingWithTildeInPath,
-                    tag: ("Application", Theme.textSecondary), size: app.size, state: .on, isLocked: true
+                    tag: app.status.requiresAdministrator
+                        ? ("Needs password", Theme.gold) : ("Application", Theme.textSecondary),
+                    size: app.size, state: .on, isLocked: true
                 ) {}
                 ForEach(model.leftoverGroups, id: \.kind) { group in
                     Divider().overlay(Theme.glassDivider)

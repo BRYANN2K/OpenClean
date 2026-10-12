@@ -108,10 +108,14 @@ struct UninstallerWorkingView: View {
             .accessibilityElement()
             .accessibilityLabel("Uninstalling")
 
-            Text("Moving \(model.processedApp?.name ?? "the app") to quarantine…")
-                .font(.system(size: 15))
-                .foregroundStyle(Theme.textSecondary)
-                .padding(.top, 28)
+            Text(
+                model.processedApp?.status.requiresAdministrator == true
+                    ? "Waiting for your password, then moving \(model.processedApp?.name ?? "the app") to quarantine…"
+                    : "Moving \(model.processedApp?.name ?? "the app") to quarantine…"
+            )
+            .font(.system(size: 15))
+            .foregroundStyle(Theme.textSecondary)
+            .padding(.top, 28)
             Text(formatBytes(model.selectedBytes))
                 .font(.system(size: 56, weight: .bold))
                 .monospacedDigit()
@@ -140,9 +144,12 @@ struct UninstallerCompleteView: View {
         VStack(spacing: 0) {
             Spacer(minLength: 24)
             Orb(size: 180) {
-                Image(systemName: model.appWasRemoved ? "checkmark" : "exclamationmark")
-                    .font(.system(size: 76, weight: .heavy))
-                    .foregroundStyle(.white)
+                Image(
+                    systemName: model.appWasRemoved
+                        ? "checkmark" : model.uninstallWasCancelled ? "arrow.uturn.backward" : "exclamationmark"
+                )
+                .font(.system(size: 76, weight: .heavy))
+                .foregroundStyle(.white)
             }
             Group {
                 if model.appWasRemoved, case .finished(let report) = model.outcome {
@@ -156,6 +163,15 @@ struct UninstallerCompleteView: View {
                     .foregroundStyle(Theme.textSecondary)
                     .padding(.top, 8)
                     skipped(report.manifest.skippedEntries)
+                } else if model.uninstallWasCancelled {
+                    Text("Uninstall cancelled")
+                        .font(.system(size: 34, weight: .bold))
+                        .padding(.top, 30)
+                    Text("Nothing was moved. \(name) is still in your Applications folder.")
+                        .font(.system(size: 15))
+                        .foregroundStyle(Theme.textSecondary)
+                        .lineLimit(2)
+                        .padding(.top, 8)
                 } else {
                     Text("\(name) was not uninstalled")
                         .font(.system(size: 34, weight: .bold))
