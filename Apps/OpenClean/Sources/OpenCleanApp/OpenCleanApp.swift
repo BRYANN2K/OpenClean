@@ -74,6 +74,10 @@ struct OpenCleanApp: App {
             CommandGroup(after: .appInfo) {
                 CheckForUpdatesButton(updates: updates)
             }
+            // Settings live in the main window (sidebar → Settings), so ⌘, goes there.
+            CommandGroup(replacing: .appSettings) {
+                OpenSettingsButton(navigation: navigation)
+            }
             CommandGroup(before: .help) {
                 Button("Welcome Tour…") { onboarding.restart() }
                     .disabled(!onboarding.isCompleted)
@@ -88,11 +92,5 @@ struct OpenCleanApp: App {
             MenuBarLabel().environment(performance)
         }
         .menuBarExtraStyle(.window)
-        SwiftUI.Settings {
-            SettingsView()
-                .environment(model)
-                .environment(updates)
-                .frame(width: 520)
-        }
     }
 }

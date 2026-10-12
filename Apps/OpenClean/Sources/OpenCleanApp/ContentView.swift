@@ -2,7 +2,7 @@ import OpenCleanAppModel
 import SwiftUI
 
 enum SidebarItem: String, CaseIterable, Identifiable {
-    case smartScan, cleanup, history, uninstaller, spaceLens, performance
+    case smartScan, cleanup, history, uninstaller, spaceLens, performance, settings
 
     var id: String { rawValue }
 
@@ -14,6 +14,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
         case .uninstaller: "Uninstaller"
         case .spaceLens: "Space Lens"
         case .performance: "Performance"
+        case .settings: "Settings"
         }
     }
 
@@ -25,10 +26,14 @@ enum SidebarItem: String, CaseIterable, Identifiable {
         case .uninstaller: "xmark.app"
         case .spaceLens: "chart.pie"
         case .performance: "speedometer"
+        case .settings: "gearshape"
         }
     }
 
     var isAvailable: Bool { true }
+
+    /// Settings sits at the bottom of the sidebar, under the storage card, not in the main list.
+    static var modules: [SidebarItem] { allCases.filter { $0 != .settings } }
 }
 
 /// Which sidebar section is showing. Shared so the menu bar can switch sections.
@@ -50,7 +55,7 @@ struct ContentView: View {
             // colour (usually blue), which clashes with the app's palette.
             ScrollView {
                 VStack(spacing: 2) {
-                    ForEach(SidebarItem.allCases.filter(\.isAvailable)) { item in
+                    ForEach(SidebarItem.modules) { item in
                         SidebarRow(item: item, isSelected: (navigation.selection ?? .smartScan) == item) {
                             navigation.selection = item
                         }
@@ -70,7 +75,13 @@ struct ContentView: View {
                 .padding(.vertical, 10)
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
-                StorageCard(disk: model.disk, stats: model.stats).padding(12)
+                VStack(spacing: 6) {
+                    StorageCard(disk: model.disk, stats: model.stats)
+                    SidebarRow(item: .settings, isSelected: navigation.selection == .settings) {
+                        navigation.selection = .settings
+                    }
+                }
+                .padding(12)
             }
             .frame(minWidth: 230)
             .navigationSplitViewColumnWidth(min: 230, ideal: 240, max: 280)
@@ -89,6 +100,7 @@ struct ContentView: View {
                     case .uninstaller: UninstallerView()
                     case .spaceLens: SpaceLensView()
                     case .performance: PerformanceView()
+                    case .settings: SettingsView()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -116,6 +128,7 @@ struct ContentView: View {
         case .uninstaller: .uninstaller
         case .spaceLens: .spaceLens
         case .performance: .performance
+        case .settings: .history
         case .smartScan where model.phase == .finished: .success
         default: .scan
         }

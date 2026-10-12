@@ -96,6 +96,12 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 - Size summaries use `splitSummary(now:quarantine:)`, which leaves out a zero side ("81.9 MB freed now", not "… · Zero KB to quarantine").
 - Dates in lists read "Today, 5:13 PM" or "Yesterday, …", never a numeric date. Quarantined sessions show "N days left" with a thin accent progress bar.
 
+## Settings and Software Update
+
+- Settings is a page in the main window, opened from the sidebar row under the storage card or ⌘, (there is no separate Settings window). Sections are glass panels of rows: title (+ optional one-line detail) on the left, a switch, stepper, picker or capsule button on the right. New preferences go into the matching section, not into module screens.
+- Update availability is a glass banner at the top of the detail area (like the Full Disk Access banner); the Software Update sheet carries the notes, progress and Install and Relaunch. Never install without the user pressing Install and Relaunch.
+- Sessions created by an app update or a removed launch agent are kept for undo but don't count as cleanups in totals (`CleanupStats.maintenanceRuleIDs`).
+
 ## Onboarding
 
 - First launch shows `OnboardingView` instead of the main window until `OnboardingModel.finish` succeeds. It finishes only when every feature step has been seen **and** Full Disk Access is granted; there is no skip. Bump `OnboardingModel.currentVersion` to show it again after a release that changes it; Help → Welcome Tour replays it.

@@ -324,6 +324,20 @@ struct CheckForUpdatesButton: View {
     }
 }
 
+/// OpenClean → Settings… (⌘,): shows the Settings page in the main window.
+struct OpenSettingsButton: View {
+    let navigation: AppNavigation
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some View {
+        Button("Settings…") {
+            navigation.selection = .settings
+            MainWindow.show(openWindow: openWindow)
+        }
+        .keyboardShortcut(",", modifiers: .command)
+    }
+}
+
 @MainActor
 enum MainWindow {
     static func show(openWindow: OpenWindowAction) {
@@ -357,6 +371,13 @@ enum AppRelauncher {
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice
         try? process.run()
-        NSApp.terminate(nil)
+        // A window with an attached sheet can keep the app from quitting, so close sheets first and
+        // quit on the next run-loop turn. The new version is already in place and nothing is left to
+        // save, so if AppKit still declines, exit after a short grace period.
+        for window in NSApp.windows {
+            if let sheet = window.attachedSheet { window.endSheet(sheet) }
+        }
+        DispatchQueue.main.async { NSApp.terminate(nil) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { exit(0) }
     }
 }
