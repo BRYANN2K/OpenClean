@@ -10,6 +10,7 @@ struct OpenCleanApp: App {
     @State private var uninstaller: UninstallerModel
     @State private var spaceLens: SpaceLensModel
     @State private var performance: PerformanceModel
+    @AppStorage(MenuBarSettings.enabledKey) private var menuBarEnabled = true
 
     init() {
         let coordinator = OpenCleanCoordinator()
@@ -26,7 +27,7 @@ struct OpenCleanApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("OpenClean") {
+        WindowGroup("OpenClean", id: MenuBarSettings.mainWindowID) {
             ContentView()
                 .environment(model)
                 .environment(uninstaller)
@@ -36,6 +37,14 @@ struct OpenCleanApp: App {
                 .task { model.onLaunch() }
         }
         .windowStyle(.hiddenTitleBar)
+        MenuBarExtra(isInserted: $menuBarEnabled) {
+            MenuBarPopover()
+                .environment(model)
+                .environment(performance)
+        } label: {
+            MenuBarLabel().environment(performance)
+        }
+        .menuBarExtraStyle(.window)
         SwiftUI.Settings {
             SettingsView()
                 .environment(model)
