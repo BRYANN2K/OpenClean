@@ -18,14 +18,17 @@ struct MenuBarLabel: View {
     var body: some View {
         let metric = MenuBarMetric(rawValue: metricRaw) ?? .cpuAndMemory
         HStack(spacing: 4) {
-            Image(nsImage: MenuBarGlyph.image)
             if metric == .cpuAndMemory {
-                // A menu bar label shows only one image and one text (inline images are dropped), so both
-                // figures share one Text with short word labels.
-                Text("CPU \(formatPercent(model.cpu))  RAM \(formatPercent(model.memory?.usedFraction))")
-                    .monospacedDigit()
-            } else if metric != .none {
-                Text(text(for: metric)).monospacedDigit()
+                // A menu bar label keeps only one image and one text (extra and inline images are dropped),
+                // so the glyph, icons and figures are drawn into a single template image.
+                Image(
+                    nsImage: MenuBarFiguresImage.render(
+                        cpu: formatPercent(model.cpu), memory: formatPercent(model.memory?.usedFraction)))
+            } else {
+                Image(nsImage: MenuBarGlyph.image)
+                if metric != .none {
+                    Text(text(for: metric)).monospacedDigit()
+                }
             }
         }
         .accessibilityLabel("OpenClean, \(metric == .none ? "monitor" : text(for: metric))")
@@ -154,5 +157,28 @@ struct MenuBarPopover: View {
         } else {
             openWindow(id: MenuBarSettings.mainWindowID)
         }
+    }
+}
+
+/// Draws "glyph · CPU icon · CPU% · memory icon · memory%" into one template image for the menu bar.
+@MainActor
+enum MenuBarFiguresImage {
+    static func render(cpu: String, memory: String) -> NSImage {
+        let font = Font.system(size: 12, weight: .medium)
+        let content = HStack(spacing: 4) {
+            Image(nsImage: MenuBarGlyph.image)
+            Image(systemName: "cpu").font(font)
+            Text(cpu).font(font).monospacedDigit()
+            Image(systemName: "memorychip").font(font).padding(.leading, 3)
+            Text(memory).font(font).monospacedDigit()
+        }
+        .foregroundStyle(.black)
+        .frame(height: 18)
+        let renderer = ImageRenderer(content: content)
+        renderer.scale = 2
+        let image = renderer.nsImage ?? MenuBarGlyph.image
+        image.isTemplate = true
+        image.accessibilityDescription = "OpenClean, CPU \(cpu), memory \(memory)"
+        return image
     }
 }
