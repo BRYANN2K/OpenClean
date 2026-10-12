@@ -44,6 +44,7 @@ struct MenuBarLabel: View {
 struct MenuBarPopover: View {
     @Environment(PerformanceModel.self) private var model
     @Environment(AppModel.self) private var app
+    @Environment(AppNavigation.self) private var navigation
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -107,6 +108,7 @@ struct MenuBarPopover: View {
                 Button("Open OpenClean") { showMainWindow() }
                     .buttonStyle(CapsuleButtonStyle(prominent: true))
                 Button("Smart Scan") {
+                    navigation.selection = .smartScan
                     showMainWindow()
                     // Never throw away results the user hasn't acted on, or interrupt a cleanup.
                     if app.phase == .idle || app.phase == .finished { app.startScan() }

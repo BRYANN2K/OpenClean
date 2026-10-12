@@ -31,14 +31,22 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     var isAvailable: Bool { true }
 }
 
+/// Which sidebar section is showing. Shared so the menu bar can switch sections.
+@MainActor
+@Observable
+final class AppNavigation {
+    var selection: SidebarItem? = .smartScan
+}
+
 struct ContentView: View {
     @Environment(AppModel.self) private var model
-    @State private var selection: SidebarItem? = .smartScan
+    @Environment(AppNavigation.self) private var navigation
 
     var body: some View {
         @Bindable var model = model
+        @Bindable var navigation = navigation
         NavigationSplitView {
-            List(selection: $selection) {
+            List(selection: $navigation.selection) {
                 Section {
                     ForEach(SidebarItem.allCases.filter(\.isAvailable)) { item in
                         Label(item.title, systemImage: item.symbol).tag(item)
@@ -74,7 +82,7 @@ struct ContentView: View {
                 AccessBanner()
                 ProblemsBanner()
                 Group {
-                    switch selection ?? .smartScan {
+                    switch navigation.selection ?? .smartScan {
                     case .smartScan: SmartScanView()
                     case .cleanup: CleanupView()
                     case .history: HistoryView()
@@ -100,7 +108,7 @@ struct ContentView: View {
     }
 
     private var backdrop: Backdrop {
-        switch selection ?? .smartScan {
+        switch navigation.selection ?? .smartScan {
         case .history: .history
         case .uninstaller: .uninstaller
         case .spaceLens: .spaceLens

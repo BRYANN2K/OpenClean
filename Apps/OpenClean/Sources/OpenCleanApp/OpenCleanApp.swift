@@ -10,6 +10,7 @@ struct OpenCleanApp: App {
     @State private var uninstaller: UninstallerModel
     @State private var spaceLens: SpaceLensModel
     @State private var performance: PerformanceModel
+    @State private var navigation = AppNavigation()
     @AppStorage(MenuBarSettings.enabledKey) private var menuBarEnabled = true
 
     init() {
@@ -33,6 +34,7 @@ struct OpenCleanApp: App {
                 .environment(uninstaller)
                 .environment(spaceLens)
                 .environment(performance)
+                .environment(navigation)
                 .frame(minWidth: 1200, minHeight: 720)
                 .task { model.onLaunch() }
         }
@@ -41,6 +43,7 @@ struct OpenCleanApp: App {
             MenuBarPopover()
                 .environment(model)
                 .environment(performance)
+                .environment(navigation)
         } label: {
             MenuBarLabel().environment(performance)
         }
