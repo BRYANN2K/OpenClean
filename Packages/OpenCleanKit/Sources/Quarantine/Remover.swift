@@ -49,22 +49,28 @@ public struct Remover: Sendable {
 
     /// True when no non-root user could swap an ancestor of `path` for a symlink before the root `rm`.
     /// Walks from the parent up to (excluding) "/". Each ancestor must be a real directory and either
-    /// root-owned and not writable by the current user, or sticky (S_ISVTX) with the next path component
+    /// root-owned and not writable by the current user, or root-owned sticky (S_ISVTX; a sticky dir's owner can rename entries) with the next path component
     /// below it (the item itself for the direct parent) root-owned and not a symlink.
     public static let systemParentIsProtected: @Sendable (String) -> Bool = { path in
         let bytes = Array(path.utf8)
         let separators = bytes.indices.filter { $0 > 0 && bytes[$0] == 0x2F }
         for (position, index) in separators.enumerated() {
             let ancestor = String(decoding: bytes[..<index], as: UTF8.self)
-            guard let stat = FileStat.of(ancestor), !stat.isSymlink, stat.isDirectory else { return false }
-            if stat.ownerUID == 0 && access(ancestor, W_OK) != 0 { continue }
-            var info = Darwin.stat()
-            let sticky = lstat(ancestor, &info) == 0 && (info.st_mode & S_ISVTX) != 0
             let nextEnd = position + 1 < separators.count ? separators[position + 1] : bytes.count
             let next = String(decoding: bytes[..<nextEnd], as: UTF8.self)
-            guard sticky, let child = FileStat.of(next), child.ownerUID == 0, !child.isSymlink else { return false }
+            if !ancestorIsProtected(ancestor, next: next) { return false }
         }
         return true
+    }
+
+    /// One step of `systemParentIsProtected`: `next` is the path component directly below `ancestor`.
+    static func ancestorIsProtected(_ ancestor: String, next: String) -> Bool {
+        guard let stat = FileStat.of(ancestor), !stat.isSymlink, stat.isDirectory else { return false }
+        if stat.ownerUID == 0 && access(ancestor, W_OK) != 0 { return true }
+        var info = Darwin.stat()
+        let sticky = lstat(ancestor, &info) == 0 && (info.st_mode & S_ISVTX) != 0
+        guard sticky, stat.ownerUID == 0, let child = FileStat.of(next) else { return false }
+        return child.ownerUID == 0 && !child.isSymlink
     }
 
     public init(
@@ -178,23 +184,30 @@ public struct Remover: Sendable {
         switch admin.runAsAdmin(command) {
         case .succeeded:
             for index in batch {
-                if FileStat.of(requests[index].item.path) == nil {
-                    mark(&manifest, index, .deleted, nil)
-                } else {
-                    mark(&manifest, index, .failed, "still present after administrator removal")
-                }
+                markAfterAdminRun(&manifest, index, requests[index].item.path,
+                    presentMessage: "still present after administrator removal")
             }
         case .cancelled:
             for index in batch { mark(&manifest, index, .skipped, SkipReason.adminCancelled.description) }
         case .failed(let message):
             // rm may have removed some items before failing; report what is actually gone.
             for index in batch {
-                if FileStat.of(requests[index].item.path) == nil {
-                    mark(&manifest, index, .deleted, nil)
-                } else {
-                    mark(&manifest, index, .failed, message)
-                }
+                markAfterAdminRun(&manifest, index, requests[index].item.path, presentMessage: message)
             }
+        }
+    }
+
+    /// Deleted only when lstat fails with ENOENT; any other lstat failure means removal is unverified.
+    private func markAfterAdminRun(
+        _ manifest: inout SessionManifest, _ index: Int, _ path: String, presentMessage: String
+    ) {
+        var info = stat()
+        if lstat(path, &info) == 0 {
+            mark(&manifest, index, .failed, presentMessage)
+        } else if errno == ENOENT {
+            mark(&manifest, index, .deleted, nil)
+        } else {
+            mark(&manifest, index, .failed, "could not verify removal")
         }
     }
 

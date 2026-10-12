@@ -207,6 +207,25 @@ struct RemoverTests {
         #expect(report.manifest.entries.first?.reason == SkipReason.adminUnsupportedPath.description)
     }
 
+    @Test func userOwnedStickyParentIsNeverProtected() throws {
+        let home = try TempDirectory()
+        let sticky = try home.directory("sticky")
+        // A root-owned, readable file to hard link; skip if the machine has none on this volume.
+        let candidates = ["/private/etc/hosts", "/private/etc/shells", "/private/etc/paths"]
+        let source = try #require(candidates.first { FileStat.of($0)?.ownerUID == 0 })
+        let linked = sticky + "/rootfile"
+        guard link(source, linked) == 0 else {
+            Issue.record("cannot hard link \(source): \(String(cString: strerror(errno)))")
+            return
+        }
+        #expect(FileStat.of(linked)?.ownerUID == 0)
+        chmod(sticky, 0o1755)
+        defer { chmod(sticky, 0o755) }
+        #expect(FileStat.of(sticky)?.ownerUID != 0)
+        #expect(!Remover.ancestorIsProtected(sticky, next: linked))
+        #expect(!Remover.systemParentIsProtected(linked))
+    }
+
     @Test func protectedParentRules() throws {
         let home = try TempDirectory()
         #expect(!Remover.systemParentIsProtected(home.path + "/x"))
