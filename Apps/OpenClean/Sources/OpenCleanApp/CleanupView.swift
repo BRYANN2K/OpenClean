@@ -15,18 +15,20 @@ struct CleanupView: View {
         if let result = model.result {
             HSplitView {
                 List(result.categories, id: \.category, selection: $category) { entry in
-                    HStack {
+                    HStack(spacing: 10) {
                         CheckboxButton(state: model.state(of: entry.category), label: entry.category.displayName) {
                             model.setSelected(model.state(of: entry.category) != .on, category: entry.category)
                         }
+                        CategoryIcon(category: entry.category, size: 26)
                         Text(entry.category.displayName)
                         Spacer()
                         Text(formatBytes(entry.rules.reduce(Int64(0)) { $0 + $1.totalSize }))
                             .monospacedDigit()
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textSecondary)
                     }
                 }
-                .frame(minWidth: 220)
+                .scrollContentBackground(.hidden)
+                .frame(minWidth: 200, idealWidth: 240)
 
                 List(rules(in: result), selection: $ruleID) { rule in
                     HStack {
@@ -35,22 +37,25 @@ struct CleanupView: View {
                         }
                         VStack(alignment: .leading, spacing: 2) {
                             Text(rule.rule.name)
-                            SafetyBadge(safety: rule.rule.safety)
+                            SafetyTag(safety: rule.rule.safety)
                         }
                         Spacer()
-                        Text(detail(for: rule)).monospacedDigit().foregroundStyle(.secondary)
+                        Text(detail(for: rule)).monospacedDigit().foregroundStyle(Theme.textSecondary)
                     }
                 }
-                .frame(minWidth: 280)
+                .scrollContentBackground(.hidden)
+                .frame(minWidth: 220, idealWidth: 260)
 
                 RuleDetailView(rule: selectedRule(in: result), previewURL: $previewURL)
-                    .frame(minWidth: 380)
+                    .frame(minWidth: 300, idealWidth: 420, maxWidth: .infinity)
             }
             .quickLookPreview($previewURL)
         } else {
-            ContentUnavailableView(
-                "No scan yet", systemImage: "magnifyingglass",
-                description: Text("Run Smart Scan to see what can be cleaned."))
+            VStack(spacing: 10) {
+                Image(systemName: "magnifyingglass").font(.system(size: 40)).foregroundStyle(Theme.textSecondary)
+                Text("No scan yet").font(.system(size: 22, weight: .bold))
+                Text("Run Smart Scan to see what can be cleaned.").foregroundStyle(Theme.textSecondary)
+            }
         }
     }
 
@@ -86,11 +91,11 @@ struct RuleDetailView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text(rule.rule.name).font(.title2.bold())
-                    SafetyBadge(safety: rule.rule.safety)
+                    SafetyTag(safety: rule.rule.safety)
                 }
                 Text(rule.rule.explain)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .foregroundStyle(Theme.textSecondary)
+                    .lineLimit(6)
                 if case .skippedAppRunning(let app) = rule.status {
                     Label("Skipped while \(app) is running. Quit it and scan again.", systemImage: "app.badge")
                 }
@@ -111,7 +116,7 @@ struct RuleDetailView: View {
                             Text((item.path as NSString).lastPathComponent)
                             Text(item.hint ?? item.path)
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Theme.textSecondary)
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                         }
@@ -122,11 +127,14 @@ struct RuleDetailView: View {
                             Button("Quick Look") { previewURL = URL(fileURLWithPath: item.path) }
                         }
                     }
+                    .width(min: 120, ideal: 240)
                     TableColumn("Size") { item in
                         Text(formatBytes(item.size)).monospacedDigit()
                     }
                     .width(90)
                 }
+                .scrollContentBackground(.hidden)
+                .alternatingRowBackgrounds(.disabled)
                 if !rule.errors.isEmpty {
                     DisclosureGroup("\(rule.errors.count) note(s)") {
                         ForEach(rule.errors, id: \.self) { note in

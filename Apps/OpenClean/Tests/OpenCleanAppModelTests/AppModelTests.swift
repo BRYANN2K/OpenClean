@@ -267,4 +267,55 @@ struct AppModelTests {
         #expect(model.phase == .idle)
         #expect(model.result == nil)
     }
+
+    @Test func cleanUpdatesStatsAndSummaryCloses() async throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/com.example/blob", bytes: 4_096)
+        let model = try makeModel(home)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+        await model.clean()
+
+        #expect(model.stats.cleanups == 1)
+        #expect(model.stats.totalFreedBytes >= 4_096)
+
+        model.closeSummary()
+        #expect(model.phase == .idle)
+        #expect(model.result == nil)
+        #expect(model.lastReport == nil)
+    }
+
+    @Test func closeSummaryKeepsRemainingResults() async throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/com.example/blob", bytes: 4_096)
+        try home.file("Downloads/old.dmg", bytes: 4_096)
+        let model = try makeModel(home)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+        await model.clean()
+        #expect(model.phase == .finished)
+
+        model.closeSummary()
+        #expect(model.phase == .results)
+        #expect(model.result?.totalSize ?? 0 > 0)
+    }
+
+    @Test func startOverDiscardsResultsWithoutTouchingFiles() async throws {
+        let home = try TempDirectory()
+        let cache = try home.file("Library/Caches/com.example/blob", bytes: 4_096)
+        let model = try makeModel(home)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+        #expect(model.phase == .results)
+
+        model.startOver()
+        #expect(model.phase == .idle)
+        #expect(model.result == nil)
+        #expect(model.selectedPaths.isEmpty)
+        #expect(FileManager.default.fileExists(atPath: cache))
+        #expect(model.history.isEmpty)
+    }
 }

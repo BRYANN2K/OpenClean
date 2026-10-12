@@ -27,6 +27,7 @@ public final class AppModel {
     public private(set) var history: [SessionListing] = []
     public private(set) var accessAdvice: AccessAdvice = .ok
     public private(set) var settings: Settings
+    public private(set) var disk: DiskSpace?
     public var errorMessage: String?
     public var isReviewPresented = false
 
@@ -55,6 +56,7 @@ public final class AppModel {
         reloadRules()
         refreshAccess()
         refreshHistory()
+        refreshDisk()
     }
 
     public func reloadRules() {
@@ -68,6 +70,22 @@ public final class AppModel {
     public func refreshHistory() {
         history = coordinator.history()
     }
+
+    public func refreshDisk() {
+        disk = DiskSpace.volume(containing: URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true))
+    }
+
+    // MARK: Stats
+
+    /// Readable session manifests, newest first as listed by the store.
+    public var manifests: [SessionManifest] {
+        history.compactMap { listing in
+            if case .ok(let manifest) = listing { return manifest }
+            return nil
+        }
+    }
+
+    public var stats: CleanupStats { CleanupStats(history: manifests) }
 
     // MARK: Scanning
 
@@ -128,6 +146,30 @@ public final class AppModel {
             finishClean(report: nil, error: error, generation: generation)
         }
         refreshHistory()
+        refreshDisk()
+    }
+
+    /// Discards the current results and returns to the start screen. Nothing on disk changes.
+    public func startOver() {
+        guard phase == .results || phase == .finished else { return }
+        result = nil
+        selectedPaths = []
+        lastReport = nil
+        progress = nil
+        phase = .idle
+    }
+
+    /// Leaves the cleanup summary: back to whatever is still left to review, or to the start.
+    public func closeSummary() {
+        guard phase == .finished else { return }
+        if let result, result.totalSize > 0 {
+            phase = .results
+        } else {
+            result = nil
+            selectedPaths = []
+            lastReport = nil
+            phase = .idle
+        }
     }
 
     /// Applies the outcome of a clean. If exclusions or Advanced changed while it ran (`generation` is

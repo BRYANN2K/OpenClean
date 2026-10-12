@@ -47,12 +47,26 @@ struct ContentView: View {
                 Section("Coming soon") {
                     ForEach(SidebarItem.allCases.filter { !$0.isAvailable }) { item in
                         Label(item.title, systemImage: item.symbol)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.textTertiary)
                             .selectionDisabled()
                     }
                 }
             }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+            .scrollContentBackground(.hidden)
+            .background(Theme.sidebar.opacity(0.55))
+            .safeAreaInset(edge: .top, spacing: 0) {
+                HStack(spacing: 10) {
+                    AppIconView(size: 28)
+                    Wordmark(size: 17)
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                StorageCard(disk: model.disk, stats: model.stats).padding(12)
+            }
+            .navigationSplitViewColumnWidth(min: 200, ideal: 220)
         } detail: {
             VStack(spacing: 0) {
                 AccessBanner()
@@ -67,12 +81,38 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .foregroundStyle(.white)
+            .background(backdrop.gradient.ignoresSafeArea())
+            .animation(.easeInOut(duration: 0.35), value: model.phase)
         }
+        .tint(Theme.accent)
+        .preferredColorScheme(.dark)
         .sheet(isPresented: $model.isReviewPresented) { ReviewSheet() }
         .alert("Something went wrong", isPresented: $model.isErrorPresented) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(model.errorMessage ?? "")
         }
+    }
+
+    private var backdrop: Backdrop {
+        switch selection ?? .smartScan {
+        case .history: .history
+        case .smartScan where model.phase == .finished: .success
+        default: .scan
+        }
+    }
+}
+
+/// "OpenClean" set in the rounded system face: regular "Open", bold "Clean".
+struct Wordmark: View {
+    var size: CGFloat
+
+    var body: some View {
+        (Text("Open").fontWeight(.regular) + Text("Clean").fontWeight(.bold))
+            .font(.system(size: size, design: .rounded))
+            .kerning(-0.3)
+            .foregroundStyle(.white)
+            .accessibilityLabel("OpenClean")
     }
 }
