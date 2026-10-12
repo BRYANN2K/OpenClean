@@ -81,5 +81,15 @@ let package = Package(
             dependencies: ["Permissions", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/PermissionsTests"
         ),
+        .target(
+            name: "OpenCleanKit",
+            dependencies: ["RuleKit", "ScanEngine", "Probes", "Privilege", "Quarantine", "Permissions", "ProcessKit"],
+            path: "Packages/OpenCleanKit/Sources/OpenCleanKit"
+        ),
+        .testTarget(
+            name: "OpenCleanKitTests",
+            dependencies: ["OpenCleanKit", "RuleKit", "ScanEngine", "Probes", "Quarantine", "Permissions", "TestSupport"],
+            path: "Packages/OpenCleanKit/Tests/OpenCleanKitTests"
+        ),
     ]
 )
