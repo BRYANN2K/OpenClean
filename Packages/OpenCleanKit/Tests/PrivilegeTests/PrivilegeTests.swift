@@ -15,7 +15,7 @@ struct AdminCommandBuilderTests {
     }
 
     @Test func buildsOneRmInvocationWithEndOfOptions() throws {
-        let command = try AdminCommandBuilder.removalCommand(paths: ["/Library/Caches/a", "/private/var/log/b.gz"])
+        let command = try AdminCommandBuilder.removalCommand(paths: ["/Library/Caches/a", "/private/var/log/b.gz"]).text
         #expect(command == "/bin/rm -rf -- '/Library/Caches/a' '/private/var/log/b.gz'")
     }
 
@@ -28,6 +28,9 @@ struct AdminCommandBuilderTests {
         #expect(throws: AdminCommandError.invalidPath("/a\nb")) {
             try AdminCommandBuilder.removalCommand(paths: ["/a\nb"])
         }
+        for bad in ["/Library/Caches/x/", "/a//b", "/Library/./Caches/x", "/Library/Caches/../../Users/x"] {
+            #expect(throws: AdminCommandError.invalidPath(bad)) { try AdminCommandBuilder.removalCommand(paths: [bad]) }
+        }
         let long = Array(repeating: "/Library/Caches/" + String(repeating: "x", count: 200), count: 5_000)
         #expect(throws: AdminCommandError.tooLong) { try AdminCommandBuilder.removalCommand(paths: long) }
     }
@@ -38,7 +41,7 @@ struct AdminCommandBuilderTests {
         let paths = try names.map { try dir.file("victims/" + $0, bytes: 1) }
         try dir.file("victims/keep.txt", bytes: 1)
 
-        let command = try AdminCommandBuilder.removalCommand(paths: paths)
+        let command = try AdminCommandBuilder.removalCommand(paths: paths).text
         let output = try ProcessCommandRunner().run("/bin/sh", ["-c", command])
 
         #expect(output.status == 0, "\(output.stderrText)")
@@ -49,7 +52,7 @@ struct AdminCommandBuilderTests {
     }
 
     @Test func appleScriptLiteralRoundTripsThroughOsascript() throws {
-        let command = try AdminCommandBuilder.removalCommand(paths: [#"/tmp/a'b"c\d 🧹"#])
+        let command = try AdminCommandBuilder.removalCommand(paths: [#"/tmp/a'b"c\d 🧹"#]).text
         let output = try ProcessCommandRunner().run(
             "/usr/bin/osascript", ["-e", "return " + AdminCommandBuilder.appleScriptLiteral(command)])
         #expect(output.status == 0, "\(output.stderrText)")
@@ -58,13 +61,18 @@ struct AdminCommandBuilderTests {
 }
 
 struct OsascriptAdminExecutorTests {
-    let command = "/bin/rm -rf -- '/Library/Caches/a'"
-    var script: String { AdminCommandBuilder.appleScript(forShellCommand: command) }
+    let command: RemovalCommand
+    let script: String
+
+    init() throws {
+        command = try AdminCommandBuilder.removalCommand(paths: ["/Library/Caches/a"])
+        script = AdminCommandBuilder.appleScript(forShellCommand: command.text)
+    }
 
     @Test func runsOsascriptWithAdministratorPrivileges() {
         let runner = FakeCommandRunner()
         runner.respond("/usr/bin/osascript -e " + script)
-        #expect(OsascriptAdminExecutor(runner: runner).runAsAdmin(shellCommand: command) == .succeeded)
+        #expect(OsascriptAdminExecutor(runner: runner).runAsAdmin(command) == .succeeded)
         #expect(runner.calls == [["/usr/bin/osascript", "-e", script]])
         #expect(script.hasSuffix("with administrator privileges"))
     }
@@ -74,14 +82,21 @@ struct OsascriptAdminExecutorTests {
         runner.respond(
             "/usr/bin/osascript -e " + script, status: 1,
             stderr: "0:105: execution error: User canceled. (-128)\n")
-        #expect(OsascriptAdminExecutor(runner: runner).runAsAdmin(shellCommand: command) == .cancelled)
+        #expect(OsascriptAdminExecutor(runner: runner).runAsAdmin(command) == .cancelled)
+    }
+
+    @Test func pathContaining128IsNotMistakenForCancel() {
+        let runner = FakeCommandRunner()
+        let stderr = "0:162: execution error: rm: /Library/Caches/cache-128: Permission denied (1)\n"
+        runner.respond("/usr/bin/osascript -e " + script, status: 1, stderr: stderr)
+        #expect(
+            OsascriptAdminExecutor(runner: runner).runAsAdmin(command)
+                == .failed(stderr.trimmingCharacters(in: .whitespacesAndNewlines)))
     }
 
     @Test func mapsOtherErrorsToFailed() {
         let runner = FakeCommandRunner()
         runner.respond("/usr/bin/osascript -e " + script, status: 1, stderr: "rm: permission denied\n")
-        #expect(
-            OsascriptAdminExecutor(runner: runner).runAsAdmin(shellCommand: command)
-                == .failed("rm: permission denied"))
+        #expect(OsascriptAdminExecutor(runner: runner).runAsAdmin(command) == .failed("rm: permission denied"))
     }
 }

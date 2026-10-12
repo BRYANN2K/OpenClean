@@ -8,7 +8,7 @@ public enum AdminRunOutcome: Sendable, Equatable {
 }
 
 public protocol AdminExecutor: Sendable {
-    func runAsAdmin(shellCommand: String) -> AdminRunOutcome
+    func runAsAdmin(_ command: RemovalCommand) -> AdminRunOutcome
 }
 
 /// Shows the standard macOS administrator prompt via `osascript`. One call = one prompt.
@@ -20,13 +20,15 @@ public struct OsascriptAdminExecutor: AdminExecutor {
         self.runner = runner
     }
 
-    public func runAsAdmin(shellCommand: String) -> AdminRunOutcome {
-        let script = AdminCommandBuilder.appleScript(forShellCommand: shellCommand)
+    public func runAsAdmin(_ command: RemovalCommand) -> AdminRunOutcome {
+        let script = AdminCommandBuilder.appleScript(forShellCommand: command.text)
         do {
             let output = try runner.run("/usr/bin/osascript", ["-e", script])
             if output.status == 0 { return .succeeded }
-            if output.stderrText.contains("-128") { return .cancelled }
-            return .failed(output.stderrText.trimmingCharacters(in: .whitespacesAndNewlines))
+            let message = output.stderrText.trimmingCharacters(in: .whitespacesAndNewlines)
+            // Only the trailing error code counts; earlier text can contain attacker-chosen path names.
+            if message.hasSuffix("(-128)") { return .cancelled }
+            return .failed(message)
         } catch {
             return .failed("\(error)")
         }
