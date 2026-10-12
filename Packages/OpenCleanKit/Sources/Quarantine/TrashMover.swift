@@ -112,21 +112,33 @@ public struct TrashMover: Sendable {
             pathIsWithin(request.path, request.scanRoot, caseInsensitive: true),
             canonicalPathKey(request.path) != canonicalPathKey(request.scanRoot)
         else { return .outsideScanRoot }
+        // Only the parent is resolved; the item itself is lstat'd and never followed, so a symlink (even a
+        // dangling one) is moved as the link, never its target.
+        guard let (parentPath, name) = Self.splitLast(request.path), !name.isEmpty, name != ".", name != ".."
+        else { return .pathChanged }
         guard let stat = FileStat.of(request.path) else { return .missing }
-        guard let resolved = realPath(request.path), canonicalPathKey(resolved) == canonicalPathKey(request.path)
+        guard let resolvedParent = realPath(parentPath),
+            canonicalPathKey(resolvedParent) == canonicalPathKey(parentPath)
         else { return .pathChanged }
         if stat.inode != request.inode || stat.device != request.device
             || stat.modificationDate != request.modificationDate || stat.isDirectory != request.isDirectory
         {
             return .changedSinceScan
         }
-        let parent = (request.path as NSString).deletingLastPathComponent
-        if let parentStat = FileStat.of(parent), parentStat.device != stat.device {
+        if let parentStat = FileStat.of(parentPath), parentStat.device != stat.device {
             return .protected("a mounted volume")
         }
         guard let busy else { return .openFilesUnknown }
         if busy.contains(canonicalPathKey(request.path)) { return .inUse }
         return nil
+    }
+
+    /// `/a/b/c` → (`/a/b`, `c`); `/c` → (`/`, `c`). Split on bytes; nil for relative paths.
+    static func splitLast(_ path: String) -> (parent: String, name: String)? {
+        let bytes = Array(path.utf8)
+        guard bytes.first == 0x2F, let slash = bytes.lastIndex(of: 0x2F) else { return nil }
+        let parent = slash == 0 ? "/" : String(decoding: bytes[..<slash], as: UTF8.self)
+        return (parent, String(decoding: bytes[(slash + 1)...], as: UTF8.self))
     }
 
     public func move(_ requests: [TrashRequest]) -> TrashReport {

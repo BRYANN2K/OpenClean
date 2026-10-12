@@ -245,4 +245,43 @@ struct TrashMoverTests {
         }
         #expect(report.trashed.isEmpty)
     }
+
+    /// Space Lens lists symlinks (also dangling ones); trashing one moves the link, never its target.
+    @Test func trashesSymlinksAsLinksNeverTheirTargets() throws {
+        let home = try TempDirectory()
+        let target = try home.file("Elsewhere/real.bin", bytes: 100)
+        let link = try home.symlink("Downloads/link.bin", to: target)
+        let dangling = try home.symlink("Downloads/dangling", to: home.path + "/nothing-here")
+        let moved = try home.directory("FakeTrash")
+        let operation: TrashOperation = { path in
+            let destination = moved + "/" + (path as NSString).lastPathComponent
+            try FileManager.default.moveItem(atPath: path, toPath: destination)
+            return destination
+        }
+        let subject = TrashMover(policy: TrashPolicy(home: home.path), openPaths: [], trash: operation)
+        let report = subject.move([try request(link, root: home.path), try request(dangling, root: home.path)])
+        #expect(report.trashed.map(\.path) == [link, dangling])
+        #expect(FileStat.of(link) == nil && FileStat.of(dangling) == nil)
+        #expect(FileStat.of(moved + "/link.bin")?.isSymlink == true)
+        #expect(FileStat.of(moved + "/dangling")?.isSymlink == true)
+        #expect(FileStat.of(target)?.isSymlink == false)
+        #expect(try Data(contentsOf: URL(fileURLWithPath: target)).count == 100)
+    }
+
+    @Test func aSymlinkSwappedForAnotherSinceTheScanIsSkipped() throws {
+        let home = try TempDirectory()
+        let link = try home.symlink("Downloads/link", to: home.path + "/a")
+        let scanned = try request(link, root: home.path)
+        try FileManager.default.removeItem(atPath: link)
+        try home.symlink("Downloads/link", to: home.path + "/b")
+        let trash = FakeTrash()
+        let report = mover(home, trash: trash).move([scanned])
+        #expect(trash.paths.isEmpty)
+        #expect(report.results.map(\.outcome) == [.skipped(.changedSinceScan)])
+
+        // The last component is not resolved, so ".." must still be refused.
+        _ = try home.directory("Downloads/sub")
+        let dotDot = try request(home.path + "/Downloads/sub/..", root: home.path)
+        #expect(mover(home, trash: trash).check(dotDot) != nil)
+    }
 }
