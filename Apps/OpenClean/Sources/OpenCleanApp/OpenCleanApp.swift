@@ -39,6 +39,10 @@ struct OpenCleanApp: App {
                 .task { model.onLaunch() }
         }
         .windowStyle(.hiddenTitleBar)
+        .commands {
+            // No "Hide Sidebar" menu item: the sidebar is always shown.
+            CommandGroup(replacing: .sidebar) {}
+        }
         MenuBarExtra(isInserted: $menuBarEnabled) {
             MenuBarPopover()
                 .environment(model)

@@ -77,6 +77,8 @@ struct ContentView: View {
                 StorageCard(disk: model.disk, stats: model.stats).padding(12)
             }
             .navigationSplitViewColumnWidth(min: 200, ideal: 220)
+            // The sidebar is the app's only navigation, so it can't be hidden.
+            .toolbar(removing: .sidebarToggle)
         } detail: {
             VStack(spacing: 0) {
                 AccessBanner()
