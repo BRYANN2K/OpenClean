@@ -1,0 +1,66 @@
+{
+  "complete" : true,
+  "rules" : [
+    {
+      "category" : "user",
+      "errors" : [
+
+      ],
+      "id" : "user.app-caches",
+      "itemCount" : 2,
+      "items" : [
+        {
+          "bytes" : 2048,
+          "path" : "/Users/t/Library/Caches/com.a",
+          "reportOnly" : false
+        },
+        {
+          "bytes" : 1024,
+          "path" : "/Users/t/Library/Caches/com.b",
+          "reportOnly" : false
+        }
+      ],
+      "name" : "App caches",
+      "safety" : "regenerable",
+      "status" : "scanned",
+      "totalBytes" : 3072
+    },
+    {
+      "category" : "trash",
+      "errors" : [
+
+      ],
+      "id" : "trash.user",
+      "itemCount" : 0,
+      "items" : [
+
+      ],
+      "name" : "Trash",
+      "safety" : "review",
+      "status" : "needs_full_disk_access",
+      "totalBytes" : 0
+    },
+    {
+      "category" : "developer",
+      "errors" : [
+        "something odd"
+      ],
+      "id" : "docker.disk-image",
+      "itemCount" : 1,
+      "items" : [
+        {
+          "bytes" : 4096,
+          "hint" : "Use docker system prune.",
+          "path" : "/Users/t/Docker.raw",
+          "reportOnly" : true
+        }
+      ],
+      "name" : "Docker disk image",
+      "safety" : "review",
+      "status" : "scanned",
+      "totalBytes" : 0
+    }
+  ],
+  "schema" : 1,
+  "totalBytes" : 3072
+}

@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS(.v14)],
     dependencies: [
         .package(url: "https://github.com/jpsim/Yams.git", from: "5.1.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.5.0"),
     ],
     targets: [
         .target(
@@ -90,6 +91,25 @@ let package = Package(
             name: "OpenCleanKitTests",
             dependencies: ["OpenCleanKit", "RuleKit", "ScanEngine", "Probes", "Quarantine", "Permissions", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/OpenCleanKitTests"
+        ),
+        .target(
+            name: "OpenCleanCLI",
+            dependencies: [
+                "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+            ],
+            path: "Apps/openclean-cli/Sources/OpenCleanCLI"
+        ),
+        .executableTarget(
+            name: "openclean",
+            dependencies: ["OpenCleanCLI"],
+            path: "Apps/openclean-cli/Sources/openclean"
+        ),
+        .testTarget(
+            name: "OpenCleanCLITests",
+            dependencies: ["OpenCleanCLI", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "TestSupport"],
+            path: "Apps/openclean-cli/Tests/OpenCleanCLITests",
+            exclude: ["Golden"]
         ),
     ]
 )

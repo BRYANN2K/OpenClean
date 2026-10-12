@@ -1,0 +1,49 @@
+{
+  "schema" : 1,
+  "sessions" : [
+    {
+      "createdAt" : "2027-01-15T08:00:00Z",
+      "damaged" : false,
+      "deletedBytes" : 2048,
+      "entries" : [
+        {
+          "bytes" : 2048,
+          "mode" : "immediate",
+          "outcome" : "deleted",
+          "path" : "/Users/t/Library/Caches/com.a",
+          "rule" : "user.app-caches"
+        },
+        {
+          "bytes" : 4096,
+          "mode" : "quarantine",
+          "outcome" : "quarantined",
+          "path" : "/Users/t/Downloads/x.dmg",
+          "rule" : "fixture.downloads",
+          "storedPath" : "/Users/t/Library/Application Support/OpenClean/Quarantine/20270115-080000-abcd/items/1/x.dmg"
+        },
+        {
+          "bytes" : 1024,
+          "mode" : "immediate",
+          "outcome" : "skipped",
+          "path" : "/Users/t/Library/Caches/com.b",
+          "reason" : "open in another app",
+          "rule" : "user.app-caches"
+        }
+      ],
+      "id" : "20270115-080000-abcd",
+      "quarantinedBytes" : 4096,
+      "skippedCount" : 1
+    },
+    {
+      "createdAt" : "2027-01-15T08:00:00Z",
+      "damaged" : true,
+      "deletedBytes" : 0,
+      "entries" : [
+
+      ],
+      "id" : "broken",
+      "quarantinedBytes" : 0,
+      "skippedCount" : 0
+    }
+  ]
+}
