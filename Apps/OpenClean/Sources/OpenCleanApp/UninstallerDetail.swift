@@ -83,7 +83,7 @@ struct UninstallerDetailView: View {
         guard alert.runModal() == .alertFirstButtonReturn else { return }
         isQuitting = true
         quitNotice = "Quitting \(app.name)…"
-        running.forEach { $0.forceTerminate() }
+        for runningApp in running { runningApp.forceTerminate() }
         Task {
             for _ in 0..<30 where running.contains(where: { !$0.isTerminated }) {
                 try? await Task.sleep(for: .milliseconds(100))
