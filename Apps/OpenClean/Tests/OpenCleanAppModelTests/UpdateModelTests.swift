@@ -71,7 +71,8 @@ struct UpdateModelTests {
 
     func harness(
         version: String = "0.2.0", latest: String? = "v0.3.0", autoCheck: Bool? = nil, lastCheck: Date? = nil,
-        interval: TimeInterval = 24 * 60 * 60, defaults: UserDefaults? = nil
+        interval: TimeInterval = 24 * 60 * 60, defaults: UserDefaults? = nil,
+        cleanUp: (@Sendable (OpenCleanCoordinator) -> Void)? = nil
     ) throws -> Harness {
         let home = try TempDirectory()
         let coordinator = OpenCleanCoordinator(
@@ -99,10 +100,13 @@ struct UpdateModelTests {
         let installer = FakeUpdateInstaller()
         let clock = TestClock()
         let relaunched = Box()
+        var cleanUpUpdates: (@Sendable () -> Void)?
+        if let cleanUp { cleanUpUpdates = { @Sendable in cleanUp(coordinator) } }
         let model = UpdateModel(
             coordinator: coordinator, settings: settings, client: client, installer: installer,
             currentVersion: version, currentAppPath: "/Applications/OpenClean.app", checkInterval: interval,
-            now: { clock.now }, relaunch: { relaunched.paths.append($0) })
+            now: { clock.now }, relaunch: { relaunched.paths.append($0) },
+            cleanUpUpdates: cleanUpUpdates)
         return Harness(
             home: home, client: client, installer: installer, defaults: suite, clock: clock, relaunched: relaunched,
             model: model)
@@ -274,6 +278,38 @@ struct UpdateModelTests {
         let download = try #require(h.installer.stagedDownloads.first)
         #expect(download.dmgPath.hasPrefix(h.home.path + "/Library/Application Support/OpenClean/Updates/0.3.0/"))
         #expect(h.model.stagedDiskImage?.path == download.dmgPath)
+    }
+
+    @Test func downloadWaitsForTheLaunchCleanup() async throws {
+        let client = Box2()
+        let dmgURL = Self.dmgURL
+        let h = try harness(autoCheck: false) { coordinator in
+            // A slow cleanup: a download started meanwhile must not touch the Updates folder yet.
+            Thread.sleep(forTimeInterval: 0.3)
+            client.dmgRequestedDuringCleanup =
+                client.client?.requests.contains { $0.url == dmgURL } ?? false
+            coordinator.cleanUpUpdates()
+        }
+        client.client = h.client
+        let updates = h.home.path + "/Library/Application Support/OpenClean/Updates"
+        try FileManager.default.createDirectory(atPath: updates + "/0.1.0", withIntermediateDirectories: true)
+        h.model.checkForUpdates()
+        await h.model.waitForWork()
+        h.model.onLaunch()
+        h.model.downloadAndInstall()
+        await h.model.waitForWork()
+        guard case .ready(let staged) = h.model.state else {
+            Issue.record("expected ready, got \(h.model.state)")
+            return
+        }
+        #expect(client.dmgRequestedDuringCleanup == false)
+        #expect(!FileManager.default.fileExists(atPath: updates + "/0.1.0"))
+        #expect(FileManager.default.fileExists(atPath: staged.dmgPath))
+    }
+
+    final class Box2: @unchecked Sendable {
+        var client: FakeHTTPClient?
+        var dmgRequestedDuringCleanup: Bool?
     }
 
     @Test func installRelaunchesAndRecordsTheHandOver() async throws {

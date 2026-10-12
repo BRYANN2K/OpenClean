@@ -59,6 +59,10 @@ public final class UpdateModel {
     @ObservationIgnored private let relaunch: @MainActor (String) -> Void
     @ObservationIgnored private var scheduleTask: Task<Void, Never>?
     @ObservationIgnored private var workTask: Task<Void, Never>?
+    /// Removes stale downloads and staging folders; started by `onLaunch`.
+    @ObservationIgnored private let cleanUpUpdates: @Sendable () -> Void
+    /// The launch cleanup. Downloads wait for it, so it can never remove a version being downloaded or staged.
+    @ObservationIgnored private var cleanupTask: Task<Void, Never>?
     @ObservationIgnored private var lastAttempt: Date?
     @ObservationIgnored private var launched = false
 
@@ -66,9 +70,11 @@ public final class UpdateModel {
         coordinator: OpenCleanCoordinator, settings: UpdateSettingsStore, client: any HTTPClient,
         installer: any UpdateInstalling, currentVersion: String?, currentAppPath: String,
         checkInterval: TimeInterval = 24 * 60 * 60, now: @escaping @Sendable () -> Date = { Date() },
-        relaunch: @escaping @MainActor (String) -> Void
+        relaunch: @escaping @MainActor (String) -> Void,
+        cleanUpUpdates: (@Sendable () -> Void)? = nil
     ) {
         self.coordinator = coordinator
+        self.cleanUpUpdates = cleanUpUpdates ?? { coordinator.cleanUpUpdates() }
         self.settings = settings
         self.client = client
         self.installer = installer
@@ -90,9 +96,10 @@ public final class UpdateModel {
         guard !launched else { return }
         launched = true
         updatedFrom = settings.consumeRelaunch(current: currentVersion)
-        // Nothing is in flight at launch, so any earlier download or staging folder is stale.
-        let coordinator = coordinator
-        Task.detached(priority: .utility) { coordinator.cleanUpUpdates() }
+        // Nothing is in flight at launch, so any earlier download or staging folder is stale. Downloads
+        // into the same folder wait for this task (`downloadAndInstall`), so the two never overlap.
+        let cleanUp = cleanUpUpdates
+        cleanupTask = Task.detached(priority: .utility) { cleanUp() }
         reschedule()
     }
 
@@ -225,7 +232,10 @@ public final class UpdateModel {
         let installer = installer
         let appVersion = currentVersionText
         let currentApp = currentAppPath
+        let cleanup = cleanupTask
         workTask = Task {
+            // The launch cleanup empties `<support>/Updates/`; never download while it runs.
+            await cleanup?.value
             let (stream, continuation) = AsyncStream.makeStream(of: DownloadProgress.self)
             async let downloaded = coordinator.downloadUpdate(
                 release, client: client, appVersion: appVersion, progress: continuation)
