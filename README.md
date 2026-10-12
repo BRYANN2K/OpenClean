@@ -24,7 +24,7 @@
 OpenClean is a native macOS disk cleanup app and command-line tool. Smart Scan finds caches, logs,
 developer-tool and AI-tool leftovers you can safely remove, shows you exactly why each item is safe, and
 keeps anything that is not trivially regenerable in a quarantine you can restore from for 7 days.
-No accounts, no analytics, no network access — every cleaning rule is readable YAML.
+No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 
 ## Screenshots
 
@@ -52,6 +52,8 @@ No accounts, no analytics, no network access — every cleaning rule is readable
   quarantine with **History and Restore** (undo for 1–90 days).
 - **Transparent rules** — every rule explains itself in the app; write and lint your own YAML packs.
 - **CLI with JSON output** — script `openclean scan` / `clean` in CI or dotfiles.
+- **Software Update** — OpenClean checks GitHub once a day for a new release (you can turn this off),
+  downloads and verifies it, installs it in place and relaunches; the previous version stays in History.
 - **Native and private** — Swift 6 + SwiftUI, no telemetry, GPL-3.0.
 
 ## Why OpenClean
@@ -62,7 +64,7 @@ No accounts, no analytics, no network access — every cleaning rule is readable
 | Most removals are permanent | Quarantine with History and Restore |
 | Cleaning logic is a black box | Every rule is readable YAML with an explanation, shown in the app |
 | Rules come only from the vendor | Community rule packs, linted in CI; add your own |
-| Analytics, accounts, upsell | No network access at all |
+| Analytics, accounts, upsell | No analytics or accounts; the only network use is the daily update check |
 | GUI only | App and a scriptable CLI with JSON output |
 | General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face cleanup |
 
@@ -84,6 +86,16 @@ OpenClean is not signed with an Apple Developer ID or notarized, so macOS blocks
 
 Releases are published automatically when changes are merged to `main` (see
 [CONTRIBUTING.md](CONTRIBUTING.md#releases--versioning)).
+
+### Updates and privacy
+
+OpenClean checks api.github.com once a day for a new release (you can turn this off in Settings → Updates
+or on the last onboarding step); **OpenClean → Check for Updates…** always works. The check sends only
+`User-Agent: OpenClean/<version>`; nothing about you or your files is sent. Updates are downloaded only
+from GitHub, checked against the release's `SHA256SUMS.txt` and the app's code signature, and installed in
+place; your previous version is kept in History, so you can restore it. Because OpenClean is not signed
+with a Developer ID, macOS asks you to allow Full Disk Access again after each update; the app shows
+you how. Apart from this, OpenClean makes no network requests.
 
 ### Build from source
 

@@ -20,7 +20,7 @@ swift run openclean scan         # CLI against your real home — read-only; `cl
 
 - CLI integration tests (`Apps/openclean-cli/Tests`) execute the built binary at `.build/debug/openclean`, so run `swift build` before `swift test` after changing CLI code, or they test a stale binary.
 - Golden JSON files (`Apps/openclean-cli/Tests/OpenCleanCLITests/Golden/`) are the `--json` contract. Re-record with `OPENCLEAN_RECORD_GOLDEN=1 swift test --filter JSONReportTests`, then review the diff by hand.
-- Dev overrides honoured by `OpenCleanCoordinator`: `OPENCLEAN_HOME` (pretend home; also moves the quarantine/settings dir) and `OPENCLEAN_RULES_DIR` (bundled rule packs). Use them to run the CLI against a temp home.
+- Dev overrides honoured by `OpenCleanCoordinator`: `OPENCLEAN_HOME` (pretend home; also moves the quarantine/settings/Updates dir), `OPENCLEAN_RULES_DIR` (bundled rule packs) and `OPENCLEAN_UPDATE_FEED` (a URL or absolute path to a JSON file shaped like GitHub's `releases/latest` response; enables `file://` for the feed and its asset links, while https still must be on the GitHub allowlist). Use them to run the CLI against a temp home, or to test Software Update locally: build a fake newer DMG (`make dmg VERSION=9.9.9` — rebuilds `build/OpenClean.app`, so check nothing is running it), write `SHA256SUMS.txt` with `shasum -a 256`, point a feed's `browser_download_url`s at them with `file://`, and launch a copy of the app outside the repo (a `build/` app counts as a development build and is never replaced in place).
 - CI (`.github/workflows/ci.yml`, macos-15) runs build, test, `make lint`, `make app` and the versioning-script tests. Every push to `main` runs `.github/workflows/release.yml`: `scripts/next-version.sh` derives the next version from Conventional Commits since the last `vX.Y.Z` tag (fix/perf → patch, feat → minor, breaking → major; minor while 0.x; docs/chore-only → no release), then it builds the universal DMG + CLI zip, tags, and publishes a GitHub release. Commit types therefore decide versions — pick them carefully. `make release-assets` stamps `Version.swift` (CLI) and the bundle's Info.plist with the version.
 
 ## Architecture
@@ -30,6 +30,7 @@ One SwiftPM package at the repo root. All logic lives in library targets under `
 ```
 RuleKit ─┬─ ScanEngine ─┬─ Probes
          │              └─ Quarantine ── Privilege ── ProcessKit
+         ├──────────────── Updater (release feed, download + SHA-256, DMG staging; never deletes) ── ProcessKit
          └──────────────── OpenCleanKit (OpenCleanCoordinator facade) ── Permissions
                               ├─ Apps/openclean-cli  (OpenCleanCLI lib + `openclean` exe)
                               └─ Apps/OpenClean      (OpenCleanAppModel lib + OpenCleanApp SwiftUI exe)
@@ -37,13 +38,16 @@ RuleKit ─┬─ ScanEngine ─┬─ Probes
 
 Pipeline: `RuleCatalog` loads + lints YAML packs (`Rules/` and `~/Library/Application Support/OpenClean/rules/`; a pack with any lint issue is skipped whole) → `ScanEngine` runs every rule concurrently (path rules via `PathRuleScanner`/`ItemBuilder`, logic-heavy targets via `Probe`s) and removes cross-rule overlaps → `CleanupPlan` (selection; report-only items can never be in it) → `Remover` → session manifest in `Quarantine/<session-id>/`. `RestoreService` and `Purger` work from those manifests. `OpenCleanCoordinator` wires this together and is the only thing the CLI and `AppModel` call.
 
+Software Update (`Coordinator+Updates.swift`, `UpdateModel`): `ReleaseFeed` reads `api.github.com/repos/leoAnimesh/OpenClean/releases/latest` → `UpdateDownloader` fetches `OpenClean-X.Y.Z.dmg` into `<support>/Updates/X.Y.Z/` and checks it against the release's `SHA256SUMS.txt` → `UpdateInstaller` mounts it read-only, `ditto`s OpenClean.app into a `staged-*` folder and checks bundle id, version and `codesign --verify --deep --strict` → Quarantine's `SelfUpdateReplacer` moves the running app into a quarantine session (`update.previous-version`) and the staged app into its place → the app relaunches via a detached `/bin/sh` helper. Update preferences (auto-check, on by default; last check; skipped version) live in `UserDefaults` via `UpdateSettingsStore`, not `settings.json`, because the CLI never updates itself.
+
 Rule semantics: `safety: regenerable` = selected by default and deleted immediately; `review` = user opts in, quarantined (restorable, retention 1–90 days, default 7); `caution` = hidden unless Advanced and, in the CLI, must also be named with `--rule`. `requires: admin` is only legal on regenerable/immediate rules. See CONTRIBUTING.md for the pack format.
 
 ## Safety invariants (do not weaken)
 
 This tool deletes users' files; most of the code exists to make that fail closed. When changing anything on the deletion path, preserve these:
 
-- **Only `Quarantine` and `Privilege` may remove files.** `RemovalGuardTests` scans every other module and all of `Apps/` for `removeItem(`, `trashItem(`, `unlink(`, `unlinkat(`, `rmdir(`, `removefile(`, `recycle(`, `/bin/rm`. Don't add exceptions.
+- **Only `Quarantine` and `Privilege` may remove files.** `RemovalGuardTests` scans every other module and all of `Apps/` for `removeItem(`, `trashItem(`, `unlink(`, `unlinkat(`, `rmdir(`, `removefile(`, `recycle(`, `/bin/rm`. Don't add exceptions. Software Update follows this too: `Updater` never deletes; stale downloads and staging folders are removed only by Quarantine's `UpdateStagingCleaner` (direct children of the resolved `<support>/Updates/`, never through a symlink).
+- **Self-update** moves the running app only through Quarantine's `SelfUpdateReplacer`: the current app must be an absolute, canonical, symlink-free `.app` with OpenClean's bundle id, not under `/AppTranslocation/`, not a development build (`.build/` or `<repo>/build/`), on a writable volume, writable by the user and on the same volume as the quarantine store; the staged app must be inside `<support>/Updates/` with the same bundle id. Intent is written to the manifest first; a failed install move puts the old app back. Updater network access is limited to HTTPS `api.github.com`, `github.com`, `objects.githubusercontent.com`, `release-assets.githubusercontent.com` (checked on every request and redirect; `file://` only with `OPENCLEAN_UPDATE_FEED`). `SHA256SUMS.txt` comes from the same release, so it proves integrity, not authorship.
 - **Path comparisons are byte-level and canonical.** Never use `String.hasPrefix` / `split(separator: "/")` for path containment — grapheme clusters let `/` + combining mark slip through. Use RuleKit `pathIsWithin`, `canonicalPathKey`, `canonicalAncestorKeys`, `hasNonCanonicalComponent` (case-folded + NFD UTF-8 bytes, `/` = 0x2F).
 - **Scan items carry `realpath`'d paths**, and every safety check uses the resolved home (`OpenCleanCoordinator.resolvedHome`, `ScanContext.home`). Mixing resolved and unresolved forms silently disables `DenyList` protections.
 - **`DenyList`** (System, home, Documents, Desktop, Keychains, Mail, Mobile Documents, `.ssh`, `.gnupg`, OpenClean's own support dir, `/private/etc`, `/private/var/db`, app bundles, Photos libraries, and any ancestor of these) is enforced by the linter, at scan time, and again in `PreDeleteChecker` just before removal.
@@ -58,7 +62,8 @@ This tool deletes users' files; most of the code exists to make that fail closed
 
 Swift Testing (`import Testing`, `#expect`). Tests must never touch the real home, Trash, LaunchAgents or an admin prompt:
 
-- Filesystem tests use `TestSupport.TempDirectory`; inject fakes from `TestSupport` (`FakeProcessChecker`, `FakeCommandRunner`, `FakeAdminExecutor`, `FakeOpenFiles`, `FixtureRules`).
+- Filesystem tests use `TestSupport.TempDirectory`; inject fakes from `TestSupport` (`FakeProcessChecker`, `FakeCommandRunner`, `FakeAdminExecutor`, `FakeOpenFiles`, `FixtureRules`, `FakeHTTPClient`, `TempDirectory.fakeApp`).
+- Update tests never use the network, real `hdiutil` or the running app: use `FakeHTTPClient` (canned responses by URL), fake app bundles in temp dirs, and a fake `UpdateInstalling` in `UpdateModelTests`.
 - CLI integration tests use `CLIFixtures.withHome { home, env in … }`; `CLIBinary.run` refuses to start unless `OPENCLEAN_HOME` is inside the temp directory, and it also overrides `HOME`.
 - Some tests run real `lsof`, `/bin/sh`, and `osascript -e 'return …'` (never with administrator privileges).
 

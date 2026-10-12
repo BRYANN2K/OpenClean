@@ -103,6 +103,13 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 - A new module gets a new step: add an `OnboardingStep` case (mark it `isFeature`), a page in `OnboardingView.page(for:)` and a visual in `OnboardingVisuals.swift`, and update the design canvas board.
 - `CapsuleButtonStyle` dims to 40% when disabled; use `.disabled` rather than hiding a button that is temporarily blocked.
 
+## Software Update
+
+- **Banner** (`UpdateBanner`, `SoftwareUpdateView.swift`): same glass banner as `AccessBanner` (radius 14, 16 pt inset), placed directly under it in the detail area. Accent `arrow.down.circle.fill`, "OpenClean 0.3.0 is available", one line of secondary text, then **What's New** (plain capsule) and **Update** (prominent capsule). Hidden after Skip This Version, and until next launch after Remind Me Later.
+- **Sheet** (`SoftwareUpdateSheet`): 560 pt wide on the `.scan` backdrop, dark. `AppIconView(size: 64)` beside an 18 pt bold title and a 14 pt secondary subtitle ("OpenClean 0.3.0 is available — you have 0.2.0."). Release notes in a 200 pt scrolling glass panel (radius 12) under a "What's New" caption, rendered from Markdown via `ReleaseNotes.blocks` (headings semibold, bullets with an accent dot). One prominent capsule per state, bound to `.defaultAction`; the dismissive one gets `.cancelAction`.
+- **Flow in the same sheet:** Checking… (small spinner + caption) → available (Skip This Version on the left; Remind Me Later, **Download & Install** on the right) → a thin accent capsule bar with "12.4 MB of 18.1 MB · 3.2 MB/s" (`rollingNumber`) and Cancel → Verifying… → **Install and Relaunch**, with a glass note that the current version is kept in History and that Full Disk Access must be allowed again. When an in-place install isn't possible, the note is gold and explains why, and the prominent button is **Open Installer**. Errors are the subtitle, in plain words, with Download from GitHub, Close and **Retry**.
+- Up to date reads "You're up to date" / "OpenClean 0.2.0 is the newest version." Never show version numbers as a score or badge.
+
 ## Accessibility checklist
 
 - Decorative art (`Orb`, `CategoryIcon`, logo) is `accessibilityHidden`; the meaning is in adjacent text.
