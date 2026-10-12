@@ -367,9 +367,12 @@ struct AdminUninstallServiceTests {
 
     @Test func reportsAMoveThatHappenedDespiteAFailedStatus() throws {
         let fixture = try Fixture()
-        // mv worked but chown failed: the bundle is in quarantine and must stay restorable.
+        // The bundle was staged and handed over, but the script still reported an error: the final move
+        // into quarantine happens anyway and the entry must stay restorable.
         let executor = FakeAdminExecutor(outcome: .failed("chown: Operation not permitted")) { move in
-            try? FileManager.default.moveItem(atPath: move.source, toPath: move.destination)
+            try? FileManager.default.createDirectory(
+                atPath: move.stagingDirectory, withIntermediateDirectories: false)
+            try? FileManager.default.moveItem(atPath: move.source, toPath: move.stagingBundle)
         }
         guard case .finished(let report) = try fixture.run(try fixture.request(), executor: executor) else {
             Issue.record("expected a finished session")
@@ -380,6 +383,35 @@ struct AdminUninstallServiceTests {
         #expect(first.reason == "moved, but: chown: Operation not permitted")
         #expect(FileStat.of(try #require(first.storedPath)) != nil)
         #expect(report.manifest.entries.dropFirst().allSatisfy { $0.outcome == .quarantined })
+    }
+
+    /// Something planted at the quarantine destination while the prompt is open is never entered or
+    /// replaced; the app stays in the staging folder, the entry fails with its location, leftovers stay.
+    @Test func aDestinationPlantedDuringThePromptFailsAndSaysWhereTheAppIs() throws {
+        let fixture = try Fixture()
+        let staging = Box<String>()
+        let planted = Box<String>()
+        let executor = FakeAdminExecutor(runForReal: true) { move in
+            staging.value = move.stagingDirectory
+            planted.value = move.destination
+            try? FileManager.default.createDirectory(atPath: move.destination, withIntermediateDirectories: false)
+            FileManager.default.createFile(atPath: move.destination + "/marker", contents: Data("x".utf8))
+        }
+        defer {
+            if let staging = staging.value { try? FileManager.default.removeItem(atPath: staging) }
+        }
+        guard case .finished(let report) = try fixture.run(try fixture.request(), executor: executor) else {
+            Issue.record("expected a finished session")
+            return
+        }
+        let entries = report.manifest.entries
+        let stagingPath = try #require(staging.value)
+        #expect(entries.map(\.outcome) == [.failed, .skipped, .skipped])
+        #expect(entries.first?.reason?.contains(stagingPath + "/Foo.app") == true)
+        #expect(entries.dropFirst().allSatisfy { $0.reason == SkipReason.appNotMoved.description })
+        #expect(try FileManager.default.contentsOfDirectory(atPath: try #require(planted.value)) == ["marker"])
+        #expect(FileStat.of(stagingPath + "/Foo.app/Contents/Info.plist") != nil)
+        #expect(fixture.leftovers.allSatisfy { FileStat.of($0) != nil })
     }
 
     @Test func refusesRunningOrChangedAppsWithoutPrompting() throws {

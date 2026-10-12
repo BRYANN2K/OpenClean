@@ -227,24 +227,34 @@ public struct Remover: Sendable {
             mark(&manifest, 0, .failed, "\(error)")
             return
         }
+        let problem: String?
         switch plan.executor.runAsAdmin(move) {
         case .cancelled:
             mark(&manifest, 0, .failed, SkipReason.adminCancelled.description)
-        case .succeeded:
-            markAfterBundleMove(&manifest, source: path, stored: stored, problem: nil)
-        case .failed(let message):
-            markAfterBundleMove(&manifest, source: path, stored: stored, problem: message)
+            return
+        case .succeeded: problem = nil
+        case .failed(let message): problem = message
+        }
+        // The root script only stages the bundle; the final move into quarantine is ours (as the user).
+        switch move.finishAsUser() {
+        case .moved:
+            markAfterBundleMove(&manifest, move: move, problem: problem)
+        case .notMoved:
+            mark(&manifest, 0, .failed, problem ?? "the app is still in place after the administrator move")
+        case .stranded(let whereabouts):
+            mark(&manifest, 0, .failed, problem.map { "\($0); \(whereabouts)" } ?? whereabouts)
         }
     }
 
-    /// Quarantined only when the source is gone (ENOENT) and a real directory sits at the stored path.
+    /// Quarantined only when the original bundle (same device and inode) is a real directory at the
+    /// stored path. Whatever is at the old path now doesn't matter: it is no longer the app.
     private func markAfterBundleMove(
-        _ manifest: inout SessionManifest, source: String, stored: String, problem: String?
+        _ manifest: inout SessionManifest, move: AppBundleAdminMove, problem: String?
     ) {
-        var info = stat()
-        let sourceGone = lstat(source, &info) != 0 && errno == ENOENT
-        guard sourceGone, let moved = FileStat.of(stored), moved.isDirectory, !moved.isSymlink else {
-            mark(&manifest, 0, .failed, problem ?? "the app is still in place after the administrator move")
+        guard let moved = FileStat.of(move.destination), moved.isDirectory, !moved.isSymlink,
+            moved.device == move.sourceDevice, moved.inode == move.sourceInode
+        else {
+            mark(&manifest, 0, .failed, problem ?? "the app did not arrive in quarantine")
             return
         }
         var notes: [String] = []
