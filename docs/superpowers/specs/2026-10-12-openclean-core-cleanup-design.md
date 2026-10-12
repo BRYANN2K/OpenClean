@@ -131,12 +131,12 @@ Rules with `requires: admin` must be `regenerable` (no root-owned data is ever q
 A matched path is rejected if it is, or is inside, any of:
 `/System`, `/bin`, `/sbin`, `/usr` (except `/usr/local`), `/Applications/*.app` and `~/Applications/*.app` bundles, `~/Documents`, `~/Desktop`, `~/Pictures/*.photoslibrary`, `~/Library/Keychains`, `/Library/Keychains`, `~/Library/Mobile Documents` (root itself), `~/Library/Mail` (except `~/Library/Containers/com.apple.mail/Data/Library/Mail Downloads`), the user home directory itself, and `/`.
 
-Rules whose glob literal prefix falls in the deny-list fail lint. At scan time, every resolved match is re-checked.
+A path is also denied when it contains a protected location (for example `~/Library`, `/Library`, `/Users`), and `~/Library/Mobile Documents` is protected as a whole subtree. Rules whose glob literal prefix falls in the deny-list fail lint. At scan time, every resolved match is re-checked.
 
 ### Path resolution
 
 - Symlinks are never followed during traversal. Each match is resolved to its real path and must remain under the glob's literal prefix; otherwise it is dropped and reported.
-- Sizes use allocated size (`totalFileAllocatedSize`), so APFS clones and sparse files do not inflate freed-space numbers. Hard-linked files are counted once per scan (deduplicated by inode).
+- Sizes use allocated blocks (`st_blocks`), so sparse files do not inflate freed-space numbers. Hard-linked files are counted once per scan (deduplicated by device + inode). APFS clones are counted at full allocation: macOS has no public API for shared-block accounting, so freed space may be overstated for cloned files.
 
 ### Probes
 

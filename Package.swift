@@ -10,6 +10,7 @@ let package = Package(
     targets: [
         .target(
             name: "TestSupport",
+            dependencies: ["ScanEngine"],
             path: "Packages/OpenCleanKit/Sources/TestSupport"
         ),
         .target(
@@ -17,10 +18,20 @@ let package = Package(
             dependencies: [.product(name: "Yams", package: "Yams")],
             path: "Packages/OpenCleanKit/Sources/RuleKit"
         ),
+        .target(
+            name: "ScanEngine",
+            dependencies: ["RuleKit"],
+            path: "Packages/OpenCleanKit/Sources/ScanEngine"
+        ),
         .testTarget(
             name: "RuleKitTests",
             dependencies: ["RuleKit", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/RuleKitTests"
+        ),
+        .testTarget(
+            name: "ScanEngineTests",
+            dependencies: ["ScanEngine", "RuleKit", "TestSupport"],
+            path: "Packages/OpenCleanKit/Tests/ScanEngineTests"
         ),
     ]
 )
