@@ -6,6 +6,10 @@
 #   scripts/next-version.sh --notes --version X.Y.Z   same, but label the notes with X.Y.Z
 #   scripts/next-version.sh --previous         print the version the bump is computed from
 #
+# Notes: when docs/release-notes/X.Y.Z.md exists, it is the summary and the generated commit list goes in
+# a collapsed "All changes" section below it; otherwise the commit list is the notes. Both end with the
+# install instructions.
+#
 # Baseline: the newest tag reachable from HEAD matching v[0-9]* (git describe). With no tag, the
 # CFBundleShortVersionString in Apps/OpenClean/Info.plist is treated as the previous version and every
 # commit in HEAD's history counts.
@@ -187,39 +191,44 @@ section() { # title body
     printf '## %s\n\n%s\n' "$1" "$2"
 }
 
-if [ -n "$last_tag" ]; then
-    printf 'Changes since %s.\n\n' "$last_tag"
+changes() {
+    if [ -n "$last_tag" ]; then
+        printf 'Changes since %s.\n\n' "$last_tag"
+    else
+        printf 'First tagged release (baseline %s from Info.plist).\n\n' "$major.$minor.$patch"
+    fi
+    section "Breaking changes" "$breaking_notes"
+    section "Features" "$feature_notes"
+    section "Fixes" "$fix_notes"
+    section "Other" "$other_notes"
+}
+
+summary="$root/docs/release-notes/$version.md"
+if [ -f "$summary" ]; then
+    cat "$summary"
+    printf '\n<details>\n<summary>All changes</summary>\n\n'
+    changes
+    printf '</details>\n\n'
 else
-    printf 'First tagged release (baseline %s from Info.plist).\n\n' "$major.$minor.$patch"
+    changes
 fi
-section "Breaking changes" "$breaking_notes"
-section "Features" "$feature_notes"
-section "Fixes" "$fix_notes"
-section "Other" "$other_notes"
 
 cat <<EOF
 ## Install
 
 **App:** download \`OpenClean-$version.dmg\`, open it and drag **OpenClean** onto **Applications**.
-The DMG is a universal build (Apple silicon and Intel), macOS 14 or later.
+The DMG is a universal build (Apple silicon and Intel) for macOS 14 or later, signed with a Developer
+ID and notarized by Apple. On first launch OpenClean walks you through granting Full Disk Access.
 
-OpenClean is not signed with an Apple Developer ID or notarized, so Gatekeeper blocks the first launch:
-
-- macOS 14: right-click (or Control-click) OpenClean in Applications → **Open** → **Open**.
-- macOS 15 and later: open it once, dismiss the warning, then go to System Settings → Privacy & Security
-  and click **Open Anyway** next to the OpenClean message.
-- Or, from Terminal: \`xattr -dr com.apple.quarantine /Applications/OpenClean.app\`
-
-**Updating:** quit OpenClean and replace the app in Applications. Each build has a new ad-hoc
-signature, so macOS forgets the old Full Disk Access grant: in System Settings → Privacy & Security →
-Full Disk Access, remove OpenClean with **−** and add it again. The app tells you when this is needed.
+**Updating:** OpenClean checks for updates once a day (Settings → Updates) and installs them in place,
+keeping the previous version in History. An update must be signed by the same developer as the app you
+have, and Full Disk Access carries over.
 
 **CLI:** download \`openclean-cli-$version.zip\`, unzip it and run \`openclean-cli/bin/openclean\`, or
 install it:
 
 \`\`\`sh
 unzip openclean-cli-$version.zip
-xattr -dr com.apple.quarantine openclean-cli
 sudo mkdir -p /usr/local/bin /usr/local/share/openclean
 sudo cp openclean-cli/bin/openclean /usr/local/bin/
 sudo cp -R openclean-cli/share/openclean/rules /usr/local/share/openclean/

@@ -64,11 +64,7 @@ Applications. It's a universal build (Apple silicon and Intel) and needs macOS 1
 release has `openclean-cli-X.Y.Z.zip` (the CLI plus its rule packs) and `SHA256SUMS.txt`
 (`shasum -a 256 -c SHA256SUMS.txt`).
 
-OpenClean is not signed with an Apple Developer ID or notarized, so macOS blocks the first launch:
-
-- macOS 14: right-click OpenClean in Applications → **Open** → **Open**.
-- macOS 15 and later: try to open it once, then click **Open Anyway** in System Settings → Privacy &
-  Security.
+Releases are signed with a Developer ID and notarized by Apple, so they open like any other app.
 
 Releases are published automatically when changes are merged to `main` (see
 [CONTRIBUTING.md](CONTRIBUTING.md#releases--versioning)).
@@ -79,9 +75,8 @@ OpenClean checks api.github.com once a day for a new release (you can turn this 
 or on the last onboarding step); **OpenClean → Check for Updates…** always works. The check sends only
 `User-Agent: OpenClean/<version>`; nothing about you or your files is sent. Updates are downloaded only
 from GitHub, checked against the release's `SHA256SUMS.txt` and the app's code signature, and installed in
-place; your previous version is kept in History, so you can restore it. Because OpenClean is not signed
-with a Developer ID, macOS asks you to allow Full Disk Access again after each update; the app shows
-you how. Apart from this, OpenClean makes no network requests.
+place; your previous version is kept in History, so you can restore it. An update must be signed by the
+same Apple developer team as the app you have. Apart from this, OpenClean makes no network requests.
 
 ### Build from source
 
@@ -103,8 +98,9 @@ brew install --HEAD openclean
 ### Full Disk Access
 
 Trash, Mail, Safari and iOS backups live in protected folders. Grant access in
-System Settings → Privacy & Security → Full Disk Access. Each rebuild of an unsigned app gets a new
-signature, so after updating, remove OpenClean from that list and add it again; the app tells you when.
+System Settings → Privacy & Security → Full Disk Access. The grant survives updates of the released app.
+A build from source is signed ad hoc, so each rebuild gets a new signature: remove OpenClean from that
+list and add it again; the app tells you when.
 
 ## Using the CLI
 

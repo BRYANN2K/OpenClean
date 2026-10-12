@@ -85,8 +85,36 @@ version. You don't need to bump it: the build stamps the release version and a b
 count) into the app bundle.
 
 When a release is due, the workflow builds, tests and lints, makes a universal `OpenClean-X.Y.Z.dmg`,
-`openclean-cli-X.Y.Z.zip` and `SHA256SUMS.txt` (`make release-assets`), pushes the `vX.Y.Z` tag and
-publishes a GitHub release with notes grouped into breaking changes, features, fixes and other.
+`openclean-cli-X.Y.Z.zip` and `SHA256SUMS.txt` (`make release-assets`), signs and notarizes them (below),
+checks them (`scripts/check-release-assets.sh`), pushes the `vX.Y.Z` tag and publishes a GitHub release.
+Every pull request runs the same build and checks without signing (the `release-dry-run` CI job), and its
+run summary shows the version merging would release and the notes.
+
+**Release notes:** by default they list the commits since the last tag, grouped into breaking changes,
+features, fixes and other. For a release worth a summary, add `docs/release-notes/X.Y.Z.md` in the pull
+request that releases X.Y.Z: it becomes the top of the notes and the commit list moves into a collapsed
+"All changes" section. Install instructions are appended either way.
+
+### Signing and notarization
+
+Releases are signed with a Developer ID Application certificate (hardened runtime, secure timestamp, no
+entitlements: OpenClean needs no hardened-runtime exceptions; it only runs `osascript` as a child
+process), notarized with `notarytool`, and the DMG gets the ticket stapled. The release job stops before
+building anything unless all six repository secrets are set:
+
+| Secret | What it is |
+|---|---|
+| `APPLE_TEAM_ID` | The ten-character Apple Team ID |
+| `DEVELOPER_ID_P12` | The Developer ID Application certificate and its private key, exported as `.p12`, base64-encoded (`base64 -i cert.p12 \| pbcopy`) |
+| `DEVELOPER_ID_P12_PASSWORD` | The password the `.p12` was exported with |
+| `APPLE_API_KEY_P8` | The contents of the App Store Connect API key file `AuthKey_<id>.p8` (notarization) |
+| `APPLE_API_KEY_ID` | That key's ID |
+| `APPLE_API_ISSUER_ID` | The issuer ID shown on the App Store Connect API keys page |
+
+The updater accepts an update only if it is signed by the same team as the running app (`PublisherCheck`),
+so a release must never be signed with a different team. Local builds, forks and pull requests are signed
+ad hoc (`SIGN_IDENTITY` defaults to `-`); to sign locally, pass
+`SIGN_IDENTITY="Developer ID Application: Name (TEAMID)"` to `make app` / `make release-assets`.
 
 Check locally:
 

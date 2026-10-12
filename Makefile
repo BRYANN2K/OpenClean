@@ -14,7 +14,7 @@ BIN = $(shell swift build -c release $(ARCH_FLAGS) --show-bin-path)
 # "Developer ID Application: … (TEAMID)" identity from a temporary keychain; then the app and the CLI are
 # signed with the hardened runtime and a secure timestamp (both required for notarization) and the DMG is
 # signed too. No entitlements file: nothing OpenClean does needs a hardened-runtime exception (see
-# CONTRIBUTING.md "Releases").
+# CONTRIBUTING.md "Signing and notarization").
 SIGN_IDENTITY ?= -
 ifeq ($(SIGN_IDENTITY),-)
 CODESIGN = codesign --force --sign -
@@ -22,7 +22,7 @@ else
 CODESIGN = codesign --force --options runtime --timestamp --sign "$(SIGN_IDENTITY)"
 endif
 
-.PHONY: build test app install uninstall dist lint icon dmg cli-zip release-assets
+.PHONY: build test app install uninstall dist lint icon dmg cli-zip checksums release-assets
 
 build:
 	swift build -c release $(ARCH_FLAGS)
@@ -99,6 +99,10 @@ release-assets:
 	rm -rf "$(RELEASE_DIR)"
 	sed -i '' 's/^public let openCleanVersion = .*/public let openCleanVersion = "$(VERSION)"/' Apps/openclean-cli/Sources/OpenCleanCLI/Version.swift
 	$(MAKE) dmg cli-zip VERSION="$(VERSION)" BUILD_NUMBER="$(BUILD_NUMBER)" ARCH_FLAGS="$(ARCH_FLAGS)"
+	$(MAKE) checksums VERSION="$(VERSION)"
+
+# Release CI runs this again after stapling the notarization ticket, which changes the DMG.
+checksums:
 	cd "$(RELEASE_DIR)" && shasum -a 256 "OpenClean-$(VERSION).dmg" "openclean-cli-$(VERSION).zip" > SHA256SUMS.txt
 	cat "$(RELEASE_DIR)/SHA256SUMS.txt"
 
