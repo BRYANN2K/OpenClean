@@ -69,7 +69,7 @@ The tree is built bottom-up; each folder keeps only some children and folds the 
 | 4–6 | top 10, each ≥ 4 MB |
 | ≥ 7 (`maxDepth`) | none: the folder is a summarized leaf (`isTruncated`) |
 
-From depth 2 down every kept node is at least 4 MB and nodes at one depth are disjoint, so the retained node count at each of those levels is at most `scanned bytes / 4 MB` and also at most the product of the per-level limits. A 1 TB home therefore retains well under a million nodes in the worst case and typically a few thousand. The UI offers **Scan this folder** on a truncated node, which re-roots the scan there.
+When only one child would be folded it is kept as itself (an "Other" of one saves nothing), so a folder keeps at most limit + 1 children. From depth 2 down every kept node (other than that single extra) is at least 4 MB and nodes at one depth are disjoint, so the retained node count at each of those levels is at most `scanned bytes / 4 MB` and also at most the product of the per-level limits. A 1 TB home therefore retains well under a million nodes in the worst case and typically a few thousand. The UI offers **Scan this folder** on a truncated node, which re-roots the scan there.
 
 ## 4. Large & old files
 
@@ -109,7 +109,7 @@ Space Lens moves items the *user* picked, one by one. That is different from Cle
 Evaluated in this order; the first match wins:
 
 1. Not absolute, or has a `.`/`..` component → **refused** (fail closed).
-2. **Critical locations — always refused:** inside or equal to `/System`, `/Library`, `/Applications`, `/usr`, `/bin`, `/sbin`, `/private`, `/opt`, `/cores`, `/dev`, `~/Library`, `~/Applications`; equal to `/`, `/Users`, `/Volumes`; any path component ending in `.app` (bundle or its insides); any component `.Trash`/`.Trashes` (already in the Trash); anything inside a package (§4 list).
+2. **Critical locations — always refused:** inside or equal to `/System`, `/Library`, `/Applications`, `/usr`, `/bin`, `/sbin`, `/opt`, `/cores`, `/dev`, `/etc`, `/var`, `/tmp`, `~/Library`, `~/Applications`; anything in `/private` except items strictly inside the per-user scratch areas `/private/tmp` and `/private/var/folders` (`$TMPDIR`); equal to `/`, `/Users`, `/Volumes`; any path component ending in `.app` (bundle or its insides); any component `.Trash`/`.Trashes` (already in the Trash); anything inside a package (§4 list).
 3. `DenyList(home:)` says nothing → **allowed**.
 4. `DenyList` denies and the path is strictly inside `~/Documents` or `~/Desktop`:
    - a regular file → **allowedUserContent** (explicit per-file user action only);
@@ -128,11 +128,12 @@ Each `TrashRequest` carries the scanned canonical path, the scan root, and the s
 
 1. the policy refuses it (`protected`);
 2. it is not strictly inside the canonical scan root (`outsideScanRoot`), or it *is* the scan root;
-3. another requested folder contains it (`coveredBySelection`, the folder's move covers it);
+3. it no longer exists (`missing`);
 4. `realpath` no longer equals the scanned path (a parent was swapped for a symlink) → `pathChanged`;
-5. it no longer exists (`missing`), or device/inode/modification date/type differ (`changedSinceScan`);
+5. device/inode/modification date/type differ from the snapshot (`changedSinceScan`);
 6. it is a mount point (device differs from its parent's) → `protected`;
-7. it, or anything inside it, is open in another process per one `lsof -F0n` call (`inUse`); if `lsof` fails, every item is skipped (`openFilesUnknown`).
+7. it, or anything inside it, is open in another process per one `lsof -F0n` call (`inUse`); if `lsof` fails, every item is skipped (`openFilesUnknown`);
+8. it passed every check but another requested folder that also passed contains it (`coveredBySelection`: the folder's move covers it).
 
 Then `TrashOperation` (default `Remover.systemTrash`, i.e. `FileManager.trashItem`) moves it; errors are recorded as `failed`. A `TrashReport` lists every item's outcome; nothing aborts the batch.
 
