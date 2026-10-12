@@ -1,0 +1,29 @@
+pack: ai
+version: 1
+rules:
+  - id: ollama.models
+    name: Ollama models
+    category: ai
+    explain: Models downloaded by Ollama. Ollama downloads a model again the next time you run it, which can take a long time for large models.
+    paths:
+      - "~/.ollama/models"
+    safety: review
+    conditions:
+      app_not_running: com.electron.ollama
+  - id: lmstudio.models
+    name: LM Studio models
+    category: ai
+    explain: Models downloaded in LM Studio. You can download them again from LM Studio's model browser.
+    paths:
+      - "~/.lmstudio/models/*/*"
+      - "~/.cache/lm-studio/models/*/*"
+    safety: review
+    conditions:
+      app_not_running: ai.elementlabs.lmstudio
+  - id: huggingface.hub
+    name: Hugging Face cache
+    category: ai
+    explain: Model and dataset files cached by Hugging Face libraries such as transformers and diffusers. They are downloaded again on next use.
+    paths:
+      - "~/.cache/huggingface/hub/*"
+    safety: review

@@ -1,0 +1,100 @@
+pack: dev-tools
+version: 1
+rules:
+  - id: xcode.derived-data
+    name: Xcode DerivedData
+    category: developer
+    explain: Build intermediates and indexes Xcode regenerates on the next build.
+    paths:
+      - "~/Library/Developer/Xcode/DerivedData/*"
+    safety: regenerable
+    conditions:
+      app_not_running: com.apple.dt.Xcode
+  - id: xcode.archives
+    name: Xcode archives
+    category: developer
+    explain: App archives used for App Store submission and crash symbolication. Keep the ones for versions you still support.
+    paths:
+      - "~/Library/Developer/Xcode/Archives/*"
+    safety: review
+  - id: xcode.device-support
+    name: Device support files
+    category: developer
+    explain: Debug symbols copied from connected devices. Xcode copies them again the next time you connect that device, which can take a few minutes.
+    paths:
+      - "~/Library/Developer/Xcode/iOS DeviceSupport/*"
+      - "~/Library/Developer/Xcode/watchOS DeviceSupport/*"
+      - "~/Library/Developer/Xcode/tvOS DeviceSupport/*"
+    safety: review
+    conditions:
+      app_not_running: com.apple.dt.Xcode
+  - id: xcode.simulators
+    name: Unavailable simulators
+    category: developer
+    explain: Simulator devices for runtimes that are no longer installed. They cannot be booted.
+    probe: xcode.simulators
+    safety: review
+    conditions:
+      app_not_running: com.apple.iphonesimulator
+  - id: npm.cache
+    name: npm cache
+    category: developer
+    explain: npm's package download cache. npm downloads packages again when needed.
+    paths:
+      - "~/.npm/_cacache"
+    safety: regenerable
+  - id: yarn.cache
+    name: Yarn cache
+    category: developer
+    explain: Yarn's package download cache. Yarn downloads packages again when needed.
+    paths:
+      - "~/Library/Caches/Yarn/*"
+    safety: regenerable
+  - id: pnpm.store
+    name: pnpm store
+    category: developer
+    explain: pnpm's shared package store. Existing node_modules keep their own copies; pnpm downloads packages again on the next install.
+    paths:
+      - "~/Library/pnpm/store/*"
+    safety: regenerable
+  - id: pip.cache
+    name: pip cache
+    category: developer
+    explain: pip's download and wheel cache. pip downloads packages again when needed.
+    paths:
+      - "~/Library/Caches/pip/*"
+    safety: regenerable
+  - id: cargo.registry-cache
+    name: Cargo registry cache
+    category: developer
+    explain: Downloaded crate archives. Cargo downloads them again on the next build that needs them.
+    paths:
+      - "~/.cargo/registry/cache/*"
+    safety: regenerable
+  - id: gradle.caches
+    name: Gradle caches
+    category: developer
+    explain: Gradle's dependency and build caches. Gradle rebuilds them on the next build.
+    paths:
+      - "~/.gradle/caches/*"
+    safety: regenerable
+  - id: cocoapods.cache
+    name: CocoaPods cache
+    category: developer
+    explain: Downloaded pod sources. CocoaPods downloads them again on the next pod install.
+    paths:
+      - "~/Library/Caches/CocoaPods/*"
+    safety: regenerable
+  - id: homebrew.cache
+    name: Homebrew downloads
+    category: developer
+    explain: Bottles and source archives Homebrew keeps after installing. Equivalent to brew cleanup --prune=all.
+    probe: homebrew.cache
+    safety: regenerable
+  - id: docker.disk-image
+    name: Docker disk image
+    category: developer
+    explain: Shows how much space Docker Desktop's virtual disk uses. OpenClean never deletes Docker data; use Docker's own tools.
+    probe: docker.disk-image
+    safety: review
+    requires: [full_disk_access]

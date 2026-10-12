@@ -1,0 +1,38 @@
+pack: system
+version: 1
+rules:
+  - id: system.caches
+    name: System caches
+    category: system
+    explain: Caches that system services and installed apps rebuild automatically when needed. Apple's own system caches are left alone.
+    paths:
+      - "/Library/Caches/*"
+    exclude:
+      - "/Library/Caches/com.apple.*"
+    safety: regenerable
+    requires: [admin]
+  - id: system.logs
+    name: Archived system logs
+    category: system
+    explain: Rotated, compressed log archives. Current logs are not touched.
+    paths:
+      - "/private/var/log/*.gz"
+      - "/private/var/log/*.bz2"
+    safety: regenerable
+    requires: [admin]
+  - id: system.diagnostic-reports
+    name: System crash reports
+    category: system
+    explain: Crash and hang reports macOS already collected. Only useful when sending them to a developer.
+    paths:
+      - "/Library/Logs/DiagnosticReports/*"
+    safety: regenerable
+    conditions:
+      min_age_days: 7
+    requires: [admin]
+  - id: timemachine.local-snapshots
+    name: Local Time Machine snapshots
+    category: system
+    explain: Shown for information. macOS deletes local snapshots by itself when it needs the space.
+    probe: timemachine.local-snapshots
+    safety: review

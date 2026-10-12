@@ -1,0 +1,42 @@
+pack: browsers
+version: 1
+rules:
+  - id: browsers.safari-cache
+    name: Safari cache
+    category: browsers
+    explain: Page resources Safari downloads again when needed. History, cookies, passwords and tabs are not touched.
+    paths:
+      - "~/Library/Caches/com.apple.Safari/*"
+      - "~/Library/Containers/com.apple.Safari/Data/Library/Caches/*"
+    safety: regenerable
+    conditions:
+      app_not_running: com.apple.Safari
+    requires: [full_disk_access]
+  - id: browsers.chrome-cache
+    name: Chrome cache
+    category: browsers
+    explain: Chrome's disk and code caches for each profile. History, cookies, passwords and extensions are not touched.
+    paths:
+      - "~/Library/Caches/Google/Chrome/*/Cache"
+      - "~/Library/Caches/Google/Chrome/*/Code Cache"
+    safety: regenerable
+    conditions:
+      app_not_running: com.google.Chrome
+  - id: browsers.firefox-cache
+    name: Firefox cache
+    category: browsers
+    explain: Firefox's network cache for each profile. History, cookies, passwords and add-ons are not touched.
+    paths:
+      - "~/Library/Caches/Firefox/Profiles/*/cache2"
+    safety: regenerable
+    conditions:
+      app_not_running: org.mozilla.firefox
+  - id: browsers.arc-cache
+    name: Arc cache
+    category: browsers
+    explain: Arc's cache folder. Spaces, history, cookies and passwords are stored elsewhere and are not touched.
+    paths:
+      - "~/Library/Caches/company.thebrowser.Browser/*"
+    safety: regenerable
+    conditions:
+      app_not_running: company.thebrowser.Browser

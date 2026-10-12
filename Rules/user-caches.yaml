@@ -1,0 +1,28 @@
+pack: user-caches
+version: 1
+rules:
+  - id: user.app-caches
+    name: App caches
+    category: user
+    explain: Per-app cache folders. Apps recreate them on demand; quit apps first for the best result. iCloud and browser caches are handled separately.
+    paths:
+      - "~/Library/Caches/*"
+    exclude:
+      - "~/Library/Caches/com.apple.Safari"
+      - "~/Library/Caches/Google"
+      - "~/Library/Caches/Firefox"
+      - "~/Library/Caches/company.thebrowser.Browser"
+      - "~/Library/Caches/Homebrew"
+      - "~/Library/Caches/CocoaPods"
+      - "~/Library/Caches/pip"
+      - "~/Library/Caches/Yarn"
+      - "~/Library/Caches/CloudKit"
+      - "~/Library/Caches/com.apple.bird"
+    safety: regenerable
+  - id: user.logs
+    name: User logs
+    category: user
+    explain: Diagnostic logs written by apps. Nothing reads them unless you are troubleshooting.
+    paths:
+      - "~/Library/Logs/*"
+    safety: regenerable

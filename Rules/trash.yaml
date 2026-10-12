@@ -1,0 +1,12 @@
+pack: trash
+version: 1
+rules:
+  - id: trash.user
+    name: Trash
+    category: trash
+    explain: Items you already moved to the Trash. Removing them is the same as Empty Trash and cannot be undone.
+    paths:
+      - "~/.Trash/*"
+    safety: review
+    delete_mode: immediate
+    requires: [full_disk_access]

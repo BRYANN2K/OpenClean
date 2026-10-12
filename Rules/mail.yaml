@@ -1,0 +1,13 @@
+pack: mail
+version: 1
+rules:
+  - id: mail.downloads
+    name: Mail attachment copies
+    category: mail
+    explain: Copies of attachments Mail saved when you opened them. The originals stay in your mailbox.
+    paths:
+      - "~/Library/Containers/com.apple.mail/Data/Library/Mail Downloads/*"
+    safety: review
+    conditions:
+      app_not_running: com.apple.mail
+    requires: [full_disk_access]
