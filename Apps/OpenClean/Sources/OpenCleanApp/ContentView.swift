@@ -93,6 +93,9 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            // The hidden title bar still reserves a ~40 pt inset above the detail column; pull the content
+            // up so the first element sits level with the window buttons instead of below an empty strip.
+            .padding(.top, -28)
             .foregroundStyle(.white)
             .background(backdrop.gradient.ignoresSafeArea())
             .animation(.easeInOut(duration: 0.35), value: model.phase)

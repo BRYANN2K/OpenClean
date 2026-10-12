@@ -16,6 +16,28 @@ enum AppQuitter {
         else { return nil }
         return app
     }
+
+    static let protectedReason = "Part of macOS, another user's, or OpenClean itself — it can't be quit from here."
+
+    /// Apps go through `NSRunningApplication`; a lone background process of the user's own goes
+    /// through `ProcessTerminator`, which re-checks its identity before killing it.
+    static func canForceQuit(_ group: ProcessGroup) -> Bool {
+        runningApp(for: group) != nil || group.killableProcess != nil
+    }
+
+    /// Force quits and returns a one-line result for the user.
+    static func forceQuit(_ group: ProcessGroup) -> String {
+        if let app = runningApp(for: group) {
+            return app.forceTerminate() ? "\(group.name) was force quit." : "\(group.name) could not be force quit."
+        }
+        guard let process = group.killableProcess else { return "\(group.name) can't be force quit from OpenClean." }
+        switch ProcessTerminator().forceQuit(process) {
+        case .killed: return "\(group.name) was force quit."
+        case .changed: return "\(group.name) had already quit or changed, so nothing was done."
+        case .protected: return "\(group.name) can't be force quit from OpenClean."
+        case .failed: return "\(group.name) could not be force quit."
+        }
+    }
 }
 
 struct HeavyConsumersView: View {
@@ -90,11 +112,7 @@ struct HeavyConsumersView: View {
     }
 
     private func forceQuit(_ group: ProcessGroup) {
-        guard let app = AppQuitter.runningApp(for: group) else {
-            notice = "\(group.name) can't be force quit from OpenClean."
-            return
-        }
-        notice = app.forceTerminate() ? "\(group.name) was force quit." : "\(group.name) could not be force quit."
+        notice = AppQuitter.forceQuit(group)
     }
 }
 
@@ -125,6 +143,9 @@ struct ConsumerRow: View {
             if quittable {
                 Button("Quit", action: onQuit).buttonStyle(CapsuleButtonStyle()).fixedSize()
                 Button("Force Quit…", action: onForceQuit).buttonStyle(CapsuleButtonStyle()).fixedSize()
+            } else if group.killableProcess != nil {
+                Button("Force Quit…", action: onForceQuit).buttonStyle(CapsuleButtonStyle()).fixedSize()
+                    .frame(minWidth: 190, alignment: .trailing)
             } else {
                 StatusTag(text: group.bundlePath == nil ? "Process" : "Protected")
                     .frame(minWidth: 190, alignment: .trailing)

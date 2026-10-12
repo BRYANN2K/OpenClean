@@ -38,10 +38,13 @@ public struct ProcessGroup: Sendable, Equatable, Identifiable {
     /// True when the library's policy allows offering Quit / Force Quit. The app layer still requires
     /// an `NSRunningApplication` for `mainPID`.
     public var canQuit: Bool
+    /// A lone background process (not inside an app) that belongs to the user and isn't protected by
+    /// the policy. The app layer may force quit it through `ProcessTerminator`, which re-verifies it.
+    public var killableProcess: ProcessUsage?
 
     public init(
         id: String, name: String, bundlePath: String?, mainPID: Int32?, processes: [ProcessUsage],
-        cpuPercent: Double, residentBytes: UInt64, canQuit: Bool
+        cpuPercent: Double, residentBytes: UInt64, canQuit: Bool, killableProcess: ProcessUsage? = nil
     ) {
         self.id = id
         self.name = name
@@ -51,6 +54,7 @@ public struct ProcessGroup: Sendable, Equatable, Identifiable {
         self.cpuPercent = cpuPercent
         self.residentBytes = residentBytes
         self.canQuit = canQuit
+        self.killableProcess = killableProcess
     }
 }
 
@@ -100,11 +104,15 @@ public enum ProcessUsageCalculator {
                 name = processes.first?.name ?? key
             }
             let canQuit = bundle != nil && main.map { !policy.isProtected($0) } == true
+            let killable =
+                bundle == nil && processes.count == 1 && processes[0].path != nil
+                    && !policy.isProtected(processes[0]) ? processes[0] : nil
             return ProcessGroup(
                 id: key, name: name, bundlePath: bundle, mainPID: main?.pid,
                 processes: processes.sorted { $0.cpuPercent > $1.cpuPercent },
                 cpuPercent: processes.reduce(0) { $0 + $1.cpuPercent },
-                residentBytes: processes.reduce(0) { $0 + $1.residentBytes }, canQuit: canQuit)
+                residentBytes: processes.reduce(0) { $0 + $1.residentBytes }, canQuit: canQuit,
+                killableProcess: killable)
         }
     }
 

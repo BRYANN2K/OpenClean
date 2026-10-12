@@ -56,6 +56,7 @@ struct MenuBarPopover: View {
     @Environment(AppModel.self) private var app
     @Environment(AppNavigation.self) private var navigation
     @Environment(\.openWindow) private var openWindow
+    @State private var forceQuitNotice: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -99,18 +100,36 @@ struct MenuBarPopover: View {
                     Text("Measuring…").font(.system(size: 12)).foregroundStyle(Theme.textTertiary)
                 }
                 ForEach(top) { group in
-                    HStack(spacing: 8) {
-                        ProcessIcon(bundlePath: group.bundlePath, size: 18)
-                        Text(group.name).lineLimit(1)
-                        Spacer()
-                        Text(String(format: "%.0f%%", group.cpuPercent)).monospacedDigit()
-                        Text(formatBytes(Int64(group.residentBytes)))
-                            .monospacedDigit()
-                            .foregroundStyle(Theme.textSecondary)
-                            .frame(minWidth: 64, alignment: .trailing)
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 8) {
+                            ProcessIcon(bundlePath: group.bundlePath, size: 18)
+                            Text(group.name).lineLimit(1)
+                            Spacer()
+                            Text(String(format: "%.0f%%", group.cpuPercent)).monospacedDigit()
+                            Text(formatBytes(Int64(group.residentBytes)))
+                                .monospacedDigit()
+                                .foregroundStyle(Theme.textSecondary)
+                                .frame(minWidth: 64, alignment: .trailing)
+                            let allowed = AppQuitter.canForceQuit(group)
+                            Button {
+                                confirmForceQuit(group)
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(allowed ? Theme.textSecondary : Theme.textTertiary.opacity(0.5))
+                                    .frame(width: 22, height: 22)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(!allowed)
+                            .help(allowed ? "Force Quit \(group.name)…" : AppQuitter.protectedReason)
+                            .accessibilityLabel("Force quit \(group.name)")
+                        }
                     }
                     .font(.system(size: 12))
-                    .accessibilityElement(children: .combine)
+                }
+                if let forceQuitNotice {
+                    Text(forceQuitNotice).font(.system(size: 11)).foregroundStyle(Theme.textSecondary)
                 }
             }
 
@@ -147,6 +166,24 @@ struct MenuBarPopover: View {
     }
 
     /// Brings the existing main window forward, or opens one if it was closed.
+    /// Asks with a standard alert first. The group is captured when the button is pressed, so the list
+    /// re-sorting meanwhile can't change which app is quit.
+    private func confirmForceQuit(_ group: ProcessGroup) {
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "Force quit \(group.name)?"
+        alert.informativeText = "Any unsaved changes in \(group.name) will be lost."
+        alert.addButton(withTitle: "Force Quit")
+        alert.addButton(withTitle: "Cancel")
+        alert.buttons.first?.hasDestructiveAction = true
+        if alert.runModal() == .alertFirstButtonReturn { forceQuit(group) }
+    }
+
+    private func forceQuit(_ group: ProcessGroup) {
+        forceQuitNotice = AppQuitter.forceQuit(group)
+    }
+
     private func showMainWindow() {
         NSApp.activate(ignoringOtherApps: true)
         if let window = NSApp.windows.first(where: {
