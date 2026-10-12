@@ -10,7 +10,7 @@ let package = Package(
     targets: [
         .target(
             name: "TestSupport",
-            dependencies: ["ScanEngine", "ProcessKit"],
+            dependencies: ["ScanEngine", "ProcessKit", "Privilege", "Quarantine"],
             path: "Packages/OpenCleanKit/Sources/TestSupport"
         ),
         .target(
