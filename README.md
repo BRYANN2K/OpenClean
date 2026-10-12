@@ -59,7 +59,26 @@ No accounts, no analytics, no network access — every cleaning rule is readable
 | GUI only | App and a scriptable CLI with JSON output |
 | General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face cleanup |
 
-## Install (build from source)
+## Install
+
+### Download (recommended)
+
+Get the latest `OpenClean-X.Y.Z.dmg` from the
+[Releases page](https://github.com/leoAnimesh/OpenClean/releases/latest), open it and drag OpenClean onto
+Applications. It's a universal build (Apple silicon and Intel) and needs macOS 14 or later. The same
+release has `openclean-cli-X.Y.Z.zip` (the CLI plus its rule packs) and `SHA256SUMS.txt`
+(`shasum -a 256 -c SHA256SUMS.txt`).
+
+OpenClean is not signed with an Apple Developer ID or notarized, so macOS blocks the first launch:
+
+- macOS 14: right-click OpenClean in Applications → **Open** → **Open**.
+- macOS 15 and later: try to open it once, then click **Open Anyway** in System Settings → Privacy &
+  Security.
+
+Releases are published automatically when changes are merged to `main` (see
+[CONTRIBUTING.md](CONTRIBUTING.md#releases--versioning)).
+
+### Build from source
 
 Requires macOS 14+ and Xcode 16+.
 
@@ -75,9 +94,6 @@ CLI only, via Homebrew (builds from the latest source):
 brew tap leoanimesh/openclean https://github.com/leoAnimesh/OpenClean
 brew install --HEAD openclean
 ```
-
-Releases on GitHub include an unsigned app zip and the CLI. Because the app is not notarized, right-click
-→ Open the first time.
 
 ### Full Disk Access
 
