@@ -81,6 +81,26 @@ struct InstallerTests {
         #expect(runner.calls.last == ["/usr/bin/codesign", "--verify", "--deep", "--strict", staged.appPath])
     }
 
+    @Test func detachesTheImageWhenTheMountPointIsUnusable() throws {
+        let temp = try TempDirectory()
+        // A relative mount point is rejected after a successful attach; the image must not stay mounted.
+        let runner = ScriptedRunner(mountPoint: "relative/Volume")
+        #expect(throws: UpdateError.stagingFailed("the disk image has no mountable volume")) {
+            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(verified(temp))
+        }
+        #expect(runner.calls.dropFirst().map { Array($0.prefix(3)) } == [["/usr/bin/hdiutil", "detach", "/dev/disk9"]])
+    }
+
+    @Test func wholeDisksAcceptOnlyDeviceEntries() {
+        #expect(UpdateInstaller.wholeDisk("/dev/disk4") == "/dev/disk4")
+        #expect(UpdateInstaller.wholeDisk("/dev/disk4s12") == "/dev/disk4")
+        #expect(UpdateInstaller.wholeDisk("/dev/disk") == nil)
+        #expect(UpdateInstaller.wholeDisk("/dev/disk4s") == nil)
+        #expect(UpdateInstaller.wholeDisk("/dev/disk4x1") == nil)
+        #expect(UpdateInstaller.wholeDisk("/dev/rdisk4") == nil)
+        #expect(UpdateInstaller.wholeDisk("/dev/disk4 -force") == nil)
+    }
+
     @Test func refusesWrongBundleIdentifier() throws {
         let temp = try TempDirectory()
         try temp.fakeApp("Volume/OpenClean.app", bundleID: "com.example.Evil", version: "0.3.0")

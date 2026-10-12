@@ -50,6 +50,8 @@ public struct UpdateInstaller: Sendable {
             throw UpdateError.stagingFailed("hdiutil attach failed: \(attach.stderrText.trimmed)")
         }
         guard let mountPoint = Self.mountPoint(fromAttachPlist: attach.stdout) else {
+            // Attached but unusable: don't leave the image mounted. Detach every whole disk it reported.
+            for device in Self.wholeDisks(fromAttachPlist: attach.stdout) { detach(device) }
             throw UpdateError.stagingFailed("the disk image has no mountable volume")
         }
         let staged: String
@@ -119,6 +121,39 @@ public struct UpdateInstaller: Sendable {
             }
         }
         return nil
+    }
+
+    /// The whole-disk devices (`/dev/diskN`) in `hdiutil attach -plist` output, for detaching an image whose
+    /// mount point couldn't be used. Only exact `/dev/diskN` or `/dev/diskNsM` entries are accepted.
+    static func wholeDisks(fromAttachPlist data: Data) -> [String] {
+        guard let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
+            let entities = plist["system-entities"] as? [[String: Any]]
+        else { return [] }
+        var disks: [String] = []
+        for entity in entities {
+            guard let entry = entity["dev-entry"] as? String, let disk = wholeDisk(entry), !disks.contains(disk)
+            else { continue }
+            disks.append(disk)
+        }
+        return disks
+    }
+
+    /// `/dev/disk4s1` -> `/dev/disk4`; nil for anything else.
+    static func wholeDisk(_ entry: String) -> String? {
+        let prefix = Array("/dev/disk".utf8)
+        let bytes = Array(entry.utf8)
+        guard bytes.starts(with: prefix) else { return nil }
+        let rest = bytes.dropFirst(prefix.count)
+        let isDigit: (UInt8) -> Bool = { $0 >= 0x30 && $0 <= 0x39 }
+        let number = rest.prefix(while: isDigit)
+        guard !number.isEmpty else { return nil }
+        let slice = rest.dropFirst(number.count)
+        if !slice.isEmpty {
+            guard slice.first == UInt8(ascii: "s"), slice.count > 1, slice.dropFirst().allSatisfy(isDigit) else {
+                return nil
+            }
+        }
+        return String(decoding: prefix + number, as: UTF8.self)
     }
 
     private func detach(_ mountPoint: String) {
