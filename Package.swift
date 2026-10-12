@@ -10,8 +10,17 @@ let package = Package(
     targets: [
         .target(
             name: "TestSupport",
-            dependencies: ["ScanEngine"],
+            dependencies: ["ScanEngine", "ProcessKit"],
             path: "Packages/OpenCleanKit/Sources/TestSupport"
+        ),
+        .target(
+            name: "ProcessKit",
+            path: "Packages/OpenCleanKit/Sources/ProcessKit"
+        ),
+        .target(
+            name: "Probes",
+            dependencies: ["ScanEngine", "ProcessKit", "RuleKit"],
+            path: "Packages/OpenCleanKit/Sources/Probes"
         ),
         .target(
             name: "RuleKit",
@@ -32,6 +41,16 @@ let package = Package(
             name: "ScanEngineTests",
             dependencies: ["ScanEngine", "RuleKit", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/ScanEngineTests"
+        ),
+        .testTarget(
+            name: "ProcessKitTests",
+            dependencies: ["ProcessKit"],
+            path: "Packages/OpenCleanKit/Tests/ProcessKitTests"
+        ),
+        .testTarget(
+            name: "ProbesTests",
+            dependencies: ["Probes", "ScanEngine", "ProcessKit", "TestSupport"],
+            path: "Packages/OpenCleanKit/Tests/ProbesTests"
         ),
     ]
 )
