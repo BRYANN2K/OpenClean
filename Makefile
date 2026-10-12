@@ -5,7 +5,7 @@ BUILD_DIR := build
 APP := $(BUILD_DIR)/OpenClean.app
 BIN = $(shell swift build -c release $(ARCH_FLAGS) --show-bin-path)
 
-.PHONY: build test app install uninstall dist lint
+.PHONY: build test app install uninstall dist lint icon
 
 build:
 	swift build -c release $(ARCH_FLAGS)
@@ -23,6 +23,7 @@ app: build
 	cp "$(BIN)/OpenCleanApp" "$(APP)/Contents/MacOS/OpenClean"
 	cp Apps/OpenClean/Info.plist "$(APP)/Contents/Info.plist"
 	cp Rules/*.yaml "$(APP)/Contents/Resources/Rules/"
+	cp Apps/OpenClean/Resources/AppIcon.icns "$(APP)/Contents/Resources/AppIcon.icns"
 	codesign --force --sign - "$(APP)"
 
 install: app
@@ -42,3 +43,7 @@ dist: app
 	cp Rules/*.yaml "$(BUILD_DIR)/dist/openclean-cli/share/openclean/rules/"
 	ditto -c -k --keepParent "$(APP)" "$(BUILD_DIR)/OpenClean-$(VERSION).zip"
 	ditto -c -k --keepParent "$(BUILD_DIR)/dist/openclean-cli" "$(BUILD_DIR)/openclean-cli-$(VERSION).zip"
+
+# Regenerate the app icon after changing the logo (see .claude/skills/openclean-design).
+icon:
+	swift scripts/make-app-icon.swift Apps/OpenClean/Resources/AppIcon.icns

@@ -8,6 +8,8 @@
     <string>OpenClean</string>
     <key>CFBundleIdentifier</key>
     <string>io.github.leoanimesh.OpenClean</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundleName</key>
     <string>OpenClean</string>
     <key>CFBundleDisplayName</key>

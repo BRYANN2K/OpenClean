@@ -19,9 +19,10 @@ struct OpenCleanApp: App {
         WindowGroup("OpenClean") {
             ContentView()
                 .environment(model)
-                .frame(minWidth: 980, minHeight: 620)
+                .frame(minWidth: 1200, minHeight: 720)
                 .task { model.onLaunch() }
         }
+        .windowStyle(.hiddenTitleBar)
         SwiftUI.Settings {
             SettingsView()
                 .environment(model)
