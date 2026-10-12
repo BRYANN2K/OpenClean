@@ -61,4 +61,38 @@ Check your pack with `openclean rules lint path/to/pack.yaml`, then try it with
 - One logical change per PR, with tests.
 - `swift test` and `make lint` must pass.
 - New behaviour that removes files needs a test showing what is **not** removed.
-- Commit messages use Conventional Commits (`feat(scan): …`, `fix(quarantine): …`).
+- Commit messages use Conventional Commits (`feat(scan): …`, `fix(quarantine): …`). They decide the
+  next version, so pick the type carefully (see below).
+
+## Releases & versioning
+
+Every merge to `main` runs `.github/workflows/release.yml`. It looks at the commits since the last
+`vX.Y.Z` tag (subjects and bodies, so squash-merge bodies count) and picks the bump:
+
+| Commits since the last tag | Bump | Example |
+|---|---|---|
+| `type!:` / `type(scope)!:`, or a `BREAKING CHANGE:` footer | major | 1.4.2 → 2.0.0 |
+| any `feat` | minor | 1.4.2 → 1.5.0 |
+| any `fix` or `perf` | patch | 1.4.2 → 1.4.3 |
+| only `docs`, `chore`, `ci`, `test`, `style`, `refactor`, `build` | no release | |
+
+While the major version is 0, a breaking change bumps the minor version instead (0.4.2 → 0.5.0), the
+usual 0.x convention. Leaving 0.x is a deliberate step: run the workflow by hand with a `version` input
+of `1.0.0`. The same input forces a release at any version (`workflow_dispatch`, Actions tab).
+
+With no tags yet, the `CFBundleShortVersionString` in `Apps/OpenClean/Info.plist` is the previous
+version. You don't need to bump it: the build stamps the release version and a build number (the commit
+count) into the app bundle.
+
+When a release is due, the workflow builds, tests and lints, makes a universal `OpenClean-X.Y.Z.dmg`,
+`openclean-cli-X.Y.Z.zip` and `SHA256SUMS.txt` (`make release-assets`), pushes the `vX.Y.Z` tag and
+publishes a GitHub release with notes grouped into breaking changes, features, fixes and other.
+
+Check locally:
+
+```sh
+scripts/next-version.sh                 # next version, or nothing if no release is due
+scripts/next-version.sh --notes         # the release notes
+bash scripts/tests/test-next-version.sh
+make release-assets VERSION=0.0.0-test  # native arch; add ARCH_FLAGS="--arch arm64 --arch x86_64" for universal
+```
