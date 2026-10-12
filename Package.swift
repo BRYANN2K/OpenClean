@@ -11,7 +11,7 @@ let package = Package(
     targets: [
         .target(
             name: "TestSupport",
-            dependencies: ["ScanEngine", "ProcessKit", "Privilege", "Quarantine"],
+            dependencies: ["ScanEngine", "ProcessKit", "Privilege", "Quarantine", "Updater"],
             path: "Packages/OpenCleanKit/Sources/TestSupport"
         ),
         .target(
@@ -122,10 +122,20 @@ let package = Package(
             path: "Packages/OpenCleanKit/Tests/MaintenanceTests"
         ),
         .target(
+            name: "Updater",
+            dependencies: ["ProcessKit", "RuleKit"],
+            path: "Packages/OpenCleanKit/Sources/Updater"
+        ),
+        .testTarget(
+            name: "UpdaterTests",
+            dependencies: ["Updater", "ProcessKit", "RuleKit", "TestSupport"],
+            path: "Packages/OpenCleanKit/Tests/UpdaterTests"
+        ),
+        .target(
             name: "OpenCleanKit",
             dependencies: [
                 "RuleKit", "ScanEngine", "Probes", "Privilege", "Quarantine", "Permissions", "ProcessKit",
-                "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit",
+                "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit", "Updater",
             ],
             path: "Packages/OpenCleanKit/Sources/OpenCleanKit"
         ),
@@ -133,7 +143,7 @@ let package = Package(
             name: "OpenCleanKitTests",
             dependencies: [
                 "OpenCleanKit", "RuleKit", "ScanEngine", "Probes", "Quarantine", "Permissions", "TestSupport",
-                "AppInventory", "Maintenance", "SpaceKit",
+                "AppInventory", "Maintenance", "SpaceKit", "Updater", "ProcessKit",
             ],
             path: "Packages/OpenCleanKit/Tests/OpenCleanKitTests"
         ),
@@ -160,7 +170,7 @@ let package = Package(
             name: "OpenCleanAppModel",
             dependencies: [
                 "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "AppInventory", "SystemMonitor",
-                "Maintenance", "SpaceKit",
+                "Maintenance", "SpaceKit", "Updater",
             ],
             path: "Apps/OpenClean/Sources/OpenCleanAppModel"
         ),
@@ -168,7 +178,7 @@ let package = Package(
             name: "OpenCleanAppModelTests",
             dependencies: [
                 "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Permissions", "TestSupport",
-                "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit",
+                "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit", "Updater",
             ],
             path: "Apps/OpenClean/Tests/OpenCleanAppModelTests"
         ),
@@ -176,7 +186,7 @@ let package = Package(
             name: "OpenCleanApp",
             dependencies: [
                 "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions",
-                "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit",
+                "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit", "Updater",
             ],
             path: "Apps/OpenClean/Sources/OpenCleanApp"
         ),

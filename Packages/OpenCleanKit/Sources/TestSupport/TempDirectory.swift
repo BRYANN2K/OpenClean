@@ -51,3 +51,23 @@ public final class TempDirectory: @unchecked Sendable {
         return target.path
     }
 }
+
+extension TempDirectory {
+    /// A minimal app bundle (`Contents/Info.plist` + a fake executable) for update tests.
+    @discardableResult
+    public func fakeApp(
+        _ relativePath: String, bundleID: String = "io.github.leoanimesh.OpenClean", version: String = "0.2.0"
+    ) throws -> String {
+        let app = url.appendingPathComponent(relativePath, isDirectory: true)
+        let contents = app.appendingPathComponent("Contents", isDirectory: true)
+        try FileManager.default.createDirectory(
+            at: contents.appendingPathComponent("MacOS"), withIntermediateDirectories: true)
+        let info: [String: Any] = [
+            "CFBundleIdentifier": bundleID, "CFBundleShortVersionString": version, "CFBundleExecutable": "OpenClean",
+        ]
+        try PropertyListSerialization.data(fromPropertyList: info, format: .xml, options: 0)
+            .write(to: contents.appendingPathComponent("Info.plist"))
+        try Data("version \(version)".utf8).write(to: contents.appendingPathComponent("MacOS/OpenClean"))
+        return app.path
+    }
+}
