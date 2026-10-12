@@ -7,7 +7,10 @@ public struct OpenCleanCommand: ParsableCommand {
         commandName: "openclean",
         abstract: "Transparent, open-source cleanup for macOS.",
         version: "0.1.0",
-        subcommands: [ScanCommand.self, RulesCommand.self]
+        subcommands: [
+            ScanCommand.self, CleanCommand.self, HistoryCommand.self, RestoreCommand.self,
+            RulesCommand.self, ScheduleCommand.self, PurgeCommand.self,
+        ]
     )
 
     public init() {}
