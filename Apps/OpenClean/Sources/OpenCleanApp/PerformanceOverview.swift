@@ -36,9 +36,14 @@ struct PerformanceOverview: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Menu bar").font(.system(size: 18, weight: .bold))
-                    Toggle("Show OpenClean in the menu bar", isOn: $menuBarEnabled)
-                        .toggleStyle(.switch)
-                        .tint(Theme.accent)
+                    HStack {
+                        Text("Show OpenClean in the menu bar")
+                        Spacer()
+                        Toggle("Show OpenClean in the menu bar", isOn: $menuBarEnabled)
+                            .toggleStyle(.switch)
+                            .tint(Theme.accent)
+                            .labelsHidden()
+                    }
                     HStack {
                         Text("Show next to the icon")
                         Spacer()

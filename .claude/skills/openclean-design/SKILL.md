@@ -98,6 +98,7 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 
 ## Settings and Software Update
 
+- Every switch, stepper or picker sits at the trailing edge of its row, with its label on the left (`Text` + `Spacer()` + control with `.labelsHidden()`); never let a `Toggle` lay out its own label next to the switch.
 - Settings is a page in the main window, opened from the sidebar row under the storage card or ⌘, (there is no separate Settings window). Sections are glass panels of rows: title (+ optional one-line detail) on the left, a switch, stepper, picker or capsule button on the right. New preferences go into the matching section, not into module screens.
 - Update availability is a glass banner at the top of the detail area (like the Full Disk Access banner); the Software Update sheet carries the notes, progress and Install and Relaunch. Never install without the user pressing Install and Relaunch.
 - Sessions created by an app update or a removed launch agent are kept for undo but don't count as cleanups in totals (`CleanupStats.maintenanceRuleIDs`).
