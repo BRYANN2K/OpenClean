@@ -129,7 +129,7 @@ Rules with `requires: admin` must be `regenerable` (no root-owned data is ever q
 ### Hard deny-list (in Swift, not overridable by rules)
 
 A matched path is rejected if it is, or is inside, any of:
-`/System`, `/bin`, `/sbin`, `/usr` (except `/usr/local`), `/Applications/*.app` and `~/Applications/*.app` bundles, `~/Documents`, `~/Desktop`, `~/Pictures/*.photoslibrary`, `~/Library/Keychains`, `/Library/Keychains`, `~/Library/Mobile Documents` (root itself), `~/Library/Mail` (except `~/Library/Containers/com.apple.mail/Data/Library/Mail Downloads`), the user home directory itself, and `/`.
+`/System`, `/bin`, `/sbin`, `/usr` (except `/usr/local`), `/Applications/*.app` and `~/Applications/*.app` bundles, `~/Documents`, `~/Desktop`, `~/Pictures/*.photoslibrary`, `~/Library/Keychains`, `/Library/Keychains`, `~/Library/Mobile Documents` (whole subtree), `~/Library/Mail` (except `~/Library/Containers/com.apple.mail/Data/Library/Mail Downloads`), the user home directory itself, and `/`.
 
 A path is also denied when it contains a protected location (for example `~/Library`, `/Library`, `/Users`), and `~/Library/Mobile Documents` is protected as a whole subtree. Rules whose glob literal prefix falls in the deny-list fail lint. At scan time, every resolved match is re-checked.
 

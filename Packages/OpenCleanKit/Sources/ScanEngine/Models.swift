@@ -127,10 +127,12 @@ public struct ScanContext: Sendable {
         home: String, hasFullDiskAccess: Bool, processChecker: any ProcessChecker,
         userExcludes: [String] = [], now: Date = .now
     ) {
-        self.home = home
+        self.home = realPath(home) ?? home
         self.hasFullDiskAccess = hasFullDiskAccess
         self.processChecker = processChecker
-        self.userExcludes = userExcludes
+        self.userExcludes = userExcludes.map { exclude in
+            realPath(exclude) ?? (exclude.count > 1 && exclude.hasSuffix("/") ? String(exclude.dropLast()) : exclude)
+        }
         self.now = now
     }
 

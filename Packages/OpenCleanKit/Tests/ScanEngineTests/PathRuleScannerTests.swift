@@ -132,6 +132,38 @@ struct PathRuleScannerTests {
         #expect(result.items.map(\.path) == [home.path + "/Library/Caches/other"])
     }
 
+    @Test func excludeInsideItemSkipsWholeItem() throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/foo/keep/f", bytes: 10)
+        try home.file("Library/Caches/other/f", bytes: 10)
+        let result = scan(
+            rule(["~/Library/Caches/*"]), context(home, excludes: [home.path + "/Library/Caches/foo/keep"]))
+        #expect(result.items.map(\.path) == [home.path + "/Library/Caches/other"])
+    }
+
+    @Test func symlinkedHomeStillAppliesDenyList() throws {
+        let real = try TempDirectory()
+        try real.file("Documents/a", bytes: 10)
+        try real.file("junk/b", bytes: 10)
+        let holder = try TempDirectory()
+        let link = try holder.symlink("link", to: real.path)
+        let result = scan(
+            rule(["~/*"]),
+            ScanContext(home: link, hasFullDiskAccess: true, processChecker: FakeProcessChecker()))
+        #expect(result.items.map(\.path) == [real.path + "/junk"])
+        #expect(result.errors.contains { $0.contains("protected") })
+    }
+
+    @Test func excludesMatchIgnoringCaseAndTrailingSlash() throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/mine/f", bytes: 10)
+        try home.file("Library/Caches/other/f", bytes: 10)
+        let result = scan(
+            rule(["~/Library/Caches/*"]),
+            context(home, excludes: [(home.path + "/library/caches/MINE/").replacingOccurrences(of: "//", with: "/")]))
+        #expect(result.items.map(\.path) == [home.path + "/Library/Caches/other"])
+    }
+
     @Test func snapshotMatchesScannerFields() throws {
         let home = try TempDirectory()
         let path = try home.file("f", bytes: 8_192)

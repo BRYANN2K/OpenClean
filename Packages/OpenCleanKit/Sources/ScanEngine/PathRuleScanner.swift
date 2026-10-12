@@ -30,7 +30,14 @@ public struct PathRuleScanner: Sendable {
                     break patterns
                 }
                 if excludes.contains(where: { fnmatch($0, match, 0) == 0 }) { continue }
-                switch ItemBuilder.build(path: match, within: prefixReal, rule: rule, context: context, ledger: ledger) {
+                let outcome = ItemBuilder.build(
+                    path: match, within: prefixReal, rule: rule, context: context, ledger: ledger)
+                if Task.isCancelled {
+                    // The size may be truncated; discard rather than report a wrong number.
+                    result.status = .cancelled
+                    break patterns
+                }
+                switch outcome {
                 case .item(let item): result.items.append(item)
                 case .dropped(let reason): result.errors.append("\(match): \(reason)")
                 case .filtered: break

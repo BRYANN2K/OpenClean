@@ -35,9 +35,15 @@ enum ItemBuilder {
         if let reason = context.denyList.denialReason(for: real) {
             return .dropped("protected: \(reason)")
         }
-        if context.userExcludes.contains(where: { real == $0 || real.hasPrefix($0 + "/") }) {
-            return .filtered
+        // Items are removed whole, so an exclude equal to, inside, or above the item protects it.
+        let lowerReal = real.lowercased()
+        let isExcluded = context.userExcludes.contains { exclude in
+            let lowerExclude = exclude.lowercased()
+            return lowerReal == lowerExclude
+                || lowerReal.hasPrefix(lowerExclude == "/" ? "/" : lowerExclude + "/")
+                || lowerExclude.hasPrefix(lowerReal + "/")
         }
+        if isExcluded { return .filtered }
         if let days = rule.conditions.minAgeDays,
             stat.modificationDate > context.now.addingTimeInterval(-Double(days) * 86_400)
         {
