@@ -37,6 +37,8 @@ rules:
     explain: Arc's cache folder. Spaces, history, cookies and passwords are stored elsewhere and are not touched.
     paths:
       - "~/Library/Caches/company.thebrowser.Browser/*"
+      - "~/Library/Caches/Arc/User Data/*/Cache"
+      - "~/Library/Caches/Arc/User Data/*/Code Cache"
     safety: regenerable
     conditions:
       app_not_running: company.thebrowser.Browser

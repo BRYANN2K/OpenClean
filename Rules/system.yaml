@@ -4,11 +4,12 @@ rules:
   - id: system.caches
     name: System caches
     category: system
-    explain: Caches that system services and installed apps rebuild automatically when needed. Apple's own system caches are left alone.
+    explain: Caches that system services and installed apps rebuild automatically when needed. Apple's com.apple.* caches and downloaded Siri voices are left alone.
     paths:
       - "/Library/Caches/*"
     exclude:
       - "/Library/Caches/com.apple.*"
+      - "/Library/Caches/SiriTTS"
     safety: regenerable
     requires: [admin]
   - id: system.logs

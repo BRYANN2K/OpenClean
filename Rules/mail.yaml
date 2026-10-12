@@ -4,7 +4,7 @@ rules:
   - id: mail.downloads
     name: Mail attachment copies
     category: mail
-    explain: Copies of attachments Mail saved when you opened them. The originals stay in your mailbox.
+    explain: Copies of attachments Mail saved when you opened them. The originals stay in your mailbox, but if you edited an opened attachment and saved it, that edited copy lives here.
     paths:
       - "~/Library/Containers/com.apple.mail/Data/Library/Mail Downloads/*"
     safety: review

@@ -4,7 +4,7 @@ rules:
   - id: ios.backups
     name: Old iPhone and iPad backups
     category: ios
-    explain: Local device backups not updated in 90+ days. Make sure you have a newer backup (local or iCloud) before removing one.
+    explain: Local device backups not updated in 90+ days, including backups you archived in Finder on purpose. Make sure you have a newer backup (local or iCloud) before removing one.
     paths:
       - "~/Library/Application Support/MobileSync/Backup/*"
     safety: review

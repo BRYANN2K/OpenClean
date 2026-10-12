@@ -4,7 +4,7 @@ rules:
   - id: user.app-caches
     name: App caches
     category: user
-    explain: Per-app cache folders. Apps recreate them on demand; quit apps first for the best result. iCloud and browser caches are handled separately.
+    explain: Per-app cache folders that apps recreate on demand; quit apps first for the best result. Apple system caches, browser caches, IDE history and test-browser downloads are left alone or handled separately.
     paths:
       - "~/Library/Caches/*"
     exclude:
@@ -18,6 +18,13 @@ rules:
       - "~/Library/Caches/Yarn"
       - "~/Library/Caches/CloudKit"
       - "~/Library/Caches/com.apple.bird"
+      - "~/Library/Caches/com.apple.*"
+      - "~/Library/Caches/JetBrains"
+      - "~/Library/Caches/ms-playwright"
+      - "~/Library/Caches/org.webkit.Playwright"
+      - "~/Library/Caches/Arc"
+      - "~/Library/Caches/Microsoft Edge"
+      - "~/Library/Caches/BraveSoftware"
     safety: regenerable
   - id: user.logs
     name: User logs
@@ -25,4 +32,8 @@ rules:
     explain: Diagnostic logs written by apps. Nothing reads them unless you are troubleshooting.
     paths:
       - "~/Library/Logs/*"
+    exclude:
+      - "~/Library/Logs/DiagnosticReports"
     safety: regenerable
+    conditions:
+      min_age_days: 7
