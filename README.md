@@ -1,10 +1,51 @@
-# OpenClean
+<p align="center">
+  <img src="docs/brand/logo.svg" width="112" alt="OpenClean app icon">
+</p>
 
-Open-source, transparent cleanup for macOS. A community alternative to CleanMyMac.
+<h1 align="center">OpenClean</h1>
 
-OpenClean finds caches, logs, developer and AI-tool leftovers you can safely remove, shows you exactly
-why each item is safe, and keeps anything that is not trivially regenerable in a quarantine you can
-restore from for 7 days.
+<p align="center">
+  <strong>Free, open-source Mac cleaner — a transparent CleanMyMac alternative for macOS.</strong><br>
+  Clear caches, logs, Xcode DerivedData, npm/Gradle/Cargo caches and AI model leftovers, with undo.
+</p>
+
+<p align="center">
+  <a href="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml"><img src="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/macOS-14%2B-0A4756" alt="macOS 14+">
+  <img src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white" alt="Swift 6">
+  <img src="https://img.shields.io/badge/SwiftUI-native-12A88B" alt="Native SwiftUI">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="GPL-3.0"></a>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/home.png" width="860" alt="OpenClean Smart Scan home screen on macOS">
+</p>
+
+OpenClean is a native macOS disk cleanup app and command-line tool. Smart Scan finds caches, logs,
+developer-tool and AI-tool leftovers you can safely remove, shows you exactly why each item is safe, and
+keeps anything that is not trivially regenerable in a quarantine you can restore from for 7 days.
+No accounts, no analytics, no network access — every cleaning rule is readable YAML.
+
+## Screenshots
+
+| Smart Scan results | Cleanup complete |
+|---|---|
+| <img src="docs/screenshots/results.png" alt="OpenClean scan results with safe and review categories"> | <img src="docs/screenshots/complete.png" alt="OpenClean cleanup summary with freed space and quarantine"> |
+| **Scanning** | **History & restore** |
+| <img src="docs/screenshots/scanning.png" alt="OpenClean scanning progress"> | <img src="docs/screenshots/history.png" alt="OpenClean cleanup history with quarantine countdown and restore"> |
+
+## Features
+
+- **Smart Scan** — one click to find System Junk, user caches and logs, browser caches, Trash, Mail
+  attachments and old iOS backups.
+- **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; npm, Yarn, pnpm,
+  pip, Cargo, Gradle, CocoaPods and Homebrew caches; Docker disk image reporting.
+- **AI model cleanup** — Ollama, LM Studio and Hugging Face caches.
+- **Safe by design** — Safe / Review / Caution levels, a hard deny-list, pre-delete checks, and a
+  quarantine with **History and Restore** (undo for 1–90 days).
+- **Transparent rules** — every rule explains itself in the app; write and lint your own YAML packs.
+- **CLI with JSON output** — script `openclean scan` / `clean` in CI or dotfiles.
+- **Native and private** — Swift 6 + SwiftUI, no telemetry, GPL-3.0.
 
 ## Why OpenClean
 
