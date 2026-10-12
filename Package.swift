@@ -111,5 +111,15 @@ let package = Package(
             path: "Apps/openclean-cli/Tests/OpenCleanCLITests",
             exclude: ["Golden"]
         ),
+        .target(
+            name: "OpenCleanAppModel",
+            dependencies: ["OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions"],
+            path: "Apps/OpenClean/Sources/OpenCleanAppModel"
+        ),
+        .testTarget(
+            name: "OpenCleanAppModelTests",
+            dependencies: ["OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Permissions", "TestSupport"],
+            path: "Apps/OpenClean/Tests/OpenCleanAppModelTests"
+        ),
     ]
 )
