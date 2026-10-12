@@ -141,7 +141,10 @@ struct SystemMonitorTests {
     @Test func restartingProcessSamplingStartsAFreshBaseline() throws {
         let app = "/Applications/Editor.app/Contents/MacOS/Editor"
         func editor(_ seconds: UInt64) -> [ProcessSample] {
-            [ProcessSample(pid: 10, name: "Editor", path: app, cpuTimeNanoseconds: seconds * 1_000_000_000, residentBytes: 1)]
+            [
+                ProcessSample(
+                    pid: 10, name: "Editor", path: app, cpuTimeNanoseconds: seconds * 1_000_000_000, residentBytes: 1)
+            ]
         }
         let ticks = CPUTicks(user: 0, system: 0, idle: 1, nice: 0)
         let sampler = FakeSampler([
