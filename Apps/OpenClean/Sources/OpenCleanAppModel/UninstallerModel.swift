@@ -99,10 +99,16 @@ public final class UninstallerModel {
 
     // MARK: Selection
 
+    /// Apps OpenClean can uninstall, including root-owned ones (they ask for an administrator password).
+    /// Apple apps, Utilities, apps without a bundle id and OpenClean itself are left out of the list.
+    public var uninstallableApps: [InstalledApp] {
+        apps.filter { $0.status.isRemovable || $0.status == .needsAdministrator }
+    }
+
     public var filteredApps: [InstalledApp] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !query.isEmpty else { return apps }
-        return apps.filter {
+        guard !query.isEmpty else { return uninstallableApps }
+        return uninstallableApps.filter {
             $0.name.localizedCaseInsensitiveContains(query)
                 || ($0.bundleID?.localizedCaseInsensitiveContains(query) ?? false)
         }
@@ -112,7 +118,7 @@ public final class UninstallerModel {
         selectedAppID.flatMap { id in apps.first { $0.id == id } }
     }
 
-    public var totalAppBytes: Int64 { apps.reduce(0) { $0 + $1.size } }
+    public var totalAppBytes: Int64 { uninstallableApps.reduce(0) { $0 + $1.size } }
 
     public var removableLeftovers: [Leftover] { leftovers.filter { !$0.isReportOnly } }
     public var reportOnlyLeftovers: [Leftover] { leftovers.filter(\.isReportOnly) }

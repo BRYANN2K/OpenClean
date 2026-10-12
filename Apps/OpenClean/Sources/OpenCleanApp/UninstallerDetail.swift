@@ -1,10 +1,13 @@
 import AppInventory
+import AppKit
 import OpenCleanAppModel
 import SwiftUI
 
 /// Right-hand panel: facts about the selected app and what it left behind.
 struct UninstallerDetailView: View {
     @Environment(UninstallerModel.self) private var model
+    @State private var isQuitting = false
+    @State private var quitNotice: String?
 
     var body: some View {
         if let app = model.selectedApp {
@@ -49,11 +52,45 @@ struct UninstallerDetailView: View {
             HStack(spacing: 12) {
                 notice(
                     symbol: "exclamationmark.triangle.fill",
-                    text: "\(app.name) is running. Quit it, then check again.", tint: Theme.gold)
-                Button("Check Again") { model.select(app) }
+                    text: quitNotice ?? "\(app.name) is running. Quit it to uninstall.", tint: Theme.gold)
+                Button("Force Quit…") { forceQuit(app) }
                     .buttonStyle(CapsuleButtonStyle())
                     .fixedSize()
+                    .disabled(isQuitting)
             }
+        }
+    }
+
+    /// Asks first, force quits the app's running copies at exactly this path, then re-checks the app
+    /// (which also refreshes the Uninstall button) once they've gone.
+    private func forceQuit(_ app: InstalledApp) {
+        guard app.bundleID != InstalledApp.openCleanBundleID else { return }
+        let running = NSWorkspace.shared.runningApplications.filter { runningApp in
+            guard let url = runningApp.bundleURL else { return false }
+            return url.resolvingSymlinksInPath().path == URL(fileURLWithPath: app.path).resolvingSymlinksInPath().path
+        }
+        guard !running.isEmpty else {
+            model.select(app)
+            return
+        }
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "Force quit \(app.name)?"
+        alert.informativeText = "Any unsaved changes in \(app.name) will be lost."
+        alert.addButton(withTitle: "Force Quit")
+        alert.addButton(withTitle: "Cancel")
+        alert.buttons.first?.hasDestructiveAction = true
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        isQuitting = true
+        quitNotice = "Quitting \(app.name)…"
+        running.forEach { $0.forceTerminate() }
+        Task {
+            for _ in 0..<30 where running.contains(where: { !$0.isTerminated }) {
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+            isQuitting = false
+            quitNotice = running.allSatisfy(\.isTerminated) ? nil : "\(app.name) didn't quit. Try again."
+            model.select(app)
         }
     }
 

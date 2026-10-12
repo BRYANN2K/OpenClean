@@ -53,7 +53,7 @@ struct UninstallerListView: View {
                     .lineLimit(2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                StatPill(text: "\(model.apps.count) apps · \(formatBytes(model.totalAppBytes))") {
+                StatPill(text: "\(model.uninstallableApps.count) apps · \(formatBytes(model.totalAppBytes))") {
                     Image(systemName: "square.grid.2x2").font(.system(size: 11, weight: .semibold))
                 }
                 .fixedSize()
@@ -126,7 +126,7 @@ struct UninstallerAppList: View {
                     .font(.system(size: 28))
                     .foregroundStyle(Theme.textSecondary)
                     .accessibilityHidden(true)
-                Text(model.apps.isEmpty ? "No apps found" : "No apps match “\(model.searchText)”")
+                Text(model.uninstallableApps.isEmpty ? "No apps to uninstall" : "No apps match “\(model.searchText)”")
                     .font(.system(size: 14, weight: .semibold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
