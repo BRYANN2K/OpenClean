@@ -92,14 +92,28 @@ let package = Package(
             path: "Packages/OpenCleanKit/Tests/SystemMonitorTests"
         ),
         .target(
+            name: "Maintenance",
+            dependencies: ["RuleKit", "ProcessKit", "Privilege", "Quarantine"],
+            path: "Packages/OpenCleanKit/Sources/Maintenance"
+        ),
+        .testTarget(
+            name: "MaintenanceTests",
+            dependencies: ["Maintenance", "RuleKit", "ProcessKit", "Privilege", "Quarantine", "TestSupport"],
+            path: "Packages/OpenCleanKit/Tests/MaintenanceTests"
+        ),
+        .target(
             name: "OpenCleanKit",
-            dependencies: ["RuleKit", "ScanEngine", "Probes", "Privilege", "Quarantine", "Permissions", "ProcessKit"],
+            dependencies: [
+                "RuleKit", "ScanEngine", "Probes", "Privilege", "Quarantine", "Permissions", "ProcessKit",
+                "SystemMonitor", "Maintenance",
+            ],
             path: "Packages/OpenCleanKit/Sources/OpenCleanKit"
         ),
         .testTarget(
             name: "OpenCleanKitTests",
             dependencies: [
                 "OpenCleanKit", "RuleKit", "ScanEngine", "Probes", "Quarantine", "Permissions", "TestSupport",
+                "Maintenance",
             ],
             path: "Packages/OpenCleanKit/Tests/OpenCleanKitTests"
         ),
@@ -124,7 +138,9 @@ let package = Package(
         ),
         .target(
             name: "OpenCleanAppModel",
-            dependencies: ["OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions"],
+            dependencies: [
+                "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "SystemMonitor", "Maintenance",
+            ],
             path: "Apps/OpenClean/Sources/OpenCleanAppModel"
         ),
         .testTarget(
@@ -134,7 +150,10 @@ let package = Package(
         ),
         .executableTarget(
             name: "OpenCleanApp",
-            dependencies: ["OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions"],
+            dependencies: [
+                "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions",
+                "SystemMonitor", "Maintenance",
+            ],
             path: "Apps/OpenClean/Sources/OpenCleanApp"
         ),
     ]
