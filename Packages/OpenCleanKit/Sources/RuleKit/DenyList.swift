@@ -29,8 +29,8 @@ public struct DenyList: Sendable {
 
     public func denialReason(for rawPath: String) -> String? {
         // Fail closed: a path we cannot reason about lexically is never deletable.
-        guard rawPath.hasPrefix("/") else { return "non-canonical path (not absolute)" }
-        if rawPath.split(separator: "/").contains(where: { $0 == "." || $0 == ".." }) {
+        guard rawPath.utf8.first == 0x2F else { return "non-canonical path (not absolute)" }
+        if hasNonCanonicalComponent(rawPath) {
             return "non-canonical path (contains . or .. component)"
         }
         let path = normalizedPath(rawPath)

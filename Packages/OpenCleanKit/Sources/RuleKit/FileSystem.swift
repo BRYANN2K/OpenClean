@@ -50,3 +50,9 @@ func isAncestorOrEqual(_ ancestor: String, of path: String) -> Bool {
     if ancestor == "/" { return true }
     return path == ancestor || path.hasPrefix(ancestor + "/")
 }
+
+/// True if any "/"-separated component is exactly "." or "..". Works on UTF-8 bytes so a combining
+/// mark after "/" cannot merge separators into a single Character and hide a component.
+func hasNonCanonicalComponent(_ path: String) -> Bool {
+    path.utf8.split(separator: 0x2F).contains { $0.elementsEqual([0x2E]) || $0.elementsEqual([0x2E, 0x2E]) }
+}

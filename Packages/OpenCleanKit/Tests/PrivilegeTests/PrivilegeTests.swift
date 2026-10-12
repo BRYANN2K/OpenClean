@@ -31,6 +31,11 @@ struct AdminCommandBuilderTests {
         for bad in ["/Library/Caches/x/", "/a//b", "/Library/./Caches/x", "/Library/Caches/../../Users/x"] {
             #expect(throws: AdminCommandError.invalidPath(bad)) { try AdminCommandBuilder.removalCommand(paths: [bad]) }
         }
+        for bad in ["/a/../\u{0301}b", "/a/./\u{0301}b", "/a//\u{0301}b"] {
+            #expect(throws: AdminCommandError.invalidPath(bad)) { try AdminCommandBuilder.removalCommand(paths: [bad]) }
+        }
+        // "/a/b/<U+0301>" is a literal file named U+0301 under /a/b (no trailing slash at byte level): accepted.
+        #expect((try? AdminCommandBuilder.removalCommand(paths: ["/a/b/\u{0301}"])) != nil)
         let long = Array(repeating: "/Library/Caches/" + String(repeating: "x", count: 200), count: 5_000)
         #expect(throws: AdminCommandError.tooLong) { try AdminCommandBuilder.removalCommand(paths: long) }
     }

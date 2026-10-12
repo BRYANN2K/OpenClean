@@ -33,6 +33,7 @@ struct DenyListTests {
         "/Users/tester/Library/Caches/../../Documents/x", "/Users/tester/./Documents/x", "Documents/x", "",
         "/users/TESTER/documents/x", "/applications/safari.app",
         "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+        "/Users/tester/Library/Caches/../\u{0301}Documents/x", "/Users/tester/./\u{0301}x",
     ])
     func deniesNonCanonicalCaseAndNestedBundles(path: String) {
         #expect(deny.isDenied(path), "expected \(path) to be denied")
@@ -41,6 +42,7 @@ struct DenyListTests {
     @Test func caseVariantStillAllowedWhenOrdinary() {
         #expect(!deny.isDenied("/Library/Caches/com.Example"))
         #expect(!deny.isDenied("/Applications/Utilities"))
+        #expect(!deny.isDenied("/Library/Caches/cafe\u{0301}"))
     }
 
     @Test func reasonsKeepConfiguredRootText() {
