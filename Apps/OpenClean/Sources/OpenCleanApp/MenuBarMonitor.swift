@@ -20,7 +20,7 @@ struct MenuBarLabel: View {
         HStack(spacing: 4) {
             if metric == .cpuAndMemory {
                 // A menu bar label keeps only one image and one text (extra and inline images are dropped),
-                // so the glyph, icons and figures are drawn into a single template image.
+                // so the icons and figures are drawn into a single template image.
                 Image(
                     nsImage: MenuBarFiguresImage.render(
                         cpu: formatPercent(model.cpu), memory: formatPercent(model.memory?.usedFraction)))
@@ -160,13 +160,12 @@ struct MenuBarPopover: View {
     }
 }
 
-/// Draws "glyph · CPU icon · CPU% · memory icon · memory%" into one template image for the menu bar.
+/// Draws "CPU icon · CPU% · memory icon · memory%" into one template image for the menu bar.
 @MainActor
 enum MenuBarFiguresImage {
     static func render(cpu: String, memory: String) -> NSImage {
         let font = Font.system(size: 12, weight: .medium)
         let content = HStack(spacing: 4) {
-            Image(nsImage: MenuBarGlyph.image)
             Image(systemName: "cpu").font(font)
             Text(cpu).font(font).monospacedDigit()
             Image(systemName: "memorychip").font(font).padding(.leading, 3)
