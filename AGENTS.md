@@ -64,5 +64,6 @@ Swift Testing (`import Testing`, `#expect`). Tests must never touch the real hom
 ## Project conventions
 
 - Design docs live in `docs/superpowers/specs/`, implementation plans in `docs/superpowers/plans/`. v1 is four sub-projects; #1 (core + cleanup + Smart Scan) is done. Next: #2 Uninstaller + leftovers, #3 Space Lens + large/old/duplicates, #4 Performance + menu bar. The sidebar already shows these as "Coming soon".
+- UI work follows the design system in `.claude/skills/openclean-design/SKILL.md` (tokens and components in `Apps/OpenClean/Sources/OpenCleanApp/Theme.swift`; `make icon` regenerates the app icon). No XP, levels, streaks or milestones: the app shows facts only.
 - Clean-room: the feature set was informed by CleanMyMac metadata and UI strings only. Never decompile, copy, or reference MacPaw code, binaries, rule data or assets.
 - Commits use Conventional Commits (`feat(scan): …`, `fix(quarantine): …`). The repo has a local git identity (`leoAnimesh`) and a repo-local credential helper for pushing as `leoAnimesh`; don't change them.
