@@ -35,11 +35,14 @@ public struct PurgeSchedule: Sendable {
         try data.write(to: plistURL, options: .atomic)
         _ = try? runner.run("/bin/launchctl", ["bootout", "gui/\(uid)/\(Self.label)"])
         let output = try runner.run("/bin/launchctl", ["bootstrap", "gui/\(uid)", plistURL.path])
-        guard output.status == 0 else { throw ScheduleError.launchctl(output.stderrText) }
+        guard output.status == 0 else {
+            try? FileManager.default.removeItem(at: plistURL)
+            throw ScheduleError.launchctl(output.stderrText)
+        }
     }
 
     public func disable() throws {
-        if isEnabled { try FileManager.default.removeItem(at: plistURL) }
         _ = try? runner.run("/bin/launchctl", ["bootout", "gui/\(uid)/\(Self.label)"])
+        if isEnabled { try FileManager.default.removeItem(at: plistURL) }
     }
 }

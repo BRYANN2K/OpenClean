@@ -22,6 +22,7 @@ public enum SessionListing: Sendable, Identifiable {
 
 public enum QuarantineError: Error, Equatable {
     case sessionNotFound(String)
+    case manifestMismatch(String)
 }
 
 /// Owns `Quarantine/<session-id>/{manifest.json, items/}`.
@@ -48,14 +49,23 @@ public struct QuarantineStore: Sendable {
 
     /// Atomic write (temp file + rename), so a crash never leaves a half-written manifest.
     public func write(_ manifest: SessionManifest) throws {
+        guard Self.isSafeID(manifest.id) else { throw QuarantineError.sessionNotFound(manifest.id) }
         try Self.encoder().encode(manifest).write(to: manifestURL(manifest.id), options: .atomic)
     }
 
     public func read(id: String) throws -> SessionManifest {
-        guard FileManager.default.fileExists(atPath: sessionDirectory(id).path) else {
+        guard Self.isSafeID(id), FileManager.default.fileExists(atPath: sessionDirectory(id).path) else {
             throw QuarantineError.sessionNotFound(id)
         }
-        return try Self.decoder().decode(SessionManifest.self, from: Data(contentsOf: manifestURL(id)))
+        let manifest = try Self.decoder().decode(SessionManifest.self, from: Data(contentsOf: manifestURL(id)))
+        // Manifests are user-writable: the decoded id must match the folder it lives in.
+        guard manifest.id == id else { throw QuarantineError.manifestMismatch(id) }
+        return manifest
+    }
+
+    /// A session id must be a single, plain path component.
+    static func isSafeID(_ id: String) -> Bool {
+        !id.isEmpty && id != "." && id != ".." && !id.utf8.contains(0x2F) && !id.utf8.contains(0)
     }
 
     public func listSessions() -> [SessionListing] {

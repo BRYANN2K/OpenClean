@@ -102,6 +102,6 @@ public func pathIsWithin(_ path: String, _ root: String, caseInsensitive: Bool =
 
 /// True if any "/"-separated component is exactly "." or "..". Works on UTF-8 bytes so a combining
 /// mark after "/" cannot merge separators into a single Character and hide a component.
-func hasNonCanonicalComponent(_ path: String) -> Bool {
+public func hasNonCanonicalComponent(_ path: String) -> Bool {
     path.utf8.split(separator: 0x2F).contains { $0.elementsEqual([0x2E]) || $0.elementsEqual([0x2E, 0x2E]) }
 }

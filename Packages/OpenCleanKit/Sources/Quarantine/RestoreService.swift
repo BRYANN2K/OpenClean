@@ -38,11 +38,17 @@ public struct RestoreService: Sendable {
         var manifest = try store.read(id: sessionID)
         var report = RestoreReport()
         let fileManager = FileManager.default
+        let items = store.itemsDirectory(sessionID).path
 
         for index in manifest.entries.indices {
             let entry = manifest.entries[index]
             if let paths, !paths.contains(entry.originalPath) { continue }
             guard [.quarantined, .trashed, .pending].contains(entry.outcome), let stored = entry.storedPath else {
+                continue
+            }
+            guard Self.isContained(entry: entry, stored: stored, items: items) else {
+                report.skipped.append(
+                    RestoreSkip(path: entry.originalPath, reason: "manifest entry points outside quarantine"))
                 continue
             }
             guard FileStat.of(stored) != nil else {
@@ -51,6 +57,7 @@ public struct RestoreService: Sendable {
             }
 
             var destination = entry.originalPath
+            var displaced: String?
             if FileStat.of(destination) != nil {
                 switch onConflict {
                 case .skip:
@@ -61,7 +68,7 @@ public struct RestoreService: Sendable {
                     destination = Self.alternateName(for: destination)
                 case .replace:
                     do {
-                        _ = try trash(destination)
+                        displaced = try trash(destination) ?? ""
                     } catch {
                         report.skipped.append(RestoreSkip(path: destination, reason: error.localizedDescription))
                         continue
@@ -76,12 +83,38 @@ public struct RestoreService: Sendable {
                 manifest.entries[index].outcome = .restored
                 manifest.entries[index].reason = destination == entry.originalPath ? nil : "restored as \(destination)"
                 report.restored.append(destination)
+                try? store.write(manifest)
             } catch {
-                report.skipped.append(RestoreSkip(path: entry.originalPath, reason: error.localizedDescription))
+                var reason = error.localizedDescription
+                if let displaced, !displaced.isEmpty {
+                    if (try? fileManager.moveItem(atPath: displaced, toPath: destination)) == nil {
+                        reason += "; your current file was moved to \(displaced)"
+                    }
+                } else if displaced != nil {
+                    reason += "; your current file was moved to the Trash"
+                }
+                report.skipped.append(RestoreSkip(path: entry.originalPath, reason: reason))
             }
         }
-        try store.write(manifest)
+        do {
+            try store.write(manifest)
+        } catch {
+            report.skipped.append(
+                RestoreSkip(path: "<manifest>", reason: "could not update history: \(error.localizedDescription)"))
+        }
         return report
+    }
+
+    static func isContained(entry: ManifestEntry, stored: String, items: String) -> Bool {
+        guard entry.originalPath.hasPrefix("/"), !hasNonCanonicalComponent(entry.originalPath),
+            !hasNonCanonicalComponent(stored)
+        else { return false }
+        switch entry.outcome {
+        case .trashed:
+            return stored.split(separator: "/").contains { $0 == ".Trash" || $0 == ".Trashes" }
+        default:
+            return pathIsWithin(stored, items)
+        }
     }
 
     /// "name (restored).ext", then "name (restored 2).ext", … until unused.

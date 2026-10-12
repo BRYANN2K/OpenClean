@@ -194,4 +194,183 @@ struct RestoreAndPurgeTests {
         #expect(!schedule.isEnabled)
         #expect(runner.calls.last == ["/bin/launchctl", "bootout", "gui/501/io.github.leoanimesh.openclean.purge"])
     }
+
+    // MARK: fix round 1
+
+    func rewriteManifest(_ store: QuarantineStore, _ id: String, _ change: (String) -> String) throws {
+        let url = store.sessionDirectory(id).appendingPathComponent("manifest.json")
+        let text = try String(contentsOf: url, encoding: .utf8)
+        try change(text).write(to: url, atomically: true, encoding: .utf8)
+    }
+
+    @Test func tamperedManifestIdIsDamagedAndNeverPurgedOutsideRoot() throws {
+        let home = try TempDirectory()
+        let store = QuarantineStore(root: home.url.appendingPathComponent("Quarantine"))
+        let now = Date()
+        let session = try store.createSession(now: now.addingTimeInterval(-10 * 86_400))
+        let victim = try home.file("Victim/items/keep.txt", bytes: 3)
+        try rewriteManifest(store, session.id) { $0.replacingOccurrences(of: session.id, with: "../Victim") }
+
+        #expect(throws: QuarantineError.manifestMismatch(session.id)) { try store.read(id: session.id) }
+        guard case .damaged = try #require(store.listSessions().first) else {
+            Issue.record("expected damaged listing")
+            return
+        }
+        _ = Purger(store: store).purge(retentionDays: 1, now: now)
+        #expect(FileManager.default.fileExists(atPath: victim))
+    }
+
+    @Test func unsafeSessionIdsAreRejected() throws {
+        let home = try TempDirectory()
+        let store = QuarantineStore(root: home.url.appendingPathComponent("Quarantine"))
+        for id in ["", ".", "..", "a/b", "../x"] {
+            #expect(throws: QuarantineError.self) { try store.read(id: id) }
+        }
+    }
+
+    func tamperedSession(
+        _ home: TempDirectory, outcome: EntryOutcome, stored: String, original: String
+    ) throws -> (QuarantineStore, String) {
+        let store = QuarantineStore(root: home.url.appendingPathComponent("Quarantine"))
+        var session = try store.createSession()
+        session.entries = [
+            ManifestEntry(
+                id: 0, originalPath: original, storedPath: stored, size: 1, ruleID: "r", mode: .quarantine,
+                outcome: outcome, reason: nil)
+        ]
+        try store.write(session)
+        return (store, session.id)
+    }
+
+    @Test func restoreRejectsStoredPathOutsideItems() throws {
+        let home = try TempDirectory()
+        let secret = try home.file("Secret/data", bytes: 4)
+        let original = home.path + "/Restored/data"
+        let (store, id) = try tamperedSession(home, outcome: .quarantined, stored: secret, original: original)
+        let result = try RestoreService(store: store).restore(sessionID: id, onConflict: .skip)
+        #expect(result.restored.isEmpty)
+        #expect(result.skipped.first?.reason == "manifest entry points outside quarantine")
+        #expect(FileManager.default.fileExists(atPath: secret))
+    }
+
+    @Test func restoreRejectsNonCanonicalStoredAndBadOriginal() throws {
+        let home = try TempDirectory()
+        let secret = try home.file("Secret/data", bytes: 4)
+        let store0 = QuarantineStore(root: home.url.appendingPathComponent("Quarantine"))
+        let sneaky = store0.root.path + "/SID/items/../../../Secret/data"
+        let (store, id) = try tamperedSession(home, outcome: .pending, stored: sneaky, original: home.path + "/R/data")
+        let sneakyResult = try RestoreService(store: store).restore(sessionID: id, onConflict: .skip)
+        #expect(sneakyResult.skipped.first?.reason == "manifest entry points outside quarantine")
+
+        let items = store.itemsDirectory(id).appendingPathComponent("f").path
+        try Data([1]).write(to: URL(fileURLWithPath: items))
+        for original in ["relative/path", home.path + "/a/../b"] {
+            var session = try store.read(id: id)
+            session.entries[0] = ManifestEntry(
+                id: 0, originalPath: original, storedPath: items, size: 1, ruleID: "r", mode: .quarantine,
+                outcome: .quarantined, reason: nil)
+            try store.write(session)
+            let result = try RestoreService(store: store).restore(sessionID: id, onConflict: .skip)
+            #expect(result.skipped.first?.reason == "manifest entry points outside quarantine")
+        }
+        #expect(FileManager.default.fileExists(atPath: secret))
+        #expect(FileManager.default.fileExists(atPath: items))
+    }
+
+    @Test func trashedEntriesMustLiveInATrash() throws {
+        let home = try TempDirectory()
+        let outside = try home.file("Documents/notes", bytes: 2)
+        let inTrash = try home.file(".Trash/notes", bytes: 2)
+        let a = try tamperedSession(home, outcome: .trashed, stored: outside, original: home.path + "/x/notes")
+        let bad = try RestoreService(store: a.0).restore(sessionID: a.1, onConflict: .skip)
+        #expect(bad.skipped.first?.reason == "manifest entry points outside quarantine")
+        #expect(FileManager.default.fileExists(atPath: outside))
+
+        let b = try tamperedSession(home, outcome: .trashed, stored: inTrash, original: home.path + "/x/notes")
+        let good = try RestoreService(store: b.0).restore(sessionID: b.1, onConflict: .skip)
+        #expect(good.restored == [home.path + "/x/notes"])
+    }
+
+    @Test func replaceFailureMovesDisplacedFileBack() throws {
+        let home = try TempDirectory()
+        let path = try home.file("a/f.txt", bytes: 5)
+        let (store, report) = try quarantine(home, [path])
+        try home.file("a/f.txt", bytes: 1)
+        let stored = try #require(report.manifest.entries.first?.storedPath)
+        let bin = try home.directory("FakeTrash")
+        let trash: TrashOperation = { source in
+            let destination = bin + "/moved"
+            try FileManager.default.moveItem(atPath: source, toPath: destination)
+            try FileManager.default.removeItem(atPath: stored)
+            return destination
+        }
+        let result = try RestoreService(store: store, trash: trash).restore(
+            sessionID: report.manifest.id, onConflict: .replace)
+        #expect(result.restored.isEmpty)
+        #expect(try Data(contentsOf: URL(fileURLWithPath: path)).count == 1)
+    }
+
+    @Test func replaceFailureReportsWhereDisplacedFileWent() throws {
+        let home = try TempDirectory()
+        let path = try home.file("a/f.txt", bytes: 5)
+        let (store, report) = try quarantine(home, [path])
+        try home.file("a/f.txt", bytes: 1)
+        let stored = try #require(report.manifest.entries.first?.storedPath)
+        let bin = try home.directory("FakeTrash")
+        let trash: TrashOperation = { source in
+            let destination = bin + "/moved"
+            try FileManager.default.moveItem(atPath: source, toPath: destination)
+            try FileManager.default.removeItem(atPath: stored)
+            try Data([9]).write(to: URL(fileURLWithPath: source))  // blocks the move back
+            return destination
+        }
+        let result = try RestoreService(store: store, trash: trash).restore(
+            sessionID: report.manifest.id, onConflict: .replace)
+        let reason = try #require(result.skipped.first?.reason)
+        #expect(reason.contains("your current file was moved to \(bin)/moved"))
+    }
+
+    @Test func manifestWriteFailureIsReportedNotThrown() throws {
+        let home = try TempDirectory()
+        let path = try home.file("a", bytes: 1)
+        let (store, report) = try quarantine(home, [path])
+        let dir = store.sessionDirectory(report.manifest.id).path
+        try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: dir)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: dir) }
+        let result = try RestoreService(store: store).restore(sessionID: report.manifest.id, onConflict: .skip)
+        #expect(result.restored == [path])
+        #expect(result.skipped.contains { $0.path == "<manifest>" && $0.reason.hasPrefix("could not update history") })
+    }
+
+    @Test func undeletableItemsLeaveManifestUnchangedForRetry() throws {
+        let home = try TempDirectory()
+        let store = QuarantineStore(root: home.url.appendingPathComponent("Quarantine"))
+        let now = Date()
+        var old = try store.createSession(now: now.addingTimeInterval(-10 * 86_400))
+        let items = store.itemsDirectory(old.id)
+        let stored = items.appendingPathComponent("f").path
+        try Data([1]).write(to: URL(fileURLWithPath: stored))
+        old.entries = [
+            ManifestEntry(
+                id: 0, originalPath: "/x", storedPath: stored, size: 1, ruleID: "r", mode: .quarantine,
+                outcome: .quarantined, reason: nil)
+        ]
+        try store.write(old)
+        try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: items.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: items.path) }
+
+        #expect(Purger(store: store).purge(retentionDays: 7, now: now).isEmpty)
+        let reloaded = try store.read(id: old.id)
+        #expect(reloaded.purgedAt == nil)
+        #expect(reloaded.entries.first?.outcome == .quarantined)
+    }
+
+    @Test func bootstrapFailureRemovesPlist() throws {
+        let home = try TempDirectory()
+        let runner = FakeCommandRunner()
+        let schedule = PurgeSchedule(home: home.path, runner: runner, uid: 501)
+        runner.respond("/bin/launchctl bootstrap gui/501 \(schedule.plistURL.path)", status: 1, stderr: "nope")
+        #expect(throws: ScheduleError.launchctl("nope")) { try schedule.enable(executable: "/x/openclean") }
+        #expect(!schedule.isEnabled)
+    }
 }

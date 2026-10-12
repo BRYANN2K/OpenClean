@@ -20,7 +20,7 @@ public struct Purger: Sendable {
             switch listing {
             case .ok(var manifest) where manifest.purgedAt == nil && manifest.createdAt < cutoff:
                 let items = store.itemsDirectory(manifest.id)
-                try? FileManager.default.removeItem(at: items)
+                guard removeContained(items) else { continue }
                 for index in manifest.entries.indices
                 where [.quarantined, .pending].contains(manifest.entries[index].outcome)
                     && manifest.entries[index].storedPath.map({ pathIsWithin($0, items.path) }) == true
@@ -31,7 +31,7 @@ public struct Purger: Sendable {
                 if (try? store.write(manifest)) != nil { purged.append(manifest.id) }
             case .damaged(let id, let created) where (created ?? .distantFuture) < cutoff:
                 let items = store.itemsDirectory(id)
-                if FileStat.of(items.path) != nil, (try? FileManager.default.removeItem(at: items)) != nil {
+                if FileStat.of(items.path) != nil, removeContained(items) {
                     purged.append(id)
                 }
             default:
@@ -39,5 +39,15 @@ public struct Purger: Sendable {
             }
         }
         return purged
+    }
+
+    /// Removes `items` only if it sits strictly inside the store root. True when it no longer exists.
+    private func removeContained(_ items: URL) -> Bool {
+        guard pathIsWithin(items.path, store.root.path), items.path != store.root.path,
+            !hasNonCanonicalComponent(items.path)
+        else { return false }
+        if FileStat.of(items.path) == nil { return true }
+        try? FileManager.default.removeItem(at: items)
+        return FileStat.of(items.path) == nil
     }
 }
