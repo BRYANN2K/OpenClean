@@ -28,7 +28,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
         }
     }
 
-    var isAvailable: Bool { [.smartScan, .cleanup, .history].contains(self) }
+    var isAvailable: Bool { true }
 }
 
 struct ContentView: View {
@@ -44,11 +44,13 @@ struct ContentView: View {
                         Label(item.title, systemImage: item.symbol).tag(item)
                     }
                 }
-                Section("Coming soon") {
-                    ForEach(SidebarItem.allCases.filter { !$0.isAvailable }) { item in
-                        Label(item.title, systemImage: item.symbol)
-                            .foregroundStyle(Theme.textTertiary)
-                            .selectionDisabled()
+                if SidebarItem.allCases.contains(where: { !$0.isAvailable }) {
+                    Section("Coming soon") {
+                        ForEach(SidebarItem.allCases.filter { !$0.isAvailable }) { item in
+                            Label(item.title, systemImage: item.symbol)
+                                .foregroundStyle(Theme.textTertiary)
+                                .selectionDisabled()
+                        }
                     }
                 }
             }
@@ -76,7 +78,9 @@ struct ContentView: View {
                     case .smartScan: SmartScanView()
                     case .cleanup: CleanupView()
                     case .history: HistoryView()
-                    default: ComingSoonView()
+                    case .uninstaller: UninstallerView()
+                    case .spaceLens: SpaceLensView()
+                    case .performance: PerformanceView()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -98,6 +102,9 @@ struct ContentView: View {
     private var backdrop: Backdrop {
         switch selection ?? .smartScan {
         case .history: .history
+        case .uninstaller: .uninstaller
+        case .spaceLens: .spaceLens
+        case .performance: .performance
         case .smartScan where model.phase == .finished: .success
         default: .scan
         }

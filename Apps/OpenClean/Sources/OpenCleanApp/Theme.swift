@@ -44,7 +44,7 @@ enum Theme {
 
 /// Which backdrop a screen sits on.
 enum Backdrop {
-    case scan, success, history
+    case scan, success, history, uninstaller, spaceLens, performance
 
     var gradient: LinearGradient {
         let colors: [UInt32] =
@@ -52,6 +52,9 @@ enum Backdrop {
             case .scan: [0x082A33, 0x0B4A4C, 0x12795F]
             case .success: [0x0A3A3E, 0x0F6656, 0x1FA67A]
             case .history: [0x0C1B33, 0x15335A, 0x1F5A7A]
+            case .uninstaller: [0x22102E, 0x3D1A52, 0x6A3478]
+            case .spaceLens: [0x0F1638, 0x1E2B66, 0x34489A]
+            case .performance: [0x2A1407, 0x52290E, 0x8A4E1A]
             }
         return LinearGradient(
             colors: colors.map { Color(hex: $0) }, startPoint: .topLeading, endPoint: .bottomTrailing)
