@@ -47,16 +47,22 @@ public struct Remover: Sendable {
         return resulting?.path
     }
 
-    /// True when every ancestor directory of `path` (excluding "/") is a real directory (not a symlink)
-    /// owned by root and not writable by the current user. Otherwise the same user could swap a parent
-    /// for a symlink between validation and the root `rm`.
+    /// True when no non-root user could swap an ancestor of `path` for a symlink before the root `rm`.
+    /// Walks from the parent up to (excluding) "/". Each ancestor must be a real directory and either
+    /// root-owned and not writable by the current user, or sticky (S_ISVTX) with the next path component
+    /// below it (the item itself for the direct parent) root-owned and not a symlink.
     public static let systemParentIsProtected: @Sendable (String) -> Bool = { path in
         let bytes = Array(path.utf8)
-        for index in bytes.indices where index > 0 && bytes[index] == 0x2F {
+        let separators = bytes.indices.filter { $0 > 0 && bytes[$0] == 0x2F }
+        for (position, index) in separators.enumerated() {
             let ancestor = String(decoding: bytes[..<index], as: UTF8.self)
-            guard let stat = FileStat.of(ancestor), !stat.isSymlink, stat.isDirectory,
-                stat.ownerUID == 0, access(ancestor, W_OK) != 0
-            else { return false }
+            guard let stat = FileStat.of(ancestor), !stat.isSymlink, stat.isDirectory else { return false }
+            if stat.ownerUID == 0 && access(ancestor, W_OK) != 0 { continue }
+            var info = Darwin.stat()
+            let sticky = lstat(ancestor, &info) == 0 && (info.st_mode & S_ISVTX) != 0
+            let nextEnd = position + 1 < separators.count ? separators[position + 1] : bytes.count
+            let next = String(decoding: bytes[..<nextEnd], as: UTF8.self)
+            guard sticky, let child = FileStat.of(next), child.ownerUID == 0, !child.isSymlink else { return false }
         }
         return true
     }
@@ -95,7 +101,9 @@ public struct Remover: Sendable {
 
         var adminIndices: [Int] = []
         for (index, request) in requests.enumerated() {
-            if let reason = checker.check(request.item, rule: request.rule) {
+            if request.rule.needs(.admin) && request.rule.effectiveDeleteMode != .immediate {
+                mark(&manifest, index, .skipped, SkipReason.adminRequiresImmediate.description)
+            } else if let reason = checker.check(request.item, rule: request.rule) {
                 mark(&manifest, index, .skipped, reason.description)
             } else if request.rule.needs(.admin) {
                 adminIndices.append(index)
@@ -142,7 +150,7 @@ public struct Remover: Sendable {
         var length = 0
         for index in indices {
             let path = requests[index].item.path
-            if path.utf8.contains(where: { $0 == 0x0A || $0 == 0x0D }) {
+            if (try? AdminCommandBuilder.removalCommand(paths: [path])) == nil {
                 mark(&manifest, index, .skipped, SkipReason.adminUnsupportedPath.description)
                 continue
             }
@@ -179,7 +187,14 @@ public struct Remover: Sendable {
         case .cancelled:
             for index in batch { mark(&manifest, index, .skipped, SkipReason.adminCancelled.description) }
         case .failed(let message):
-            for index in batch { mark(&manifest, index, .failed, message) }
+            // rm may have removed some items before failing; report what is actually gone.
+            for index in batch {
+                if FileStat.of(requests[index].item.path) == nil {
+                    mark(&manifest, index, .deleted, nil)
+                } else {
+                    mark(&manifest, index, .failed, message)
+                }
+            }
         }
     }
 

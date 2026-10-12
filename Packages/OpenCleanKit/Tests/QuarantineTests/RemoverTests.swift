@@ -18,7 +18,7 @@ struct RemoverTests {
     }
 
     func remover(
-        _ home: TempDirectory, admin: FakeAdminExecutor = FakeAdminExecutor(),
+        _ home: TempDirectory, admin: any AdminExecutor = FakeAdminExecutor(),
         deviceOf: @escaping @Sendable (String) -> Int32? = { FileStat.of($0)?.device },
         trash: @escaping TrashOperation = { _ in nil },
         parentIsProtected: @escaping @Sendable (String) -> Bool = { _ in true }
@@ -168,5 +168,65 @@ struct RemoverTests {
         _ = try home.directory("real")
         try home.symlink("link", to: home.path + "/real")
         #expect(!Remover.systemParentIsProtected(home.path + "/link/x"))
+    }
+
+    @Test func partlyFailedAdminBatchReportsPerItem() throws {
+        let home = try TempDirectory()
+        let a = try home.file("sys/a", bytes: 10)
+        let b = try home.file("sys/b", bytes: 10)
+        let admin = PartialAdmin(deleting: a)
+        let report = try remover(home, admin: admin).0.remove([
+            try request(a, requires: [.admin]), try request(b, requires: [.admin]),
+        ])
+        #expect(report.manifest.entries.map(\.outcome) == [.deleted, .failed])
+        #expect(report.manifest.entries[1].reason == "rm: b: Operation not permitted")
+    }
+
+    @Test func adminRuleWithQuarantineModeIsSkipped() throws {
+        let home = try TempDirectory()
+        let a = try home.file("sys/a", bytes: 10)
+        let admin = FakeAdminExecutor(runForReal: true)
+        let report = try remover(home, admin: admin).0.remove([
+            try request(a, safety: .review, requires: [.admin])
+        ])
+        #expect(admin.commands.isEmpty)
+        #expect(FileManager.default.fileExists(atPath: a))
+        #expect(report.manifest.entries.first?.reason == "system items can only be deleted, not quarantined")
+    }
+
+    @Test func oneBadAdminPathDoesNotFailTheBatch() throws {
+        let home = try TempDirectory()
+        let bad = try home.file("sys/line\nbreak", bytes: 10)
+        let good = try home.file("sys/good", bytes: 10)
+        let admin = FakeAdminExecutor()  // records only; the command is not run
+        let report = try remover(home, admin: admin).0.remove([
+            try request(bad, requires: [.admin]), try request(good, requires: [.admin]),
+        ])
+        #expect(admin.commands == ["/bin/rm -rf -- '\(good)'"])
+        #expect(report.manifest.entries.first?.outcome == .skipped)
+        #expect(report.manifest.entries.first?.reason == SkipReason.adminUnsupportedPath.description)
+    }
+
+    @Test func protectedParentRules() throws {
+        let home = try TempDirectory()
+        #expect(!Remover.systemParentIsProtected(home.path + "/x"))
+        #expect(Remover.systemParentIsProtected("/Library/Logs/x"))
+        // Sticky /Library/Caches: protected only when the entry itself is root-owned.
+        if let stat = FileStat.of("/Library/Caches/ColorSync"), stat.ownerUID == 0, !stat.isSymlink {
+            #expect(Remover.systemParentIsProtected("/Library/Caches/ColorSync"))
+        }
+        if let stat = FileStat.of("/Library/Caches/SiriTTS"), stat.ownerUID != 0 {
+            #expect(!Remover.systemParentIsProtected("/Library/Caches/SiriTTS"))
+        }
+    }
+}
+
+/// Deletes one chosen file for real, then reports failure, like a partly failed `rm`.
+final class PartialAdmin: AdminExecutor, @unchecked Sendable {
+    let path: String
+    init(deleting path: String) { self.path = path }
+    func runAsAdmin(_ command: RemovalCommand) -> AdminRunOutcome {
+        try? FileManager.default.removeItem(atPath: path)
+        return .failed("rm: b: Operation not permitted")
     }
 }

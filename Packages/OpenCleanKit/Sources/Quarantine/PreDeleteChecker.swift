@@ -14,6 +14,7 @@ public enum SkipReason: Sendable, Equatable, CustomStringConvertible {
     case adminUnsupportedPath
     case adminBatchFull
     case adminUnsafeParent
+    case adminRequiresImmediate
 
     public var description: String {
         switch self {
@@ -28,6 +29,7 @@ public enum SkipReason: Sendable, Equatable, CustomStringConvertible {
         case .adminUnsupportedPath: "path cannot be passed safely to the administrator prompt"
         case .adminBatchFull: "too many system items for one prompt; run cleanup again"
         case .adminUnsafeParent: "a parent folder is not protected by the system"
+        case .adminRequiresImmediate: "system items can only be deleted, not quarantined"
         }
     }
 }
