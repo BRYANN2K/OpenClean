@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Toolchain
         run: swift --version
+      - name: Test release version script
+        run: bash scripts/tests/test-next-version.sh
       - name: Build
         run: swift build
       - name: Test
