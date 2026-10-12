@@ -32,6 +32,9 @@ extension OpenCleanCoordinator {
         ).scan(progress: progress)
     }
 
+    /// Whether an app is running right now.
+    public func isAppRunning(bundleID: String) -> Bool { processChecker.isRunning(bundleID: bundleID) }
+
     /// Leftovers in `~/Library` (removable) and `systemLibrary` (report-only). Empty without a bundle id.
     public func leftovers(
         for app: InstalledApp, otherBundleIDs: Set<String> = [], systemLibrary: String = "/Library"
