@@ -116,25 +116,52 @@ struct SystemMonitorTests {
 
     @Test func processIntervalIsTrackedSeparatelyFromMetrics() throws {
         let app = "/Applications/Editor.app/Contents/MacOS/Editor"
+        let ticks = CPUTicks(user: 0, system: 0, idle: 1, nice: 0)
         let sampler = FakeSampler([
+            RawSample(time: 0, cpu: ticks),
             RawSample(
-                time: 0,
+                time: 2, cpu: ticks,
                 processes: [ProcessSample(pid: 10, name: "Editor", path: app, cpuTimeNanoseconds: 0, residentBytes: 1)]
             ),
-            RawSample(time: 2, cpu: CPUTicks(user: 0, system: 0, idle: 1, nice: 0)),
             RawSample(
-                time: 4,
+                time: 6, cpu: ticks,
                 processes: [
                     ProcessSample(
                         pid: 10, name: "Editor", path: app, cpuTimeNanoseconds: 2_000_000_000, residentBytes: 1)
                 ]),
         ])
         let monitor = SystemMonitor(sampler: sampler, policy: policy)
-        _ = monitor.next(.processes)
         _ = monitor.next(.metrics)
-        let groups = try #require(monitor.next(.processes).groups)
-        // 2 s of CPU over 4 s of wall time = 50 % of one core.
+        #expect(monitor.next([.metrics, .processes]).groups == nil, "first process sample has no baseline")
+        let groups = try #require(monitor.next([.metrics, .processes]).groups)
+        // 2 s of CPU over the 4 s since the previous process sample (not the metrics one) = 50 %.
         #expect(groups.first?.cpuPercent == 50)
+    }
+
+    @Test func restartingProcessSamplingStartsAFreshBaseline() throws {
+        let app = "/Applications/Editor.app/Contents/MacOS/Editor"
+        func editor(_ seconds: UInt64) -> [ProcessSample] {
+            [ProcessSample(pid: 10, name: "Editor", path: app, cpuTimeNanoseconds: seconds * 1_000_000_000, residentBytes: 1)]
+        }
+        let ticks = CPUTicks(user: 0, system: 0, idle: 1, nice: 0)
+        let sampler = FakeSampler([
+            RawSample(time: 0, cpu: ticks, processes: editor(0)),
+            RawSample(time: 2, cpu: ticks, processes: editor(2)),
+            // Process list closed; the menu bar keeps sampling metrics for a long time.
+            RawSample(time: 50, cpu: ticks),
+            RawSample(time: 100, cpu: ticks),
+            // Reopened: the Editor was busy just now, idle before.
+            RawSample(time: 102, cpu: ticks, processes: editor(10)),
+            RawSample(time: 104, cpu: ticks, processes: editor(11)),
+        ])
+        let monitor = SystemMonitor(sampler: sampler, policy: policy)
+        let both: SampleRequest = [.metrics, .processes]
+        _ = monitor.next(both)
+        #expect(try #require(monitor.next(both).groups).first?.cpuPercent == 100)
+        _ = monitor.next(.metrics)
+        _ = monitor.next(.metrics)
+        #expect(monitor.next(both).groups == nil, "no figure averaged over the 100 s gap")
+        #expect(try #require(monitor.next(both).groups).first?.cpuPercent == 50)
     }
 }
 

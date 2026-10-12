@@ -25,13 +25,16 @@ public struct MonitorSnapshot: Sendable, Equatable {
 }
 
 /// Turns successive raw samples into snapshots. Keeps only the previous metrics sample and the
-/// previous process sample (they can be taken at different rates).
+/// previous process sample. Process sampling is a session: a request without `.processes` ends it, and
+/// the next request with `.processes` starts a fresh baseline, so figures are never averaged over a gap
+/// while only metrics were being sampled (e.g. the menu bar kept running while the process list closed).
 public final class SystemMonitor: @unchecked Sendable {
     let sampler: any SystemSampler
     let policy: ForceQuitPolicy
     private let lock = NSLock()
     private var previousMetrics: RawSample?
     private var previousProcesses: RawSample?
+    private var lastRequestHadProcesses = false
 
     public init(sampler: any SystemSampler = DarwinSampler(), policy: ForceQuitPolicy = ForceQuitPolicy()) {
         self.sampler = sampler
@@ -42,6 +45,9 @@ public final class SystemMonitor: @unchecked Sendable {
     public func next(_ request: SampleRequest) -> MonitorSnapshot {
         let current = sampler.sample(request)
         return lock.withLock {
+            let sessionStarts = request.contains(.processes) && !lastRequestHadProcesses
+            lastRequestHadProcesses = request.contains(.processes)
+            if sessionStarts { previousProcesses = nil }
             let snapshot = Self.snapshot(
                 previousMetrics: previousMetrics, previousProcesses: previousProcesses, current: current,
                 policy: policy)
@@ -56,6 +62,7 @@ public final class SystemMonitor: @unchecked Sendable {
         lock.withLock {
             previousMetrics = nil
             previousProcesses = nil
+            lastRequestHadProcesses = false
         }
     }
 
