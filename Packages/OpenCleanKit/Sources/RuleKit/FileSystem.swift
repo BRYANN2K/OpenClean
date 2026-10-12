@@ -73,6 +73,23 @@ func pathKey(_ s: String) -> [UInt8] {
     Array(s.folding(options: [.caseInsensitive], locale: nil).decomposedStringWithCanonicalMapping.utf8)
 }
 
+/// Canonical comparison key: normalized slashes, case-folded, NFD. Equal keys mean the same location
+/// on a case-insensitive, normalization-insensitive volume.
+public func canonicalPathKey(_ path: String) -> [UInt8] {
+    pathKey(normalizedPath(path))
+}
+
+/// Keys of every ancestor directory of `path` (excluding "/" and the path itself). Splits on the
+/// 0x2F byte so combining marks after "/" cannot hide a separator.
+public func canonicalAncestorKeys(_ path: String) -> [[UInt8]] {
+    let bytes = Array(normalizedPath(path).utf8)
+    var keys: [[UInt8]] = []
+    for index in bytes.indices where index > 0 && bytes[index] == 0x2F {
+        keys.append(pathKey(String(decoding: bytes[..<index], as: UTF8.self)))
+    }
+    return keys
+}
+
 /// True when `path` equals `root` or is inside it, comparing UTF-8 bytes. `root` may carry trailing
 /// or duplicate slashes. With `caseInsensitive`, compares `pathKey`s.
 public func pathIsWithin(_ path: String, _ root: String, caseInsensitive: Bool = false) -> Bool {

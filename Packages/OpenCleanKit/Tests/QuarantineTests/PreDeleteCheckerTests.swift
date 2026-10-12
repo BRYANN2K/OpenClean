@@ -86,9 +86,46 @@ struct PreDeleteCheckerTests {
         #expect(checker(home).check(item, rule: rule()) == .reportOnly)
     }
 
-    @Test func parsesLsofFieldOutput() {
-        let text = "p123\nfcwd\nn/Users/a\nf4\nn/Users/a/file.db\nf5\nnlocalhost:443->x\np456\nf1\nn/dev/null\n"
-        #expect(LsofParser.paths(from: text) == ["/Users/a", "/Users/a/file.db", "/dev/null"])
+    @Test func parsesLsofFieldOutput() throws {
+        let text = "p123\0\nfcwd\0\nn/Users/a\0\nf4\0\nn/Users/a/file.db\0\nf5\0\nnlocalhost:443->x\0\np456\0\nn/tmp/a\nb\0\n"
+        #expect(try LsofParser.paths(from: Data(text.utf8)) == ["/Users/a", "/Users/a/file.db", "/tmp/a\nb"])
+    }
+
+    @Test func rejectsNonUTF8Paths() {
+        let data = Data([0x6E, 0x2F, 0xFF, 0x00])
+        #expect(throws: LsofError.unreadablePath) { try LsofParser.paths(from: data) }
+    }
+
+    @Test func lsofRejectsUnexpectedStatusAndEmptyOutput() throws {
+        let command = "/usr/sbin/lsof -n -P -w -F0n"
+        for status: Int32 in [2, 143] {
+            let runner = FakeCommandRunner()
+            runner.respond(command, status: status, stdout: "n/a\0")
+            #expect(throws: LsofError.unexpectedStatus(status)) { try LsofOpenFilesProvider(runner: runner).openPaths() }
+        }
+        let empty = FakeCommandRunner()
+        empty.respond(command, status: 1)
+        #expect(throws: LsofError.noOutput(status: 1)) { try LsofOpenFilesProvider(runner: empty).openPaths() }
+        let ok = FakeCommandRunner()
+        ok.respond(command, status: 1, stdout: "n/a\0")
+        #expect(try LsofOpenFilesProvider(runner: ok).openPaths() == ["/a"])
+    }
+
+    @Test func matchesOpenPathsAcrossCaseSlashAndNormalization() throws {
+        let home = try TempDirectory()
+        let dir = try home.directory("Cache/Stör")
+        let item = try #require(ScanItem.snapshot(of: dir, ruleID: "r"))
+        let open: Set<String> = [dir.uppercased().decomposedStringWithCanonicalMapping + "/Store.db"]
+        let variants = [
+            dir, dir.lowercased(), dir + "/", dir.decomposedStringWithCanonicalMapping,
+            dir.precomposedStringWithCanonicalMapping,
+        ]
+        for variant in variants {
+            let alias = ScanItem(
+                path: variant, ruleID: "r", size: item.size, device: item.device, inode: item.inode,
+                modificationDate: item.modificationDate, ownerUID: item.ownerUID)
+            #expect(checker(home, openPaths: open).check(alias, rule: rule()) == .inUse, "\(variant)")
+        }
     }
 
     @Test func lsofSeesFilesOpenInThisProcess() throws {

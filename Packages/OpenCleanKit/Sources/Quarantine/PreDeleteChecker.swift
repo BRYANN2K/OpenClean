@@ -31,11 +31,13 @@ public enum SkipReason: Sendable, Equatable, CustomStringConvertible {
 }
 
 /// Last checks right before an item is removed. Any failure means "skip and record why".
+/// Only the item's own inode, device, modification date and owner are compared with the scan;
+/// changes deep inside a directory item are not detected (the open-file check is the backstop).
 public struct PreDeleteChecker: Sendable {
     let denyList: DenyList
     let processChecker: any ProcessChecker
-    /// Open paths plus all their ancestors; nil when open files could not be determined.
-    let busy: Set<String>?
+    /// Canonical keys of open paths plus all their ancestors; nil when open files could not be determined.
+    let busy: Set<[UInt8]>?
 
     public init(denyList: DenyList, processChecker: any ProcessChecker, openPaths: Set<String>?) {
         self.denyList = denyList
@@ -44,14 +46,10 @@ public struct PreDeleteChecker: Sendable {
             busy = nil
             return
         }
-        var expanded = Set<String>()
+        var expanded = Set<[UInt8]>()
         for path in openPaths {
-            expanded.insert(path)
-            var parent = (path as NSString).deletingLastPathComponent
-            while parent.count > 1 {
-                expanded.insert(parent)
-                parent = (parent as NSString).deletingLastPathComponent
-            }
+            expanded.insert(canonicalPathKey(path))
+            expanded.formUnion(canonicalAncestorKeys(path))
         }
         busy = expanded
     }
@@ -59,7 +57,9 @@ public struct PreDeleteChecker: Sendable {
     public func check(_ item: ScanItem, rule: Rule) -> SkipReason? {
         if item.reportOnly { return .reportOnly }
         guard let stat = FileStat.of(item.path) else { return .missing }
-        if stat.inode != item.inode || stat.device != item.device || stat.modificationDate != item.modificationDate {
+        if stat.inode != item.inode || stat.device != item.device || stat.modificationDate != item.modificationDate
+            || stat.ownerUID != item.ownerUID
+        {
             return .changedSinceScan
         }
         if let reason = denyList.denialReason(for: item.path) { return .protected(reason) }
@@ -67,7 +67,7 @@ public struct PreDeleteChecker: Sendable {
             return .appRunning(app)
         }
         guard let busy else { return .openFilesUnknown }
-        if busy.contains(item.path) { return .inUse }
+        if busy.contains(canonicalPathKey(item.path)) { return .inUse }
         return nil
     }
 }
