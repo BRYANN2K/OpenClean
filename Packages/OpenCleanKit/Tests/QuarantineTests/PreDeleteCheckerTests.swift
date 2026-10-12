@@ -1,8 +1,9 @@
 import Foundation
 import RuleKit
 import ScanEngine
-import Testing
 import TestSupport
+import Testing
+
 @testable import Quarantine
 
 struct PreDeleteCheckerTests {
@@ -77,7 +78,8 @@ struct PreDeleteCheckerTests {
     @Test func skipsProtectedPaths() throws {
         let home = try TempDirectory()
         let item = try #require(ScanItem.snapshot(of: try home.file("Documents/a", bytes: 10), ruleID: "r"))
-        #expect(checker(home).check(item, rule: rule()) == .protected("inside protected location \(home.path)/Documents"))
+        #expect(
+            checker(home).check(item, rule: rule()) == .protected("inside protected location \(home.path)/Documents"))
     }
 
     @Test func neverPassesReportOnlyItems() throws {
@@ -87,7 +89,8 @@ struct PreDeleteCheckerTests {
     }
 
     @Test func parsesLsofFieldOutput() throws {
-        let text = "p123\0\nfcwd\0\nn/Users/a\0\nf4\0\nn/Users/a/file.db\0\nf5\0\nnlocalhost:443->x\0\np456\0\nn/tmp/a\nb\0\n"
+        let text =
+            "p123\0\nfcwd\0\nn/Users/a\0\nf4\0\nn/Users/a/file.db\0\nf5\0\nnlocalhost:443->x\0\np456\0\nn/tmp/a\nb\0\n"
         #expect(try LsofParser.paths(from: Data(text.utf8)) == ["/Users/a", "/Users/a/file.db", "/tmp/a\nb"])
     }
 
@@ -101,7 +104,9 @@ struct PreDeleteCheckerTests {
         for status: Int32 in [2, 143] {
             let runner = FakeCommandRunner()
             runner.respond(command, status: status, stdout: "n/a\0")
-            #expect(throws: LsofError.unexpectedStatus(status)) { try LsofOpenFilesProvider(runner: runner).openPaths() }
+            #expect(throws: LsofError.unexpectedStatus(status)) {
+                try LsofOpenFilesProvider(runner: runner).openPaths()
+            }
         }
         let empty = FakeCommandRunner()
         empty.respond(command, status: 1)

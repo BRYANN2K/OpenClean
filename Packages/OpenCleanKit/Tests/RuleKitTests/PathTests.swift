@@ -1,6 +1,7 @@
 import Foundation
-import Testing
 import TestSupport
+import Testing
+
 @testable import RuleKit
 
 struct PathTests {

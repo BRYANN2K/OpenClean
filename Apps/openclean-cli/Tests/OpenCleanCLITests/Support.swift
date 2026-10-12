@@ -1,7 +1,7 @@
 import Foundation
 import RuleKit
-import Testing
 import TestSupport
+import Testing
 
 /// <repo>/Apps/openclean-cli/Tests/OpenCleanCLITests/Support.swift
 let repoRoot = URL(fileURLWithPath: #filePath)
@@ -40,8 +40,10 @@ enum CLIBinary {
         else {
             throw CocoaError(
                 .fileReadInvalidFileName,
-                userInfo: [NSLocalizedDescriptionKey:
-                    "CLIBinary.run refuses to run: OPENCLEAN_HOME must be set to a directory inside NSTemporaryDirectory()"])
+                userInfo: [
+                    NSLocalizedDescriptionKey:
+                        "CLIBinary.run refuses to run: OPENCLEAN_HOME must be set to a directory inside NSTemporaryDirectory()"
+                ])
         }
         guard FileManager.default.isExecutableFile(atPath: url.path) else {
             throw CocoaError(.fileNoSuchFile, userInfo: [NSFilePathErrorKey: url.path + " (run `swift build` first)"])

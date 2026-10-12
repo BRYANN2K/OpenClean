@@ -25,7 +25,9 @@ public struct TimeMachineSnapshotsProbe: Probe {
             .map {
                 ProbeFinding(
                     path: "tmsnapshot://\($0)", reportOnly: true,
-                    hint: "Local Time Machine snapshot. macOS removes these when space is needed; manage with `tmutil deletelocalsnapshots`.")
+                    hint:
+                        "Local Time Machine snapshot. macOS removes these when space is needed; manage with `tmutil deletelocalsnapshots`."
+                )
             }
     }
 }

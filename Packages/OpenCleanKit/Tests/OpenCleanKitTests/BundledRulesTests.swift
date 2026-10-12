@@ -3,6 +3,7 @@ import Probes
 import RuleKit
 import ScanEngine
 import Testing
+
 @testable import OpenCleanKit
 
 struct BundledRulesTests {
@@ -16,37 +17,38 @@ struct BundledRulesTests {
         let loaded = try load()
         #expect(loaded.problems.isEmpty, "\(loaded.problems)")
         #expect(loaded.rules.count == 29)
-        #expect(Set(loaded.rules.map(\.id)) == [
-            "system.caches",
-            "system.logs",
-            "system.diagnostic-reports",
-            "timemachine.local-snapshots",
-            "user.app-caches",
-            "user.logs",
-            "browsers.safari-cache",
-            "browsers.chrome-cache",
-            "browsers.firefox-cache",
-            "browsers.arc-cache",
-            "xcode.derived-data",
-            "xcode.archives",
-            "xcode.device-support",
-            "xcode.simulators",
-            "npm.cache",
-            "yarn.cache",
-            "pnpm.store",
-            "pip.cache",
-            "cargo.registry-cache",
-            "gradle.caches",
-            "cocoapods.cache",
-            "homebrew.cache",
-            "docker.disk-image",
-            "ollama.models",
-            "lmstudio.models",
-            "huggingface.hub",
-            "mail.downloads",
-            "trash.user",
-            "ios.backups"
-        ])
+        #expect(
+            Set(loaded.rules.map(\.id)) == [
+                "system.caches",
+                "system.logs",
+                "system.diagnostic-reports",
+                "timemachine.local-snapshots",
+                "user.app-caches",
+                "user.logs",
+                "browsers.safari-cache",
+                "browsers.chrome-cache",
+                "browsers.firefox-cache",
+                "browsers.arc-cache",
+                "xcode.derived-data",
+                "xcode.archives",
+                "xcode.device-support",
+                "xcode.simulators",
+                "npm.cache",
+                "yarn.cache",
+                "pnpm.store",
+                "pip.cache",
+                "cargo.registry-cache",
+                "gradle.caches",
+                "cocoapods.cache",
+                "homebrew.cache",
+                "docker.disk-image",
+                "ollama.models",
+                "lmstudio.models",
+                "huggingface.hub",
+                "mail.downloads",
+                "trash.user",
+                "ios.backups",
+            ])
     }
 
     @Test func everyCategoryHasRules() throws {

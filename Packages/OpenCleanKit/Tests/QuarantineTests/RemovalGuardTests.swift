@@ -3,7 +3,8 @@ import Testing
 
 /// Only Quarantine and Privilege may remove files. Everything else in the product must not.
 struct RemovalGuardTests {
-    static let forbidden = ["removeItem(", "trashItem(", "unlink(", "rmdir(", "/bin/rm",
+    static let forbidden = [
+        "removeItem(", "trashItem(", "unlink(", "rmdir(", "/bin/rm",
         "unlinkat(", "removefile(", "recycle(",
     ]
     static let allowedModules: Set<String> = ["Quarantine", "Privilege", "TestSupport"]

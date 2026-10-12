@@ -14,7 +14,8 @@ public enum TextReport {
             lines.append(category.displayName)
             for ruleResult in rules {
                 let removable = ruleResult.items.filter { !$0.reportOnly }.count
-                let detail = ruleResult.status == .scanned
+                let detail =
+                    ruleResult.status == .scanned
                     ? "\(size(ruleResult.totalSize)) in \(removable) item(s)"
                     : statusText(ruleResult.status)
                 lines.append("  \(ruleResult.rule.name) [\(ruleResult.rule.id)]  \(detail)")
@@ -64,7 +65,9 @@ public enum TextReport {
         }
         if let days = rule.conditions.minAgeDays { lines.append("Only items older than \(days) days") }
         if let minimum = rule.conditions.minSize { lines.append("Only items larger than \(minimum)") }
-        if !rule.requires.isEmpty { lines.append("Requires:    " + rule.requires.map(\.rawValue).joined(separator: ", ")) }
+        if !rule.requires.isEmpty {
+            lines.append("Requires:    " + rule.requires.map(\.rawValue).joined(separator: ", "))
+        }
         return lines.joined(separator: "\n")
     }
 
@@ -72,7 +75,8 @@ public enum TextReport {
         var lines = ["Ready to remove \(plan.itemCount) item(s):"]
         lines.append("  Delete now:          \(size(plan.immediateBytes)) (\(plan.immediateRequests.count) items)")
         lines.append(
-            "  Move to quarantine:  \(size(plan.quarantineBytes)) (\(plan.quarantineRequests.count) items, restorable for \(retentionDays) days)")
+            "  Move to quarantine:  \(size(plan.quarantineBytes)) (\(plan.quarantineRequests.count) items, restorable for \(retentionDays) days)"
+        )
         if !plan.adminRequests.isEmpty {
             lines.append("  \(plan.adminRequests.count) system item(s) need your administrator password.")
         }
@@ -88,7 +92,9 @@ public enum TextReport {
         ]
         if report.hadSkips {
             lines.append("  Skipped \(report.skipped.count) item(s):")
-            for entry in report.skipped { lines.append("    \(entry.originalPath): \(entry.reason ?? "unknown reason")") }
+            for entry in report.skipped {
+                lines.append("    \(entry.originalPath): \(entry.reason ?? "unknown reason")")
+            }
         }
         return lines.joined(separator: "\n")
     }
@@ -102,7 +108,8 @@ public enum TextReport {
             switch listing {
             case .ok(let manifest):
                 let state = manifest.purgedAt == nil ? "" : "  (purged)"
-                return "\(manifest.id)  \(formatter.string(from: manifest.createdAt))  freed \(size(manifest.deletedBytes))  quarantined \(size(manifest.quarantinedBytes))  skipped \(manifest.skippedEntries.count)\(state)"
+                return
+                    "\(manifest.id)  \(formatter.string(from: manifest.createdAt))  freed \(size(manifest.deletedBytes))  quarantined \(size(manifest.quarantinedBytes))  skipped \(manifest.skippedEntries.count)\(state)"
             case .damaged(let id, _):
                 return "\(id)  damaged manifest"
             }

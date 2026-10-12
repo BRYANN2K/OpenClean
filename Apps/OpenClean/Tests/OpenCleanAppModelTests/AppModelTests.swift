@@ -3,8 +3,9 @@ import OpenCleanKit
 import Permissions
 import RuleKit
 import ScanEngine
-import Testing
 import TestSupport
+import Testing
+
 @testable import OpenCleanAppModel
 
 struct SlowAppProbe: Probe {

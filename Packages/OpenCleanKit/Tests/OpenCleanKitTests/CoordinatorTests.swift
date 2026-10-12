@@ -2,8 +2,9 @@ import Foundation
 import Quarantine
 import RuleKit
 import ScanEngine
-import Testing
 import TestSupport
+import Testing
+
 @testable import OpenCleanKit
 
 struct CoordinatorTests {

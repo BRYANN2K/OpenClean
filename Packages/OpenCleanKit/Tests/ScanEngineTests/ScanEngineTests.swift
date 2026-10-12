@@ -1,7 +1,8 @@
 import Foundation
 import RuleKit
-import Testing
 import TestSupport
+import Testing
+
 @testable import ScanEngine
 
 struct StubProbe: Probe {

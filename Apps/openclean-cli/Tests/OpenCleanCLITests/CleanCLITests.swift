@@ -1,6 +1,6 @@
 import Foundation
-import Testing
 import TestSupport
+import Testing
 
 @Suite(.serialized)
 struct CleanCLITests {
@@ -41,7 +41,8 @@ struct CleanCLITests {
             let clean = try CLIBinary.run(["clean", "--yes", "--include-review", "--json"], environment: env)
             #expect(clean.status == 0, "\(clean.stderr)")
             #expect(!FileManager.default.fileExists(atPath: download))
-            let session = try #require((try CLIFixtures.json(clean.stdout)["session"] as? [String: Any])?["id"] as? String)
+            let session = try #require(
+                (try CLIFixtures.json(clean.stdout)["session"] as? [String: Any])?["id"] as? String)
 
             let history = try CLIBinary.run(["history", "--json"], environment: env)
             let sessions = try CLIFixtures.json(history.stdout)["sessions"] as? [[String: Any]]

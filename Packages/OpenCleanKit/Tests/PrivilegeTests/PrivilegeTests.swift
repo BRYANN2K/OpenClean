@@ -1,7 +1,8 @@
 import Foundation
 import ProcessKit
-import Testing
 import TestSupport
+import Testing
+
 @testable import Privilege
 
 struct AdminCommandBuilderTests {

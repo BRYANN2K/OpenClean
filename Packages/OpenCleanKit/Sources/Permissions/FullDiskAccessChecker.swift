@@ -12,10 +12,11 @@ public struct FullDiskAccessChecker: Sendable {
     let probePaths: [String]
 
     public init(home: String, probePaths: [String]? = nil) {
-        self.probePaths = probePaths ?? [
-            home + "/Library/Safari",
-            home + "/Library/Containers/com.apple.stocks",
-        ]
+        self.probePaths =
+            probePaths ?? [
+                home + "/Library/Safari",
+                home + "/Library/Containers/com.apple.stocks",
+            ]
     }
 
     public func status() -> FullDiskAccessStatus {

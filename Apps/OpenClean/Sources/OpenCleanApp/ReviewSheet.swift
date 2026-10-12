@@ -10,7 +10,8 @@ struct ReviewSheet: View {
             Text("Review cleanup").font(.title2.bold())
             if let plan = model.plan {
                 LabeledContent(
-                    "Deleted now", value: "\(formatBytes(plan.immediateBytes)) · \(plan.immediateRequests.count) item(s)")
+                    "Deleted now",
+                    value: "\(formatBytes(plan.immediateBytes)) · \(plan.immediateRequests.count) item(s)")
                 LabeledContent(
                     "Moved to quarantine (restorable for \(model.settings.clampedRetentionDays) days)",
                     value: "\(formatBytes(plan.quarantineBytes)) · \(plan.quarantineRequests.count) item(s)")

@@ -3,8 +3,9 @@ import Foundation
 import ProcessKit
 import RuleKit
 import ScanEngine
-import Testing
 import TestSupport
+import Testing
+
 @testable import Quarantine
 
 struct RestoreAndPurgeTests {
@@ -13,7 +14,9 @@ struct RestoreAndPurgeTests {
         let checker = PreDeleteChecker(
             denyList: DenyList(home: home.path), processChecker: FakeProcessChecker(), openPaths: [])
         let rule = Rule(id: "r", name: "R", category: .user, explain: "x", paths: ["~/x"], safety: .review)
-        let requests = try paths.map { RemovalRequest(item: try #require(ScanItem.snapshot(of: $0, ruleID: "r")), rule: rule) }
+        let requests = try paths.map {
+            RemovalRequest(item: try #require(ScanItem.snapshot(of: $0, ruleID: "r")), rule: rule)
+        }
         let report = try Remover(store: store, checker: checker, admin: FakeAdminExecutor()).remove(requests)
         return (store, report)
     }
@@ -90,7 +93,8 @@ struct RestoreAndPurgeTests {
         let a = try home.file("a", bytes: 1)
         let b = try home.file("b", bytes: 1)
         let (store, report) = try quarantine(home, [a, b])
-        let result = try RestoreService(store: store).restore(sessionID: report.manifest.id, paths: [b], onConflict: .skip)
+        let result = try RestoreService(store: store).restore(
+            sessionID: report.manifest.id, paths: [b], onConflict: .skip)
         #expect(result.restored == [b])
         #expect(!FileManager.default.fileExists(atPath: a))
     }
@@ -185,8 +189,9 @@ struct RestoreAndPurgeTests {
         try schedule.enable(executable: "/usr/local/bin/openclean")
 
         #expect(schedule.isEnabled)
-        let plist = try PropertyListSerialization.propertyList(
-            from: Data(contentsOf: schedule.plistURL), format: nil) as? [String: Any]
+        let plist =
+            try PropertyListSerialization.propertyList(
+                from: Data(contentsOf: schedule.plistURL), format: nil) as? [String: Any]
         #expect(plist?["Label"] as? String == "io.github.leoanimesh.openclean.purge")
         #expect(plist?["ProgramArguments"] as? [String] == ["/usr/local/bin/openclean", "purge"])
         #expect(runner.calls.contains(["/bin/launchctl", "bootstrap", "gui/501", schedule.plistURL.path]))

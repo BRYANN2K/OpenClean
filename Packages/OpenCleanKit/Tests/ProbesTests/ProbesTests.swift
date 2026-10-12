@@ -1,8 +1,9 @@
 import Foundation
 import ProcessKit
 import ScanEngine
-import Testing
 import TestSupport
+import Testing
+
 @testable import Probes
 
 struct ProbesTests {
@@ -22,11 +23,12 @@ struct ProbesTests {
                 ]}}
                 """)
         let findings = try await XcodeSimulatorsProbe(runner: runner).scan(context(home))
-        #expect(findings == [
-            ProbeFinding(
-                path: home.path + "/Library/Developer/CoreSimulator/Devices/AAA",
-                hint: "Unavailable simulator: iPhone 14")
-        ])
+        #expect(
+            findings == [
+                ProbeFinding(
+                    path: home.path + "/Library/Developer/CoreSimulator/Devices/AAA",
+                    hint: "Unavailable simulator: iPhone 14")
+            ])
     }
 
     @Test func xcodeSimulatorsIsEmptyWhenXcrunFails() async throws {
@@ -45,7 +47,8 @@ struct ProbesTests {
         let runner = FakeCommandRunner()
         runner.respond("\(brew) --cache", stdout: home.path + "/brew-cache\n")
         let findings = try await HomebrewCacheProbe(runner: runner, brewCandidates: [brew]).scan(context(home))
-        #expect(findings.map(\.path) == [home.path + "/brew-cache/a.bottle.tar.gz", home.path + "/brew-cache/downloads"])
+        #expect(
+            findings.map(\.path) == [home.path + "/brew-cache/a.bottle.tar.gz", home.path + "/brew-cache/downloads"])
         #expect(findings.allSatisfy { !$0.reportOnly })
     }
 
@@ -76,8 +79,9 @@ struct ProbesTests {
     }
 
     @Test func standardRegistryHasAllV1Probes() {
-        #expect(ProbeRegistry.standard.ids == [
-            "xcode.simulators", "homebrew.cache", "docker.disk-image", "timemachine.local-snapshots",
-        ])
+        #expect(
+            ProbeRegistry.standard.ids == [
+                "xcode.simulators", "homebrew.cache", "docker.disk-image", "timemachine.local-snapshots",
+            ])
     }
 }

@@ -1,4 +1,5 @@
 import Testing
+
 @testable import RuleKit
 
 struct DenyListTests {
@@ -46,8 +47,10 @@ struct DenyListTests {
     }
 
     @Test func reasonsKeepConfiguredRootText() {
-        #expect(deny.denialReason(for: "/Users/tester/Documents/x") == "inside protected location /Users/tester/Documents")
-        #expect(deny.denialReason(for: "/users/tester/documents/x") == "inside protected location /Users/tester/Documents")
+        #expect(
+            deny.denialReason(for: "/Users/tester/Documents/x") == "inside protected location /Users/tester/Documents")
+        #expect(
+            deny.denialReason(for: "/users/tester/documents/x") == "inside protected location /Users/tester/Documents")
     }
 
     @Test(arguments: [

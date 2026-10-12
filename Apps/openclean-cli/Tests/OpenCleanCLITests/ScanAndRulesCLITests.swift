@@ -1,6 +1,6 @@
 import Foundation
-import Testing
 import TestSupport
+import Testing
 
 @Suite(.serialized)
 struct ScanAndRulesCLITests {
@@ -33,7 +33,8 @@ struct ScanAndRulesCLITests {
             #expect(good.stdout.hasPrefix("OK: 1 pack(s), 3 rule(s)"))
 
             let badPath = home.path + "/bad.yaml"
-            try "pack: bad\nversion: 1\nrules:\n  - id: bad.docs\n    name: D\n    category: user\n    explain: x\n    paths: [\"~/Documents/*\"]\n    safety: regenerable\n"
+            try
+                "pack: bad\nversion: 1\nrules:\n  - id: bad.docs\n    name: D\n    category: user\n    explain: x\n    paths: [\"~/Documents/*\"]\n    safety: regenerable\n"
                 .write(toFile: badPath, atomically: true, encoding: .utf8)
             let bad = try CLIBinary.run(["rules", "lint", badPath], environment: env)
             #expect(bad.status == 1)
@@ -70,6 +71,8 @@ struct ScanAndRulesCLITests {
 
     @Test func binaryRefusesNonTemporaryHome() {
         #expect(throws: (any Error).self) { try CLIBinary.run(["--version"], environment: [:]) }
-        #expect(throws: (any Error).self) { try CLIBinary.run(["--version"], environment: ["OPENCLEAN_HOME": "/Users"]) }
+        #expect(throws: (any Error).self) {
+            try CLIBinary.run(["--version"], environment: ["OPENCLEAN_HOME": "/Users"])
+        }
     }
 }

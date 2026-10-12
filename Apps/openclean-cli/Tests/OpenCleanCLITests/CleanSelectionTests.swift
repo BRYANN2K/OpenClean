@@ -2,10 +2,12 @@ import Foundation
 import RuleKit
 import ScanEngine
 import Testing
+
 @testable import OpenCleanCLI
 
 struct CleanSelectionTests {
-    let regenerable = Rule(id: "a.regen", name: "A", category: .user, explain: "x", paths: ["~/a/*"], safety: .regenerable)
+    let regenerable = Rule(
+        id: "a.regen", name: "A", category: .user, explain: "x", paths: ["~/a/*"], safety: .regenerable)
     let review = Rule(id: "b.review", name: "B", category: .developer, explain: "x", paths: ["~/b/*"], safety: .review)
     let caution = Rule(id: "c.caution", name: "C", category: .user, explain: "x", paths: ["~/c/*"], safety: .caution)
 

@@ -179,7 +179,8 @@ public final class AppModel {
             errorMessage = "Could not save settings: \(error.localizedDescription)"
         }
         if previous.advancedEnabled != settings.advancedEnabled { reloadRules() }
-        let invalidates = previous.advancedEnabled != settings.advancedEnabled
+        let invalidates =
+            previous.advancedEnabled != settings.advancedEnabled
             || previous.excludedPaths != settings.excludedPaths
         if invalidates { settingsGeneration += 1 }
         if invalidates, result != nil, phase != .scanning, phase != .cleaning {

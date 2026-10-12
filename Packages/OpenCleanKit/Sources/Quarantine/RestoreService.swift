@@ -34,7 +34,9 @@ public struct RestoreService: Sendable {
         self.trash = trash
     }
 
-    public func restore(sessionID: String, paths: Set<String>? = nil, onConflict: ConflictPolicy) throws -> RestoreReport {
+    public func restore(sessionID: String, paths: Set<String>? = nil, onConflict: ConflictPolicy) throws
+        -> RestoreReport
+    {
         var manifest = try store.read(id: sessionID)
         var report = RestoreReport()
         let fileManager = FileManager.default

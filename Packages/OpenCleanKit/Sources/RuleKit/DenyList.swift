@@ -59,7 +59,8 @@ public struct DenyList: Sendable {
         }
         if within(photosParent), key != pathKey(photosParent) {
             let depth = pathComponents(photosParent).count
-            if keyComponents.count > depth, hasSuffix(keyComponents[keyComponents.startIndex + depth], ".photoslibrary") {
+            if keyComponents.count > depth, hasSuffix(keyComponents[keyComponents.startIndex + depth], ".photoslibrary")
+            {
                 return "Photos library \(photosParent)/\(components[depth])"
             }
         }

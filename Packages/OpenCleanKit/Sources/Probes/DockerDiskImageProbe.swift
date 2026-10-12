@@ -16,7 +16,9 @@ public struct DockerDiskImageProbe: Probe {
         return candidates.filter { FileStat.of($0) != nil }.map {
             ProbeFinding(
                 path: $0, reportOnly: true,
-                hint: "Docker Desktop's virtual disk. Reclaim space with `docker system prune` or Docker Desktop → Settings → Resources.")
+                hint:
+                    "Docker Desktop's virtual disk. Reclaim space with `docker system prune` or Docker Desktop → Settings → Resources."
+            )
         }
     }
 }

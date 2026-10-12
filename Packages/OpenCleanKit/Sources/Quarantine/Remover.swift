@@ -95,7 +95,8 @@ public struct Remover: Sendable {
         // Record intent first: a crash after a move still leaves a restorable entry.
         manifest.entries = requests.enumerated().map { index, request in
             let mode = request.rule.effectiveDeleteMode
-            let planned = mode == .quarantine && !request.rule.needs(.admin)
+            let planned =
+                mode == .quarantine && !request.rule.needs(.admin)
                 ? itemsDirectory.appendingPathComponent("\(index)")
                     .appendingPathComponent((request.item.path as NSString).lastPathComponent).path
                 : nil
@@ -184,7 +185,8 @@ public struct Remover: Sendable {
         switch admin.runAsAdmin(command) {
         case .succeeded:
             for index in batch {
-                markAfterAdminRun(&manifest, index, requests[index].item.path,
+                markAfterAdminRun(
+                    &manifest, index, requests[index].item.path,
                     presentMessage: "still present after administrator removal")
             }
         case .cancelled:

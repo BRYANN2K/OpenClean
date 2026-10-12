@@ -23,7 +23,8 @@ public enum AdminCommandBuilder {
     }
 
     public static func appleScriptLiteral(_ value: String) -> String {
-        let escaped = value
+        let escaped =
+            value
             .replacingOccurrences(of: #"\"#, with: #"\\"#)
             .replacingOccurrences(of: #"""#, with: #"\""#)
         return "\"" + escaped + "\""

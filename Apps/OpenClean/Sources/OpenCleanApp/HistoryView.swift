@@ -36,7 +36,9 @@ struct HistoryView: View {
                         Label("Damaged session \(id)", systemImage: "exclamationmark.triangle")
                         Spacer()
                         Button("Reveal in Finder") {
-                            NSWorkspace.shared.activateFileViewerSelecting([model.paths.quarantine.appendingPathComponent(id)])
+                            NSWorkspace.shared.activateFileViewerSelecting([
+                                model.paths.quarantine.appendingPathComponent(id)
+                            ])
                         }
                     }
                 }
@@ -53,7 +55,9 @@ struct HistoryView: View {
 
     private func restore(_ policy: ConflictPolicy) {
         guard let pending else { return }
-        Task { lastRestore = await model.restore(sessionID: pending.sessionID, paths: pending.paths, onConflict: policy) }
+        Task {
+            lastRestore = await model.restore(sessionID: pending.sessionID, paths: pending.paths, onConflict: policy)
+        }
     }
 }
 
@@ -68,9 +72,12 @@ struct SessionRow: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(entry.originalPath).lineLimit(1).truncationMode(.middle)
-                        Text([entry.outcome.rawValue.capitalized, entry.reason].compactMap { $0 }.joined(separator: " — "))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        Text(
+                            [entry.outcome.rawValue.capitalized, entry.reason].compactMap { $0 }.joined(
+                                separator: " — ")
+                        )
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     }
                     Spacer()
                     Text(formatBytes(entry.size)).monospacedDigit().foregroundStyle(.secondary)

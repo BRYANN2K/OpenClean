@@ -1,0 +1,30 @@
+name: Bug report
+description: Something OpenClean did that it should not have, or did not do.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the rule id if it is about a specific item (see `openclean rules list`).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: OpenClean version and macOS version
+      placeholder: "0.1.0 on macOS 15.4 (Apple Silicon)"
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Paste `openclean scan --json` or `openclean history --json` output if relevant. Remove personal paths you do not want to share.
+      render: json

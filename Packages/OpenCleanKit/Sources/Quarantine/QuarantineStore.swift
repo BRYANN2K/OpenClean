@@ -70,7 +70,8 @@ public struct QuarantineStore: Sendable {
 
     public func listSessions() -> [SessionListing] {
         let names = (try? FileManager.default.contentsOfDirectory(atPath: root.path)) ?? []
-        let listings: [SessionListing] = names
+        let listings: [SessionListing] =
+            names
             .filter { FileStat.of(sessionDirectory($0).path)?.isDirectory == true }
             .map { name in
                 if let manifest = try? read(id: name) { return .ok(manifest) }

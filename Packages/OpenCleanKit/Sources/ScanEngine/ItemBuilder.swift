@@ -7,7 +7,8 @@ enum Gate {
         if rule.needs(.fullDiskAccess) && !context.hasFullDiskAccess {
             return .needsFullDiskAccess
         }
-        if let running = rule.conditions.appNotRunning.first(where: { context.processChecker.isRunning(bundleID: $0) }) {
+        if let running = rule.conditions.appNotRunning.first(where: { context.processChecker.isRunning(bundleID: $0) })
+        {
             return .skippedAppRunning(running)
         }
         return nil

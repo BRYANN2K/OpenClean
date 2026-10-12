@@ -123,9 +123,12 @@ struct CleanupSummary: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Label("Cleanup complete", systemImage: "checkmark.circle.fill").font(.headline).foregroundStyle(.green)
-            Text("Freed \(formatBytes(report.deletedBytes)) now · \(formatBytes(report.quarantinedBytes)) in quarantine (see History to restore).")
+            Text(
+                "Freed \(formatBytes(report.deletedBytes)) now · \(formatBytes(report.quarantinedBytes)) in quarantine (see History to restore)."
+            )
             if report.hadSkips {
-                Text("\(report.skipped.count) item(s) were skipped; details are in History.").foregroundStyle(.secondary)
+                Text("\(report.skipped.count) item(s) were skipped; details are in History.").foregroundStyle(
+                    .secondary)
             }
         }
     }

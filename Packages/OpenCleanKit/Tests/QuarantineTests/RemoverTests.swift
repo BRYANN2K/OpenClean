@@ -2,8 +2,9 @@ import Foundation
 import Privilege
 import RuleKit
 import ScanEngine
-import Testing
 import TestSupport
+import Testing
+
 @testable import Quarantine
 
 struct RemoverTests {

@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+
 @testable import RuleKit
 
 struct RuleLinterTests {
@@ -49,8 +50,9 @@ struct RuleLinterTests {
         "~/Library/Mobile Documents/*",
     ])
     func rejectsProtectedPaths(pattern: String) {
-        #expect(messages(rule(paths: [pattern])).contains { $0.contains("protected location") },
-                "expected \(pattern) to be protected")
+        #expect(
+            messages(rule(paths: [pattern])).contains { $0.contains("protected location") },
+            "expected \(pattern) to be protected")
     }
 
     @Test func rejectsRelativePaths() {
@@ -58,16 +60,19 @@ struct RuleLinterTests {
     }
 
     @Test func rejectsTrailingDoubleStar() {
-        #expect(messages(rule(paths: ["~/Library/Caches/**"])).contains { $0.hasPrefix("trailing ** is not supported") })
+        #expect(
+            messages(rule(paths: ["~/Library/Caches/**"])).contains { $0.hasPrefix("trailing ** is not supported") })
     }
 
     @Test func adminOnlyForRegenerableImmediateRules() {
-        #expect(messages(rule(safety: .review, requires: [.admin])).contains {
-            $0 == "requires: admin is only allowed for regenerable rules"
-        })
-        #expect(messages(rule(deleteMode: .quarantine, requires: [.admin])).contains {
-            $0 == "requires: admin rules must delete immediately"
-        })
+        #expect(
+            messages(rule(safety: .review, requires: [.admin])).contains {
+                $0 == "requires: admin is only allowed for regenerable rules"
+            })
+        #expect(
+            messages(rule(deleteMode: .quarantine, requires: [.admin])).contains {
+                $0 == "requires: admin rules must delete immediately"
+            })
     }
 
     @Test func rejectsNegativeAge() {

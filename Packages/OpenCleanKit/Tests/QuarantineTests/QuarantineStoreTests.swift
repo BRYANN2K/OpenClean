@@ -1,7 +1,8 @@
 import Foundation
 import RuleKit
-import Testing
 import TestSupport
+import Testing
+
 @testable import Quarantine
 
 struct QuarantineStoreTests {

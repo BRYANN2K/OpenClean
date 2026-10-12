@@ -83,8 +83,11 @@ public struct OpenCleanCoordinator: Sendable {
 
     public func history() -> [SessionListing] { store.listSessions() }
 
-    public func restore(sessionID: String, paths: Set<String>? = nil, onConflict: ConflictPolicy) throws -> RestoreReport {
-        try RestoreService(store: store, trash: trash).restore(sessionID: sessionID, paths: paths, onConflict: onConflict)
+    public func restore(sessionID: String, paths: Set<String>? = nil, onConflict: ConflictPolicy) throws
+        -> RestoreReport
+    {
+        try RestoreService(store: store, trash: trash).restore(
+            sessionID: sessionID, paths: paths, onConflict: onConflict)
     }
 
     @discardableResult

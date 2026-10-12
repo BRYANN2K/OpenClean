@@ -3,12 +3,15 @@ import Quarantine
 import RuleKit
 import ScanEngine
 import Testing
+
 @testable import OpenCleanCLI
 
 struct JSONReportTests {
     static let date = Date(timeIntervalSince1970: 1_800_000_000)
 
-    static func item(_ path: String, _ rule: String, _ size: Int64, reportOnly: Bool = false, hint: String? = nil) -> ScanItem {
+    static func item(_ path: String, _ rule: String, _ size: Int64, reportOnly: Bool = false, hint: String? = nil)
+        -> ScanItem
+    {
         ScanItem(
             path: path, ruleID: rule, size: size, device: 1, inode: 1, modificationDate: date, ownerUID: 501,
             reportOnly: reportOnly, hint: hint)
@@ -26,14 +29,19 @@ struct JSONReportTests {
             probe: "docker.disk-image", safety: .review)
         return ScanResult(
             rules: [
-                RuleResult(rule: caches, items: [
-                    item("/Users/t/Library/Caches/com.a", caches.id, 2_048),
-                    item("/Users/t/Library/Caches/com.b", caches.id, 1_024),
-                ]),
+                RuleResult(
+                    rule: caches,
+                    items: [
+                        item("/Users/t/Library/Caches/com.a", caches.id, 2_048),
+                        item("/Users/t/Library/Caches/com.b", caches.id, 1_024),
+                    ]),
                 RuleResult(rule: trash, status: .needsFullDiskAccess),
                 RuleResult(
                     rule: docker,
-                    items: [item("/Users/t/Docker.raw", docker.id, 4_096, reportOnly: true, hint: "Use docker system prune.")],
+                    items: [
+                        item(
+                            "/Users/t/Docker.raw", docker.id, 4_096, reportOnly: true, hint: "Use docker system prune.")
+                    ],
                     errors: ["something odd"]),
             ],
             isComplete: true, startedAt: date, finishedAt: date.addingTimeInterval(2))
@@ -48,7 +56,8 @@ struct JSONReportTests {
                     ruleID: "user.app-caches", mode: .immediate, outcome: .deleted, reason: nil),
                 ManifestEntry(
                     id: 1, originalPath: "/Users/t/Downloads/x.dmg",
-                    storedPath: "/Users/t/Library/Application Support/OpenClean/Quarantine/20270115-080000-abcd/items/1/x.dmg",
+                    storedPath:
+                        "/Users/t/Library/Application Support/OpenClean/Quarantine/20270115-080000-abcd/items/1/x.dmg",
                     size: 4_096, ruleID: "fixture.downloads", mode: .quarantine, outcome: .quarantined, reason: nil),
                 ManifestEntry(
                     id: 2, originalPath: "/Users/t/Library/Caches/com.b", storedPath: nil, size: 1_024,
@@ -63,7 +72,8 @@ struct JSONReportTests {
 
     @Test func scanJSONStructure() throws {
         let json = try #require(
-            try JSONSerialization.jsonObject(with: Data(try JSONReport.scan(Self.scanFixture()).utf8)) as? [String: Any])
+            try JSONSerialization.jsonObject(with: Data(try JSONReport.scan(Self.scanFixture()).utf8)) as? [String: Any]
+        )
         #expect(json["schema"] as? Int == 1)
         #expect(json["complete"] as? Bool == true)
         #expect(json["totalBytes"] as? Int == 3_072)
