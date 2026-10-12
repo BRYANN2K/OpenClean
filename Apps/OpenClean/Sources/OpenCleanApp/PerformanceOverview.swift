@@ -89,7 +89,7 @@ struct MetricCard: View {
             }
             Text(value)
                 .font(.system(size: 28, weight: .bold))
-                .monospacedDigit()
+                .rollingNumber(value)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text(detail)

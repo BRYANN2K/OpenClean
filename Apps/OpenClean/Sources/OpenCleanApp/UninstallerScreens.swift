@@ -67,11 +67,11 @@ struct UninstallerLoadingView: View {
                 .padding(.top, 28)
             Text("\(Int(fraction * 100))%")
                 .font(.system(size: 56, weight: .bold))
-                .monospacedDigit()
-                .contentTransition(.numericText())
+                .rollingNumber(Int(fraction * 100))
             if let progress = model.progress, progress.total > 0 {
                 Text("\(progress.finished) of \(progress.total) apps measured")
                     .font(.system(size: 14))
+                    .rollingNumber(progress.finished)
                     .monospacedDigit()
                     .foregroundStyle(Theme.textSecondary)
             }

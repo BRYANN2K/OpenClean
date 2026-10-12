@@ -99,11 +99,11 @@ struct ScanningView: View {
                 .padding(.top, 28)
             Text("\(Int(fraction * 100))%")
                 .font(.system(size: 56, weight: .bold))
-                .monospacedDigit()
-                .contentTransition(.numericText())
+                .rollingNumber(Int(fraction * 100))
             if let progress = model.progress {
                 Text("\(progress.finished) of \(progress.total) rules checked")
                     .font(.system(size: 14))
+                    .rollingNumber(progress.finished)
                     .foregroundStyle(Theme.textSecondary)
             }
 

@@ -80,6 +80,27 @@ extension View {
     }
 }
 
+// MARK: Live numbers
+
+/// Rolls digits when a live number changes (sizes, counts, percentages). Off with Reduce Motion.
+struct RollingNumber<Value: Equatable>: ViewModifier {
+    let value: Value
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .monospacedDigit()
+            .contentTransition(reduceMotion ? .identity : .numericText())
+            .animation(reduceMotion ? nil : .snappy(duration: 0.4), value: value)
+    }
+}
+
+extension View {
+    func rollingNumber<Value: Equatable>(_ value: Value) -> some View {
+        modifier(RollingNumber(value: value))
+    }
+}
+
 // MARK: Buttons
 
 /// The one big round action on a screen (Scan, Clean).

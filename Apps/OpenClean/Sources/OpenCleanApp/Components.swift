@@ -56,6 +56,7 @@ struct StorageCard: View {
             if let disk {
                 HStack(alignment: .firstTextBaseline) {
                     Text("\(formatCapacity(disk.available)) free").font(.system(size: 13, weight: .semibold))
+                        .rollingNumber(disk.available)
                         .lineLimit(1)
                     Spacer(minLength: 4)
                     Text("of \(formatCapacity(disk.total))")

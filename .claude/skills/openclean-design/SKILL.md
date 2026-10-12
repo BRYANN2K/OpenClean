@@ -39,7 +39,7 @@ New modules get their own backdrop case: a dark top-leading color moving to a mi
 **Type** (system font, set with `.font(.system(size:weight:))`):
 - Screen headline: 30–34 bold. Big number: 56 bold, `.monospacedDigit()`.
 - Section title: 18 bold. Row title: 14–15 semibold. Body/secondary: 14–15 regular in `textSecondary`. Captions: 11–12.
-- Any number that changes (sizes, counts, percentages) uses `.monospacedDigit()`.
+- Any number that changes live (sizes, counts, percentages) uses `.rollingNumber(value)` (Theme.swift): monospaced digits that roll to the new value, off with Reduce Motion. Static numbers just use `.monospacedDigit()`.
 - Wordmark: `Wordmark` view, rounded design, "Open" regular + "Clean" bold.
 
 ## Components (reuse; don't re-create)
