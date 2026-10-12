@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="docs/brand/logo.svg" width="112" alt="OpenClean app icon">
+  <img src="docs/brand/hero.jpg" alt="OpenClean — the free, open-source Mac cleaner: Smart Scan, Uninstaller, Space Lens, duplicates, Performance and a menu bar monitor, with undo">
 </p>
-
-<h1 align="center">OpenClean</h1>
 
 <p align="center">
   <strong>Free, open-source Mac cleaner — a transparent CleanMyMac alternative for macOS.</strong><br>
@@ -10,29 +8,17 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/leoAnimesh/OpenClean/releases/latest"><img src="https://img.shields.io/github/v/release/leoAnimesh/OpenClean?label=download&color=12A88B" alt="Latest release"></a>
   <a href="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml"><img src="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/macOS-14%2B-0A4756" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white" alt="Swift 6">
-  <img src="https://img.shields.io/badge/SwiftUI-native-12A88B" alt="Native SwiftUI">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="GPL-3.0"></a>
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/home.png" width="860" alt="OpenClean Smart Scan home screen on macOS">
 </p>
 
 OpenClean is a native macOS disk cleanup app and command-line tool. Smart Scan finds caches, logs,
 developer-tool and AI-tool leftovers you can safely remove, shows you exactly why each item is safe, and
 keeps anything that is not trivially regenerable in a quarantine you can restore from for 7 days.
 No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
-
-## Screenshots
-
-| Smart Scan results | Cleanup complete |
-|---|---|
-| <img src="docs/screenshots/results.png" alt="OpenClean scan results with safe and review categories"> | <img src="docs/screenshots/complete.png" alt="OpenClean cleanup summary with freed space and quarantine"> |
-| **Scanning** | **History & restore** |
-| <img src="docs/screenshots/scanning.png" alt="OpenClean scanning progress"> | <img src="docs/screenshots/history.png" alt="OpenClean cleanup history with quarantine countdown and restore"> |
 
 ## Features
 
