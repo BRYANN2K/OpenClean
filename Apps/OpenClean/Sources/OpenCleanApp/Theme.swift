@@ -144,6 +144,21 @@ struct CapsuleButtonStyle: ButtonStyle {
     var prominent = false
 
     func makeBody(configuration: Configuration) -> some View {
+        Pill(configuration: configuration, prominent: prominent)
+    }
+
+    private struct Pill: View {
+        let configuration: Configuration
+        let prominent: Bool
+        @Environment(\.isEnabled) private var isEnabled
+
+        var body: some View {
+            CapsuleButtonStyle.body(configuration, prominent: prominent)
+                .opacity(isEnabled ? 1 : 0.4)
+        }
+    }
+
+    fileprivate static func body(_ configuration: Configuration, prominent: Bool) -> some View {
         configuration.label
             .font(.system(size: 14, weight: prominent ? .semibold : .medium))
             .foregroundStyle(prominent ? Theme.deepTeal : .white)

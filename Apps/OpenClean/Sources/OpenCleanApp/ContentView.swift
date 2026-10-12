@@ -63,7 +63,7 @@ struct ContentView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(Theme.sidebar.opacity(0.55))
+            .background(Theme.sidebar.opacity(0.2))
             .safeAreaInset(edge: .top, spacing: 0) {
                 HStack(spacing: 10) {
                     AppIconView(size: 28)
@@ -76,7 +76,8 @@ struct ContentView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 StorageCard(disk: model.disk, stats: model.stats).padding(12)
             }
-            .navigationSplitViewColumnWidth(min: 200, ideal: 220)
+            .frame(minWidth: 230)
+            .navigationSplitViewColumnWidth(min: 230, ideal: 240, max: 280)
             // The sidebar is the app's only navigation, so it can't be hidden.
             .toolbar(removing: .sidebarToggle)
         } detail: {
@@ -132,6 +133,8 @@ struct Wordmark: View {
         (Text("Open").fontWeight(.regular) + Text("Clean").fontWeight(.bold))
             .font(.system(size: size, design: .rounded))
             .kerning(-0.3)
+            .lineLimit(1)
+            .fixedSize()
             .foregroundStyle(.white)
             .accessibilityLabel("OpenClean")
     }

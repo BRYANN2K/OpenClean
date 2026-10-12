@@ -95,6 +95,13 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 - Size summaries use `splitSummary(now:quarantine:)`, which leaves out a zero side ("81.9 MB freed now", not "… · Zero KB to quarantine").
 - Dates in lists read "Today, 5:13 PM" or "Yesterday, …", never a numeric date. Quarantined sessions show "N days left" with a thin accent progress bar.
 
+## Onboarding
+
+- First launch shows `OnboardingView` instead of the main window until `OnboardingModel.finish` succeeds. It finishes only when every feature step has been seen **and** Full Disk Access is granted; there is no skip. Bump `OnboardingModel.currentVersion` to show it again after a release that changes it; Help → Welcome Tour replays it.
+- Each step is visual (≈270 pt tall) + eyebrow + title + one paragraph, on the backdrop of the module it explains. Visuals are decorative (`accessibilityHidden`), loop with `PhaseAnimator` through `LoopingPhases`, and hold a still frame with Reduce Motion.
+- A new module gets a new step: add an `OnboardingStep` case (mark it `isFeature`), a page in `OnboardingView.page(for:)` and a visual in `OnboardingVisuals.swift`, and update the design canvas board.
+- `CapsuleButtonStyle` dims to 40% when disabled; use `.disabled` rather than hiding a button that is temporarily blocked.
+
 ## Accessibility checklist
 
 - Decorative art (`Orb`, `CategoryIcon`, logo) is `accessibilityHidden`; the meaning is in adjacent text.

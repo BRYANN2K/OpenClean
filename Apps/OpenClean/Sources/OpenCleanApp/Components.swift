@@ -54,17 +54,23 @@ struct StorageCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let disk {
-                HStack(alignment: .firstTextBaseline) {
-                    Text("\(formatCapacity(disk.available)) free").font(.system(size: 13, weight: .semibold))
-                        .rollingNumber(disk.available)
-                        .lineLimit(1)
-                    Spacer(minLength: 4)
-                    Text("of \(formatCapacity(disk.total))")
-                        .lineLimit(1)
-                        .font(.system(size: 11))
-                        .foregroundStyle(Theme.textSecondary)
+                // Free space and total on one line when the sidebar is wide enough; otherwise just free space.
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("\(formatCapacity(disk.available)) free")
+                            .font(.system(size: 13, weight: .semibold))
+                            .fixedSize()
+                        Spacer(minLength: 4)
+                        Text("of \(formatCapacity(disk.total))")
+                            .font(.system(size: 11))
+                            .foregroundStyle(Theme.textSecondary)
+                            .fixedSize()
+                    }
+                    Text("\(formatCapacity(disk.available)) free")
+                        .font(.system(size: 13, weight: .semibold))
+                        .fixedSize()
                 }
-                .monospacedDigit()
+                .rollingNumber(disk.available)
                 ProgressView(value: disk.freeFraction)
                     .progressViewStyle(.linear)
                     .tint(Theme.accent)
