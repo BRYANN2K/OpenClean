@@ -130,4 +130,32 @@ struct CoordinatorUninstallerTests {
         #expect(FileStat.of(app + "/Contents/Info.plist") != nil)
         #expect(FileStat.of(app)?.ownerUID == getuid())
     }
+
+    /// With a symlinked home (OPENCLEAN_HOME in /tmp or /var/folders), the quarantine store is built from
+    /// the resolved home, so the administrator move's symlink-free `items/` check passes.
+    @Test func administratorUninstallWorksUnderASymlinkedHome() async throws {
+        let dir = try TempDirectory()
+        let real = try dir.directory("real")
+        let link = try dir.symlink("link", to: real)
+        let app = try makeApp(dir, "real/Applications/Foo.app", id: "com.example.foo")
+        let applications = real + "/Applications"
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: applications)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: applications) }
+        let admin = FakeAdminExecutor(runForReal: true) { _ in
+            try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: applications)
+        }
+        let subject = OpenCleanCoordinator(
+            home: link, environment: [:], registry: ProbeRegistry([]), processChecker: FakeProcessChecker(),
+            openFiles: FakeOpenFiles(), admin: admin, fullDiskAccess: { .granted }, trash: { _ in nil })
+        #expect(subject.store.root.path == real + "/Library/Application Support/OpenClean/Quarantine")
+
+        let foo = try #require(await subject.installedApps(lastUsed: nil).first)
+        #expect(foo.status == .needsAdministrator)
+        guard case .finished(let report) = try subject.uninstall(foo, leftovers: []) else {
+            Issue.record("expected the uninstall to finish")
+            return
+        }
+        #expect(report.manifest.entries.map(\.outcome) == [.quarantined])
+        #expect(FileStat.of(app) == nil)
+    }
 }

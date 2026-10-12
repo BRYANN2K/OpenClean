@@ -43,7 +43,9 @@ public struct OpenCleanCoordinator: Sendable {
         self.home = givenHome
         let resolvedHome = realPath(givenHome) ?? givenHome
         self.resolvedHome = resolvedHome
-        paths = AppPaths.standard(home: givenHome)
+        // Resolved, so the quarantine store, settings and Updates paths compare equal to the realpath'd
+        // forms the safety checks use (e.g. `AppBundleAdminMove` requires a symlink-free `items/`).
+        paths = AppPaths.standard(home: resolvedHome)
         self.registry = registry
         bundledRulesDirectory = RulesLocator.bundledDirectory(environment: environment)
         self.processChecker = processChecker
