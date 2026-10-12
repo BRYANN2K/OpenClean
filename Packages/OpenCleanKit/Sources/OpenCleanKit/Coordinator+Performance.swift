@@ -10,19 +10,23 @@ import SystemMonitor
 extension OpenCleanCoordinator {
     /// `/Applications` and `~/Applications`, where installed apps are looked up for owner resolution.
     public var applicationDirectories: [String] {
-        ["/Applications", (home as NSString).appendingPathComponent("Applications")]
+        ["/Applications", (resolvedHome as NSString).appendingPathComponent("Applications")]
     }
 
     public func makeSystemMonitor() -> SystemMonitor {
         SystemMonitor(sampler: DarwinSampler(volume: URL(fileURLWithPath: home, isDirectory: true)))
     }
 
+    /// Launch agent/daemon folders for the coordinator's home, symlinks in the home resolved:
+    /// `LaunchAgentQuarantine` compares against the realpath'd agents folder.
+    public var launchItemRoots: LaunchItemRoots { .standard(home: resolvedHome) }
+
     public func loginItemsService(
         runner: any CommandRunner = ProcessCommandRunner(timeout: 10), roots: LaunchItemRoots? = nil,
         installedApps: [InstalledApp]? = nil
     ) -> LoginItemsService {
         LoginItemsService(
-            roots: roots ?? .standard(home: home), runner: runner,
+            roots: roots ?? launchItemRoots, runner: runner,
             installedApps: installedApps ?? InstalledApp.scan(directories: applicationDirectories),
             quarantineStore: store)
     }

@@ -59,7 +59,7 @@ public struct LaunchItemRoots: Sendable, Equatable {
 
 /// Lists launch agents/daemons with their state, and disables, enables or removes *user* agents.
 public struct LoginItemsService: Sendable {
-    let roots: LaunchItemRoots
+    public let roots: LaunchItemRoots
     let uid: UInt32
     let runner: any CommandRunner
     let owners: OwnerResolver
@@ -194,11 +194,13 @@ public struct LoginItemsService: Sendable {
     }
 
     /// Stops the agent and moves its plist into a quarantine session (restorable from History).
+    /// Every quarantine check runs first: a removal that would be refused never stops the agent.
     @discardableResult
     public func remove(_ item: LaunchItem, now: Date = .now) throws -> SessionManifest {
         try checkActionable(item)
-        _ = try? runner.run(LaunchctlCommand.executable, LaunchctlCommand.bootout(uid: uid, label: item.label))
         do {
+            try quarantine.check(plistPath: item.path)
+            _ = try? runner.run(LaunchctlCommand.executable, LaunchctlCommand.bootout(uid: uid, label: item.label))
             return try quarantine.quarantine(plistPath: item.path, now: now)
         } catch let error as LaunchAgentQuarantineError {
             throw LoginItemsError.quarantineFailed(error.description)
