@@ -9,7 +9,7 @@ public enum ScheduleError: Error, Equatable {
 
 /// Optional daily purge via a per-user LaunchAgent. Off by default.
 public struct PurgeSchedule: Sendable {
-    public static let label = "io.github.leoanimesh.openclean.purge"
+    public static let label = "com.openclean.purge"
     let launchAgents: URL
     let runner: any CommandRunner
     let uid: uid_t

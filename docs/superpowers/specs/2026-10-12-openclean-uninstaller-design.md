@@ -67,7 +67,7 @@ Every candidate is a direct entry of one of these folders, found by listing the 
 
 App bundles are deny-listed. `UninstallBundleExemption.authorize` builds a one-request exemption only when **all** hold, otherwise the request is refused with a reason:
 
-1. The bundle id is a safe component, not `com.apple.*`, not OpenClean's (`io.github.leoanimesh.OpenClean`); the path is not OpenClean's own bundle and not under `/System`.
+1. The bundle id is a safe component, not `com.apple.*`, not OpenClean's (`com.openclean`); the path is not OpenClean's own bundle and not under `/System`.
 2. The path is absolute, has no `.`/`..`, equals its own `realpath` (no symlink anywhere), is a real directory whose last component ends in `.app`, and its parent's canonical key equals one of the allowed (uninstall-enabled, resolved) application folders — i.e. a `.app` directly inside it.
 3. Not root-owned; the bundle and its parent folder are writable by the user. **Exception:** for a `.needsAdministrator` app (`UninstallRequest.requiresAdministrator`) this check is dropped and the bundle is moved by `AppBundleAdminMove` (root moves it into a fresh root-only folder in `/private/var/tmp`, checks it is the same inode, chowns its folders and single-link files to the user and hands the folder over; the user then moves it into `items/0/<name>` without replacing anything — see AGENTS.md) after one password prompt; everything else in this list still applies. A cancelled or failed prompt moves nothing (entry 0 `failed`, leftovers `skipped`); leftovers move only after the bundle reached quarantine. Restored apps come back owned by the user.
 4. `DenyList.denialReason` for the path is either nil or exactly `application bundle <path>`; any other denial stays in force.

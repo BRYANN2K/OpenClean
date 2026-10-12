@@ -8,7 +8,7 @@ import Testing
 import Updater
 
 struct CoordinatorUpdatesTests {
-    static let bundleID = "io.github.leoanimesh.OpenClean"
+    static let bundleID = "com.openclean"
 
     func coordinator(_ home: TempDirectory, environment: [String: String] = [:]) -> OpenCleanCoordinator {
         OpenCleanCoordinator(
@@ -81,7 +81,8 @@ struct CoordinatorUpdatesTests {
         let staged = try home.fakeApp(
             "Library/Application Support/OpenClean/Updates/0.3.0/staged-x/OpenClean.app", version: "0.3.0")
         let dmg = try home.file("Library/Application Support/OpenClean/Updates/0.3.0/OpenClean-0.3.0.dmg", bytes: 1)
-        let installer = coordinator.selfUpdateInstaller(bundleIdentifier: Self.bundleID, runner: FakeCommandRunner())
+        let installer = coordinator.selfUpdateInstaller(
+            bundleIdentifier: Self.bundleID, runner: FakeCommandRunner(), runningTeamIdentifier: nil)
         #expect(installer.installBlocker(currentApp: current) == nil)
 
         let rel = Release(
@@ -107,7 +108,8 @@ struct CoordinatorUpdatesTests {
     @Test func installerExplainsWhyItCannotReplace() throws {
         let home = try TempDirectory()
         let coordinator = coordinator(home)
-        let installer = coordinator.selfUpdateInstaller(bundleIdentifier: Self.bundleID, runner: FakeCommandRunner())
+        let installer = coordinator.selfUpdateInstaller(
+            bundleIdentifier: Self.bundleID, runner: FakeCommandRunner(), runningTeamIdentifier: nil)
         let translocated = try home.fakeApp("AppTranslocation/X/d/OpenClean.app")
         #expect(installer.installBlocker(currentApp: translocated)?.contains("Applications folder") == true)
         try home.file("Repo/Package.swift")

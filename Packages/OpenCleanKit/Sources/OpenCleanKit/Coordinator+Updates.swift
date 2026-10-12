@@ -47,10 +47,15 @@ extension OpenCleanCoordinator {
         updateStagingCleaner.removeAll(keeping: keeping)
     }
 
+    /// `runningTeamIdentifier` is the running app's Developer ID team (nil when ad-hoc signed); when set,
+    /// staged updates must be signed by the same team.
     public func selfUpdateInstaller(
-        bundleIdentifier: String, runner: any CommandRunner = ProcessCommandRunner(timeout: 180)
+        bundleIdentifier: String, runner: any CommandRunner = ProcessCommandRunner(timeout: 180),
+        runningTeamIdentifier: String? = PublisherCheck.runningTeamIdentifier()
     ) -> SelfUpdateInstaller {
-        SelfUpdateInstaller(coordinator: self, bundleIdentifier: bundleIdentifier, runner: runner)
+        SelfUpdateInstaller(
+            coordinator: self, bundleIdentifier: bundleIdentifier, runner: runner,
+            runningTeamIdentifier: runningTeamIdentifier)
     }
 }
 
@@ -60,6 +65,7 @@ public struct SelfUpdateInstaller: UpdateInstalling {
     let coordinator: OpenCleanCoordinator
     let bundleIdentifier: String
     let runner: any CommandRunner
+    let runningTeamIdentifier: String?
 
     var replacer: SelfUpdateReplacer {
         SelfUpdateReplacer(
@@ -68,7 +74,9 @@ public struct SelfUpdateInstaller: UpdateInstalling {
     }
 
     public func stage(_ download: VerifiedDownload) throws -> StagedUpdate {
-        try UpdateInstaller(runner: runner, bundleIdentifier: bundleIdentifier).stage(download)
+        try UpdateInstaller(
+            runner: runner, bundleIdentifier: bundleIdentifier, runningTeamIdentifier: runningTeamIdentifier
+        ).stage(download)
     }
 
     public func installBlocker(currentApp: String) -> String? {

@@ -64,6 +64,8 @@ public enum UpdateError: Error, Equatable, CustomStringConvertible {
     case stagingFailed(String)
     case invalidBundle(String)
     case signatureInvalid(String)
+    /// The running app is Developer ID signed and the update isn't signed by the same team.
+    case publisherMismatch(String)
 
     public var description: String {
         switch self {
@@ -81,6 +83,8 @@ public enum UpdateError: Error, Equatable, CustomStringConvertible {
         case .stagingFailed(let reason): "The update could not be prepared: \(reason)"
         case .invalidBundle(let reason): "The downloaded app is not a valid OpenClean update: \(reason)"
         case .signatureInvalid(let reason): "The downloaded app's code signature is invalid: \(reason)"
+        case .publisherMismatch(let reason):
+            "The downloaded app isn't from OpenClean's publisher, so it was not installed: \(reason)."
         }
     }
 }

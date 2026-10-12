@@ -56,7 +56,7 @@ extension TempDirectory {
     /// A minimal app bundle (`Contents/Info.plist` + a fake executable) for update tests.
     @discardableResult
     public func fakeApp(
-        _ relativePath: String, bundleID: String = "io.github.leoanimesh.OpenClean", version: String = "0.2.0"
+        _ relativePath: String, bundleID: String = "com.openclean", version: String = "0.2.0"
     ) throws -> String {
         let app = url.appendingPathComponent(relativePath, isDirectory: true)
         let contents = app.appendingPathComponent("Contents", isDirectory: true)

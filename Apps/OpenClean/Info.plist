@@ -7,7 +7,7 @@
     <key>CFBundleExecutable</key>
     <string>OpenClean</string>
     <key>CFBundleIdentifier</key>
-    <string>io.github.leoanimesh.OpenClean</string>
+    <string>com.openclean</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>CFBundleName</key>

@@ -79,7 +79,7 @@ public enum AppBundleAdminMoveError: Error, Sendable, Equatable, CustomStringCon
 /// - The quarantine `destination` (inside the user-writable session folder) never appears in the script.
 /// Nothing the user types ever reaches the shell.
 public struct AppBundleAdminMove: Sendable, Equatable {
-    public static let openCleanBundleID = "io.github.leoanimesh.OpenClean"
+    public static let openCleanBundleID = "com.openclean"
     /// Root-owned, sticky, on the data volume. The staging folder is created directly inside it.
     public static let stagingBase = "/private/var/tmp"
 

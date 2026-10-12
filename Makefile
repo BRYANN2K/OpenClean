@@ -10,6 +10,17 @@ RELEASE_DIR := $(BUILD_DIR)/release
 DMG = $(RELEASE_DIR)/OpenClean-$(VERSION).dmg
 CLI_ZIP = $(RELEASE_DIR)/openclean-cli-$(VERSION).zip
 BIN = $(shell swift build -c release $(ARCH_FLAGS) --show-bin-path)
+# Code signing. "-" (the default) = ad-hoc, for local builds, forks and PRs. Release CI passes a
+# "Developer ID Application: … (TEAMID)" identity from a temporary keychain; then the app and the CLI are
+# signed with the hardened runtime and a secure timestamp (both required for notarization) and the DMG is
+# signed too. No entitlements file: nothing OpenClean does needs a hardened-runtime exception (see
+# CONTRIBUTING.md "Releases").
+SIGN_IDENTITY ?= -
+ifeq ($(SIGN_IDENTITY),-)
+CODESIGN = codesign --force --sign -
+else
+CODESIGN = codesign --force --options runtime --timestamp --sign "$(SIGN_IDENTITY)"
+endif
 
 .PHONY: build test app install uninstall dist lint icon dmg cli-zip release-assets
 
@@ -32,7 +43,10 @@ app: build
 	cp Apps/OpenClean/Resources/AppIcon.icns "$(APP)/Contents/Resources/AppIcon.icns"
 	plutil -replace CFBundleShortVersionString -string "$(VERSION)" "$(APP)/Contents/Info.plist"
 	plutil -replace CFBundleVersion -string "$(BUILD_NUMBER)" "$(APP)/Contents/Info.plist"
-	codesign --force --sign - "$(APP)"
+	@# The bundle has no nested code (no frameworks, helpers or plug-ins), so signing the bundle signs its
+	@# main executable too. If nested code is ever added, sign it first, inside-out.
+	$(CODESIGN) "$(APP)"
+	codesign --verify --strict --verbose=2 "$(APP)"
 
 install: app
 	mkdir -p "$(PREFIX)/bin" "$(PREFIX)/share/openclean/rules"
@@ -65,12 +79,17 @@ dmg: app
 		if [ $$attempt = 3 ]; then exit 1; fi; echo "hdiutil failed, retrying"; sleep 5; \
 	done
 	rm -rf "$(BUILD_DIR)/dmg-root"
+	if [ "$(SIGN_IDENTITY)" != "-" ]; then codesign --timestamp --sign "$(SIGN_IDENTITY)" "$(DMG)"; fi
 
 # CLI archive: openclean-cli/bin/openclean finds its rules in ../share/openclean/rules.
 cli-zip: build
 	rm -rf "$(BUILD_DIR)/cli-root" "$(CLI_ZIP)"
 	mkdir -p "$(BUILD_DIR)/cli-root/openclean-cli/bin" "$(BUILD_DIR)/cli-root/openclean-cli/share/openclean/rules" "$(RELEASE_DIR)"
 	cp "$(BIN)/openclean" "$(BUILD_DIR)/cli-root/openclean-cli/bin/"
+	@# Ad-hoc builds keep the linker's signature; Developer ID builds are re-signed for notarization.
+	if [ "$(SIGN_IDENTITY)" != "-" ]; then \
+		$(CODESIGN) --identifier com.openclean.cli "$(BUILD_DIR)/cli-root/openclean-cli/bin/openclean"; \
+	fi
 	cp Rules/*.yaml "$(BUILD_DIR)/cli-root/openclean-cli/share/openclean/rules/"
 	ditto -c -k --norsrc --noextattr --noacl --keepParent "$(BUILD_DIR)/cli-root/openclean-cli" "$(CLI_ZIP)"
 	rm -rf "$(BUILD_DIR)/cli-root"

@@ -10,6 +10,8 @@ final class ScriptedRunner: CommandRunner, @unchecked Sendable {
     let mountPoint: String
     var attachStatus: Int32 = 0
     var codesignStatus: Int32 = 0
+    /// The Team ID the fake staged app is "signed" by; a `-R=` requirement passes only if it names it.
+    var stagedTeam: String?
     private let lock = NSLock()
     private var recorded: [[String]] = []
 
@@ -36,6 +38,11 @@ final class ScriptedRunner: CommandRunner, @unchecked Sendable {
         case "/usr/bin/ditto":
             return try ProcessCommandRunner(timeout: 30).run(executable, arguments)
         case "/usr/bin/codesign":
+            if let requirement = arguments.first(where: { $0.hasPrefix("-R=") }) {
+                let satisfied = stagedTeam.map { requirement.contains("certificate leaf[subject.OU] = \"\($0)\"") }
+                return CommandOutput(
+                    status: satisfied == true ? 0 : 3, stderr: Data("test-requirement: code failed to satisfy".utf8))
+            }
             return CommandOutput(status: codesignStatus, stderr: Data("a sealed resource is missing".utf8))
         default:
             return CommandOutput(status: 127)
@@ -44,7 +51,7 @@ final class ScriptedRunner: CommandRunner, @unchecked Sendable {
 }
 
 struct InstallerTests {
-    static let bundleID = "io.github.leoanimesh.OpenClean"
+    static let bundleID = "com.openclean"
 
     func verified(_ temp: TempDirectory, version: String = "0.3.0") throws -> VerifiedDownload {
         let dmg = try temp.file("Updates/\(version)/OpenClean-\(version).dmg", bytes: 10)
@@ -59,7 +66,8 @@ struct InstallerTests {
         try temp.fakeApp("Volume/OpenClean.app", version: "0.3.0")
         let runner = ScriptedRunner(mountPoint: temp.path + "/Volume")
         let download = try verified(temp)
-        let staged = try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(download)
+        let staged = try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: nil)
+            .stage(download)
 
         #expect(staged.version == SemanticVersion("0.3.0"))
         #expect(staged.dmgPath == download.dmgPath)
@@ -81,12 +89,74 @@ struct InstallerTests {
         #expect(runner.calls.last == ["/usr/bin/codesign", "--verify", "--deep", "--strict", staged.appPath])
     }
 
+    // MARK: publisher (Developer ID team) check
+
+    func stage(_ temp: TempDirectory, runningTeam: String?, stagedTeam: String?) throws -> (
+        StagedUpdate, ScriptedRunner
+    ) {
+        try temp.fakeApp("Volume/OpenClean.app", version: "0.3.0")
+        let runner = ScriptedRunner(mountPoint: temp.path + "/Volume")
+        runner.stagedTeam = stagedTeam
+        let staged = try UpdateInstaller(
+            runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: runningTeam
+        )
+        .stage(verified(temp))
+        return (staged, runner)
+    }
+
+    @Test func signedRunningAppAcceptsUpdateFromTheSameTeam() throws {
+        let temp = try TempDirectory()
+        let (staged, runner) = try stage(temp, runningTeam: "ABCDE12345", stagedTeam: "ABCDE12345")
+        let requirement = PublisherCheck.requirement(teamIdentifier: "ABCDE12345", bundleIdentifier: Self.bundleID)
+        #expect(
+            runner.calls.last == ["/usr/bin/codesign", "--verify", "--strict", "-R=" + requirement, staged.appPath])
+        #expect(requirement.contains("anchor apple generic"))
+        #expect(requirement.contains("identifier \"\(Self.bundleID)\""))
+    }
+
+    @Test func signedRunningAppRefusesUpdateFromAnotherTeam() throws {
+        let temp = try TempDirectory()
+        #expect(
+            throws: UpdateError.publisherMismatch("it is not signed with OpenClean's Developer ID (team ABCDE12345)")
+        ) {
+            try stage(temp, runningTeam: "ABCDE12345", stagedTeam: "ZZZZZ99999")
+        }
+    }
+
+    @Test func signedRunningAppRefusesAdHocUpdate() throws {
+        let temp = try TempDirectory()
+        #expect(
+            throws: UpdateError.publisherMismatch("it is not signed with OpenClean's Developer ID (team ABCDE12345)")
+        ) {
+            try stage(temp, runningTeam: "ABCDE12345", stagedTeam: nil)
+        }
+    }
+
+    @Test func adHocRunningAppKeepsThePlainSignatureCheck() throws {
+        let temp = try TempDirectory()
+        let (staged, runner) = try stage(temp, runningTeam: nil, stagedTeam: nil)
+        #expect(!runner.calls.contains { $0.contains { $0.hasPrefix("-R=") } })
+        #expect(runner.calls.last == ["/usr/bin/codesign", "--verify", "--deep", "--strict", staged.appPath])
+    }
+
+    @Test func malformedRunningTeamIsRefusedNotInterpolated() throws {
+        let temp = try TempDirectory()
+        #expect(throws: UpdateError.self) {
+            try stage(temp, runningTeam: "X\" or anchor apple", stagedTeam: "X")
+        }
+        #expect(PublisherCheck.isValidTeamIdentifier("ABCDE12345"))
+        #expect(!PublisherCheck.isValidTeamIdentifier("abcde12345"))
+        #expect(!PublisherCheck.isValidTeamIdentifier("ABCDE1234"))
+        #expect(!PublisherCheck.isValidTeamIdentifier("ABCDE12345\""))
+    }
+
     @Test func detachesTheImageWhenTheMountPointIsUnusable() throws {
         let temp = try TempDirectory()
         // A relative mount point is rejected after a successful attach; the image must not stay mounted.
         let runner = ScriptedRunner(mountPoint: "relative/Volume")
         #expect(throws: UpdateError.stagingFailed("the disk image has no mountable volume")) {
-            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(verified(temp))
+            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: nil).stage(
+                verified(temp))
         }
         #expect(runner.calls.dropFirst().map { Array($0.prefix(3)) } == [["/usr/bin/hdiutil", "detach", "/dev/disk9"]])
     }
@@ -106,7 +176,8 @@ struct InstallerTests {
         try temp.fakeApp("Volume/OpenClean.app", bundleID: "com.example.Evil", version: "0.3.0")
         let runner = ScriptedRunner(mountPoint: temp.path + "/Volume")
         #expect(throws: UpdateError.invalidBundle("bundle identifier is com.example.Evil")) {
-            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(verified(temp))
+            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: nil).stage(
+                verified(temp))
         }
         // Still detached after the failure.
         #expect(runner.calls.contains { $0.prefix(2) == ["/usr/bin/hdiutil", "detach"] })
@@ -117,7 +188,8 @@ struct InstallerTests {
         try temp.fakeApp("Volume/OpenClean.app", version: "0.2.9")
         let runner = ScriptedRunner(mountPoint: temp.path + "/Volume")
         #expect(throws: UpdateError.self) {
-            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(verified(temp))
+            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: nil).stage(
+                verified(temp))
         }
     }
 
@@ -127,7 +199,8 @@ struct InstallerTests {
         let runner = ScriptedRunner(mountPoint: temp.path + "/Volume")
         runner.codesignStatus = 1
         #expect(throws: UpdateError.signatureInvalid("a sealed resource is missing")) {
-            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(verified(temp))
+            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: nil).stage(
+                verified(temp))
         }
     }
 
@@ -138,7 +211,8 @@ struct InstallerTests {
         try temp.symlink("Volume/OpenClean.app", to: real)
         let runner = ScriptedRunner(mountPoint: temp.path + "/Volume")
         #expect(throws: UpdateError.self) {
-            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(verified(temp))
+            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: nil).stage(
+                verified(temp))
         }
         #expect(!runner.calls.contains { $0.first == "/usr/bin/ditto" })
     }
@@ -148,7 +222,8 @@ struct InstallerTests {
         let runner = ScriptedRunner(mountPoint: temp.path + "/Volume")
         runner.attachStatus = 1
         #expect(throws: UpdateError.self) {
-            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID).stage(verified(temp))
+            try UpdateInstaller(runner: runner, bundleIdentifier: Self.bundleID, runningTeamIdentifier: nil).stage(
+                verified(temp))
         }
     }
 

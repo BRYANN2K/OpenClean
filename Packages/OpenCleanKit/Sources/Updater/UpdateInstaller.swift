@@ -26,6 +26,9 @@ public struct StagedUpdate: Sendable, Equatable {
 /// 3. The copy must be a real directory (not a symlink), its `CFBundleIdentifier` must equal the running
 ///    app's, its `CFBundleShortVersionString` must equal the release version, and
 ///    `codesign --verify --deep --strict` must pass.
+/// 4. If the running app is signed with a Developer ID (it has a Team ID), the copy must also satisfy a
+///    Developer ID requirement for that same team (`PublisherCheck.requirement`), so only the same
+///    publisher's builds can replace it. Ad-hoc running apps (dev builds, unsigned releases) skip this.
 ///
 /// Never deletes: a failed staging folder stays inside `<updates>/<X.Y.Z>/` until `UpdateStagingCleaner`
 /// clears it.
@@ -34,10 +37,17 @@ public struct UpdateInstaller: Sendable {
 
     let runner: any CommandRunner
     let bundleIdentifier: String
+    /// The running app's Team ID (nil when it is ad-hoc signed). Injected so tests don't depend on how
+    /// the test runner itself is signed.
+    let runningTeamIdentifier: String?
 
-    public init(runner: any CommandRunner = ProcessCommandRunner(timeout: 180), bundleIdentifier: String) {
+    public init(
+        runner: any CommandRunner = ProcessCommandRunner(timeout: 180), bundleIdentifier: String,
+        runningTeamIdentifier: String? = PublisherCheck.runningTeamIdentifier()
+    ) {
         self.runner = runner
         self.bundleIdentifier = bundleIdentifier
+        self.runningTeamIdentifier = runningTeamIdentifier
     }
 
     public func stage(_ download: VerifiedDownload) throws -> StagedUpdate {
@@ -73,13 +83,16 @@ public struct UpdateInstaller: Sendable {
         }
 
         try Self.validate(
-            app: staged, bundleIdentifier: bundleIdentifier, version: download.release.version, runner: runner)
+            app: staged, bundleIdentifier: bundleIdentifier, version: download.release.version,
+            runningTeamIdentifier: runningTeamIdentifier, runner: runner)
         return StagedUpdate(release: download.release, appPath: staged, dmgPath: dmg)
     }
 
-    /// Bundle id, version and code signature of a staged app.
+    /// Bundle id, version and code signature of a staged app, and its publisher when the running app has
+    /// a Team ID.
     public static func validate(
-        app: String, bundleIdentifier: String, version: SemanticVersion, runner: any CommandRunner
+        app: String, bundleIdentifier: String, version: SemanticVersion, runningTeamIdentifier: String?,
+        runner: any CommandRunner
     ) throws {
         guard let stat = FileStat.of(app), stat.isDirectory, !stat.isSymlink else {
             throw UpdateError.invalidBundle("not an app bundle")
@@ -98,6 +111,33 @@ public struct UpdateInstaller: Sendable {
             throw UpdateError.signatureInvalid("\(error)")
         }
         guard output.status == 0 else { throw UpdateError.signatureInvalid(output.stderrText.trimmed) }
+        guard let team = runningTeamIdentifier else { return }
+        try verifyPublisher(app: app, team: team, bundleIdentifier: bundleIdentifier, runner: runner)
+    }
+
+    /// `codesign --verify --strict -R=<Developer ID requirement for team>`: the staged app must be signed
+    /// by the same Developer ID team as the running app.
+    static func verifyPublisher(app: String, team: String, bundleIdentifier: String, runner: any CommandRunner) throws {
+        guard PublisherCheck.isValidTeamIdentifier(team), bundleIdentifier.utf8.allSatisfy(Self.isRequirementSafe)
+        else {
+            throw UpdateError.publisherMismatch("the running app's signing team \"\(team)\" can't be checked")
+        }
+        let requirement = PublisherCheck.requirement(teamIdentifier: team, bundleIdentifier: bundleIdentifier)
+        let output: CommandOutput
+        do {
+            output = try runner.run("/usr/bin/codesign", ["--verify", "--strict", "-R=" + requirement, app])
+        } catch {
+            throw UpdateError.publisherMismatch("\(error)")
+        }
+        guard output.status == 0 else {
+            throw UpdateError.publisherMismatch("it is not signed with OpenClean's Developer ID (team \(team))")
+        }
+    }
+
+    /// Bundle identifiers are pasted into a quoted code requirement: letters, digits, `.` and `-` only.
+    private static func isRequirementSafe(_ byte: UInt8) -> Bool {
+        (0x30...0x39).contains(byte) || (0x41...0x5A).contains(byte) || (0x61...0x7A).contains(byte)
+            || byte == UInt8(ascii: ".") || byte == UInt8(ascii: "-")
     }
 
     /// `CFBundleIdentifier` and `CFBundleShortVersionString` from `<app>/Contents/Info.plist`.

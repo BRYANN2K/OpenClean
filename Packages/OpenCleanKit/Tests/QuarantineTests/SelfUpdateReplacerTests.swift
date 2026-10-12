@@ -6,7 +6,7 @@ import Testing
 @testable import Quarantine
 
 struct SelfUpdateReplacerTests {
-    static let bundleID = "io.github.leoanimesh.OpenClean"
+    static let bundleID = "com.openclean"
 
     struct Fixture {
         let temp: TempDirectory

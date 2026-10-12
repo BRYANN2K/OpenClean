@@ -52,7 +52,7 @@ public enum AppStatus: String, Sendable, Hashable {
 }
 
 public struct InstalledApp: Sendable, Hashable, Identifiable {
-    public static let openCleanBundleID = "io.github.leoanimesh.OpenClean"
+    public static let openCleanBundleID = "com.openclean"
 
     public var id: String { path }
     /// Canonical (`realpath`'d) path of the `.app` bundle.

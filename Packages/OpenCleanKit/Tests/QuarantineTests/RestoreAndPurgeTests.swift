@@ -192,13 +192,13 @@ struct RestoreAndPurgeTests {
         let plist =
             try PropertyListSerialization.propertyList(
                 from: Data(contentsOf: schedule.plistURL), format: nil) as? [String: Any]
-        #expect(plist?["Label"] as? String == "io.github.leoanimesh.openclean.purge")
+        #expect(plist?["Label"] as? String == "com.openclean.purge")
         #expect(plist?["ProgramArguments"] as? [String] == ["/usr/local/bin/openclean", "purge"])
         #expect(runner.calls.contains(["/bin/launchctl", "bootstrap", "gui/501", schedule.plistURL.path]))
 
         try schedule.disable()
         #expect(!schedule.isEnabled)
-        #expect(runner.calls.last == ["/bin/launchctl", "bootout", "gui/501/io.github.leoanimesh.openclean.purge"])
+        #expect(runner.calls.last == ["/bin/launchctl", "bootout", "gui/501/com.openclean.purge"])
     }
 
     // MARK: fix round 1

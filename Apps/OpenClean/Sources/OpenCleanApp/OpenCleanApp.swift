@@ -26,7 +26,7 @@ struct OpenCleanApp: App {
         _uninstaller = State(initialValue: UninstallerModel(coordinator: coordinator))
         _spaceLens = State(initialValue: SpaceLensModel(coordinator: coordinator))
         _performance = State(initialValue: PerformanceModel(coordinator: coordinator))
-        let bundleID = Bundle.main.bundleIdentifier ?? "io.github.leoanimesh.OpenClean"
+        let bundleID = Bundle.main.bundleIdentifier ?? "com.openclean"
         _updates = State(
             initialValue: UpdateModel(
                 coordinator: coordinator, settings: UpdateSettingsStore(defaults: .standard),
