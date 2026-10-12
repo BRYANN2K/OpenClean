@@ -39,16 +39,36 @@ public struct FileStat: Sendable, Equatable {
     }
 }
 
-/// Removes duplicate and trailing slashes. Does not touch `/private` (unlike `standardizingPath`).
-func normalizedPath(_ path: String) -> String {
-    let parts = path.split(separator: "/", omittingEmptySubsequences: true)
-    return "/" + parts.joined(separator: "/")
+/// "/"-separated components, split on UTF-8 bytes so a combining mark after "/" cannot merge
+/// separators into a single Character and hide a component.
+func pathComponents(_ path: String) -> [String] {
+    path.utf8.split(separator: 0x2F, omittingEmptySubsequences: true).map { String(decoding: $0, as: UTF8.self) }
 }
 
-/// True when `ancestor` equals `path` or is one of its parent directories.
+/// Removes duplicate and trailing slashes. Does not touch `/private` (unlike `standardizingPath`).
+func normalizedPath(_ path: String) -> String {
+    var bytes: [UInt8] = []
+    for part in path.utf8.split(separator: 0x2F, omittingEmptySubsequences: true) {
+        bytes.append(0x2F)
+        bytes.append(contentsOf: part)
+    }
+    return bytes.isEmpty ? "/" : String(decoding: bytes, as: UTF8.self)
+}
+
+/// True when `ancestor` equals `path` or is one of its parent directories. Compares UTF-8 bytes.
 func isAncestorOrEqual(_ ancestor: String, of path: String) -> Bool {
     if ancestor == "/" { return true }
-    return path == ancestor || path.hasPrefix(ancestor + "/")
+    let a = Array(ancestor.utf8)
+    let p = Array(path.utf8)
+    if p.count == a.count { return p == a }
+    return p.count > a.count && p.starts(with: a) && p[a.count] == 0x2F
+}
+
+/// True when `path` equals `root` or is inside it, comparing UTF-8 bytes (optionally on lowercased forms).
+public func pathIsWithin(_ path: String, _ root: String, caseInsensitive: Bool = false) -> Bool {
+    caseInsensitive
+        ? isAncestorOrEqual(root.lowercased(), of: path.lowercased())
+        : isAncestorOrEqual(root, of: path)
 }
 
 /// True if any "/"-separated component is exactly "." or "..". Works on UTF-8 bytes so a combining

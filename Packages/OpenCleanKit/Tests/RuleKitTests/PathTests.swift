@@ -24,4 +24,13 @@ struct PathTests {
         #expect(realPath(link) == target)
         #expect(FileStat.of(dir.path + "/missing") == nil)
     }
+
+    @Test func pathIsWithinComparesBytes() {
+        #expect(pathIsWithin("/a/\u{0301}x", "/a"))
+        #expect(!pathIsWithin("/ab", "/a"))
+        #expect(pathIsWithin("/A/b", "/a", caseInsensitive: true))
+        #expect(!pathIsWithin("/A/b", "/a"))
+        #expect(pathIsWithin("/a", "/a"))
+        #expect(pathIsWithin("/anything", "/"))
+    }
 }

@@ -48,6 +48,15 @@ struct PathRuleScannerTests {
         #expect(scan(r, context(home)).items.map(\.path) == [home.path + "/Library/Caches/clean"])
     }
 
+    @Test func userExcludeMatchesCombiningMarkComponentByBytes() throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/\u{0301}keep/f", bytes: 10)
+        try home.file("Library/Caches/other/f", bytes: 10)
+        let ctx = context(home, excludes: [home.path + "/Library/Caches/\u{0301}keep"])
+        let result = scan(rule(["~/Library/Caches/*"]), ctx)
+        #expect(result.items.map(\.path) == [home.path + "/Library/Caches/other"])
+    }
+
     @Test func dropsSymlinkThatEscapesIntoDocuments() throws {
         let home = try TempDirectory()
         try home.file("Documents/secret.txt", bytes: 10)

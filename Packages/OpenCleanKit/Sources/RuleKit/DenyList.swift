@@ -45,17 +45,17 @@ public struct DenyList: Sendable {
             if allowedInside.contains(where: within) { continue }
             return "inside protected location \(root)"
         }
-        let components = path.split(separator: "/").map(String.init)
-        for parent in bundleParents where lower.hasPrefix(parent.lowercased() + "/") {
-            let depth = parent.split(separator: "/").count
+        let components = pathComponents(path)
+        for parent in bundleParents where within(parent) && lower != parent.lowercased() {
+            let depth = pathComponents(parent).count
             let below = components.dropFirst(depth)
             if let idx = below.firstIndex(where: { $0.lowercased().hasSuffix(".app") }) {
                 let bundle = components.prefix(depth + (idx - below.startIndex) + 1).joined(separator: "/")
                 return "application bundle /\(bundle)"
             }
         }
-        if lower.hasPrefix(photosParent.lowercased() + "/") {
-            let first = path.dropFirst(photosParent.count + 1).split(separator: "/").first ?? ""
+        if within(photosParent), lower != photosParent.lowercased() {
+            let first = components.dropFirst(pathComponents(photosParent).count).first ?? ""
             if first.lowercased().hasSuffix(".photoslibrary") { return "Photos library \(photosParent)/\(first)" }
         }
         let containedRoots = subtrees + exact.filter { $0 != "/" } + bundleParents + [photosParent]

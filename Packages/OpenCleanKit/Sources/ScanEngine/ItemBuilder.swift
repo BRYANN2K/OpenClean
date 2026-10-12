@@ -29,19 +29,15 @@ enum ItemBuilder {
         guard let stat = FileStat.of(path) else { return .dropped("disappeared during scan") }
         if stat.isSymlink { return .dropped("symbolic link skipped") }
         guard let real = realPath(path) else { return .dropped("cannot resolve path") }
-        if let prefixReal, real != prefixReal, !real.hasPrefix(prefixReal == "/" ? "/" : prefixReal + "/") {
+        if let prefixReal, !pathIsWithin(real, prefixReal) {
             return .dropped("resolves outside \(prefixReal)")
         }
         if let reason = context.denyList.denialReason(for: real) {
             return .dropped("protected: \(reason)")
         }
         // Items are removed whole, so an exclude equal to, inside, or above the item protects it.
-        let lowerReal = real.lowercased()
         let isExcluded = context.userExcludes.contains { exclude in
-            let lowerExclude = exclude.lowercased()
-            return lowerReal == lowerExclude
-                || lowerReal.hasPrefix(lowerExclude == "/" ? "/" : lowerExclude + "/")
-                || lowerExclude.hasPrefix(lowerReal + "/")
+            pathIsWithin(real, exclude, caseInsensitive: true) || pathIsWithin(exclude, real, caseInsensitive: true)
         }
         if isExcluded { return .filtered }
         if let days = rule.conditions.minAgeDays,

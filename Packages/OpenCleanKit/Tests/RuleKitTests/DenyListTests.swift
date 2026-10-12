@@ -49,4 +49,19 @@ struct DenyListTests {
         #expect(deny.denialReason(for: "/Users/tester/Documents/x") == "inside protected location /Users/tester/Documents")
         #expect(deny.denialReason(for: "/users/tester/documents/x") == "inside protected location /Users/tester/Documents")
     }
+
+    @Test(arguments: [
+        "/Users/tester/Documents/\u{0301}x", "/Users/tester/Desktop/\u{0301}", "/System/\u{0301}x",
+        "/usr/\u{0301}bin", "/Users/tester/Library/Keychains/\u{0301}login.keychain-db",
+        "/Applications/\u{0301}Safari.app", "/Applications/Safari.app/\u{0301}x",
+        "/Users/tester/Pictures/\u{0301}x.photoslibrary",
+    ])
+    func deniesPathsWithCombiningMarkAfterSlash(path: String) {
+        #expect(deny.isDenied(path), "expected \(path) to be denied")
+    }
+
+    @Test(arguments: ["/Library/Caches/cafe\u{0301}", "/Users/tester/Library/Caches/\u{0301}x"])
+    func allowsCombiningMarksInOrdinaryPaths(path: String) {
+        #expect(!deny.isDenied(path), "expected \(path) to be allowed: \(deny.denialReason(for: path) ?? "")")
+    }
 }
