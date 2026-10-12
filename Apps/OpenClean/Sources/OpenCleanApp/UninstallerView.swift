@@ -158,33 +158,37 @@ struct UninstallerAppRow: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 12) {
-                UninstallerAppIcon(path: app.path, size: 32)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(app.name).font(.system(size: 14, weight: .semibold)).lineLimit(1)
-                    HStack(spacing: 6) {
-                        if let version = app.version {
-                            Text(version).font(.system(size: 12)).foregroundStyle(Theme.textSecondary).lineLimit(1)
-                        }
-                        if let state = app.stateLabel {
-                            UninstallerTag(text: state.text, tint: state.tint)
-                        }
+        // A plain tappable row rather than a Button: on recent macOS a plain-style Button in a list draws
+        // its own rounded highlight over the flat selection fill.
+        HStack(spacing: 12) {
+            UninstallerAppIcon(path: app.path, size: 32)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(app.name).font(.system(size: 14, weight: .semibold)).lineLimit(1)
+                HStack(spacing: 6) {
+                    if let version = app.version {
+                        Text(version).font(.system(size: 12)).foregroundStyle(Theme.textSecondary).lineLimit(1)
+                    }
+                    if let state = app.stateLabel {
+                        UninstallerTag(text: state.text, tint: state.tint)
                     }
                 }
-                Spacer(minLength: 8)
-                Text(formatBytes(app.size))
-                    .font(.system(size: 13))
-                    .monospacedDigit()
-                    .foregroundStyle(Theme.textSecondary)
             }
-            .padding(.horizontal, 14)
-            .frame(minHeight: 54)
-            .background(isSelected ? Theme.glassStroke : Color.clear)
-            .contentShape(Rectangle())
+            Spacer(minLength: 8)
+            Text(formatBytes(app.size))
+                .font(.system(size: 13))
+                .monospacedDigit()
+                .foregroundStyle(Theme.textSecondary)
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 14)
+        .frame(minHeight: 54)
+        .background {
+            // Square-cornered, edge-to-edge fill so it lines up with the dividers above and below.
+            Rectangle().fill(isSelected ? Theme.glassStroke : Color.clear)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture(perform: action)
         .accessibilityElement(children: .combine)
+        .accessibilityAction(.default, action)
         .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
     }
 }
