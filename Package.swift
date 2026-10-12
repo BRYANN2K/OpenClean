@@ -83,6 +83,15 @@ let package = Package(
             path: "Packages/OpenCleanKit/Tests/PermissionsTests"
         ),
         .target(
+            name: "SystemMonitor",
+            path: "Packages/OpenCleanKit/Sources/SystemMonitor"
+        ),
+        .testTarget(
+            name: "SystemMonitorTests",
+            dependencies: ["SystemMonitor"],
+            path: "Packages/OpenCleanKit/Tests/SystemMonitorTests"
+        ),
+        .target(
             name: "OpenCleanKit",
             dependencies: ["RuleKit", "ScanEngine", "Probes", "Privilege", "Quarantine", "Permissions", "ProcessKit"],
             path: "Packages/OpenCleanKit/Sources/OpenCleanKit"
