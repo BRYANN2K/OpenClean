@@ -25,6 +25,11 @@ public protocol CommandRunner: Sendable {
     func run(_ executable: String, _ arguments: [String]) throws -> CommandOutput
 }
 
+/// Serial queue for timeouts. Serial queues are overcommit, so the timer always fires even when
+/// the global pool is saturated by threads blocked in `run`. (Concurrent queues, including private
+/// ones, are not guaranteed a thread.) The stderr reader uses a dedicated `Thread` for the same reason.
+private let timerQueue = DispatchQueue(label: "openclean.processkit.timer")
+
 public struct ProcessCommandRunner: CommandRunner {
     let timeout: TimeInterval?
 
@@ -58,7 +63,7 @@ public struct ProcessCommandRunner: CommandRunner {
                 }
             }
             timer = item
-            DispatchQueue.global().asyncAfter(deadline: .now() + timeout, execute: item)
+            timerQueue.asyncAfter(deadline: .now() + timeout, execute: item)
         }
 
         // Drain stderr on another thread so a full pipe buffer can never deadlock the child.
@@ -66,10 +71,12 @@ public struct ProcessCommandRunner: CommandRunner {
         let stderrBox = DataBox()
         let group = DispatchGroup()
         group.enter()
-        DispatchQueue.global().async {
+        let reader = Thread {
             stderrBox.set(stderrHandle.readDataToEndOfFile())
             group.leave()
         }
+        reader.name = "openclean.processkit.stderr"
+        reader.start()
         let stdoutData = stdoutPipe.fileHandleForReading.readDataToEndOfFile()
         group.wait()
         process.waitUntilExit()
