@@ -15,6 +15,14 @@ struct SlowAppProbe: Probe {
     }
 }
 
+struct ReportOnlyAppProbe: Probe {
+    static let id = "reportonly.app-probe"
+    let path: String
+    func scan(_ context: ScanContext) async throws -> [ProbeFinding] {
+        [ProbeFinding(path: path, reportOnly: true)]
+    }
+}
+
 @MainActor
 struct AppModelTests {
     func makeModel(_ home: TempDirectory, registry: ProbeRegistry = ProbeRegistry([])) throws -> AppModel {
@@ -137,5 +145,79 @@ struct AppModelTests {
         #expect(reloaded.settings == Settings(retentionDays: 90, advancedEnabled: true, excludedPaths: ["/tmp/keep"]))
         reloaded.removeExclusion("/tmp/keep")
         #expect(reloaded.settings.excludedPaths.isEmpty)
+    }
+
+    @Test func reportOnlyItemsCannotBeSelected() async throws {
+        let home = try TempDirectory()
+        let file = try home.file("Library/Odd/thing", bytes: 4_096)
+        let model = try makeModel(home, registry: ProbeRegistry([ReportOnlyAppProbe(path: file)]))
+        let userRules = model.paths.userRules.path
+        try FileManager.default.createDirectory(atPath: userRules, withIntermediateDirectories: true)
+        try """
+        pack: ro
+        version: 1
+        rules:
+          - id: ro.rule
+            name: ReportOnly
+            category: developer
+            explain: Report only.
+            probe: reportonly.app-probe
+            safety: regenerable
+        """.write(toFile: userRules + "/ro.yaml", atomically: true, encoding: .utf8)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+
+        let rule = try #require(model.result?.rule("ro.rule"))
+        let item = try #require(rule.items.first)
+        #expect(item.reportOnly)
+        model.toggle(item)
+        model.setSelected(true, rule: rule)
+        model.setSelected(true, category: .developer)
+        #expect(!model.selectedPaths.contains(item.path))
+        #expect(model.plan?.isEmpty == true)
+    }
+
+    @Test func doubleCleanRunsOnce() async throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/com.example/blob", bytes: 4_096)
+        let model = try makeModel(home)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+        async let a: Void = model.clean()
+        async let b: Void = model.clean()
+        _ = await (a, b)
+        #expect(model.history.count == 1)
+    }
+
+    @Test func exclusionAfterScanResetsResults() async throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/com.example/blob", bytes: 4_096)
+        let model = try makeModel(home)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+        #expect(model.result != nil)
+        model.addExclusion("/tmp/keep")
+        #expect(model.phase == .idle)
+        #expect(model.result == nil)
+        #expect(model.selectedPaths.isEmpty)
+    }
+
+    @Test func cleanFailureReturnsToResults() async throws {
+        let home = try TempDirectory()
+        try home.file("Library/Caches/com.example/blob", bytes: 4_096)
+        let model = try makeModel(home)
+        model.onLaunch()
+        model.startScan()
+        await model.waitForScan()
+        let support = model.paths.support.path
+        try FileManager.default.createDirectory(atPath: support, withIntermediateDirectories: true)
+        try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: support)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: support) }
+        await model.clean()
+        #expect(model.errorMessage != nil)
+        #expect(model.phase == .results)
     }
 }
