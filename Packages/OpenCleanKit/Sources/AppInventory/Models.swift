@@ -31,14 +31,20 @@ public enum AppStatus: String, Sendable, Hashable {
     case listOnly
     case noBundleID
 
-    public var isRemovable: Bool { self == .removable }
+    /// The Uninstaller can move this app to quarantine: either directly (`.removable`) or after the user
+    /// types an administrator password (`.needsAdministrator`). Everything else is never removed.
+    public var isRemovable: Bool { self == .removable || self == .needsAdministrator }
+
+    /// The bundle is owned by root or not writable by the user, so uninstalling it needs an administrator
+    /// password (one `AppBundleAdminMove`).
+    public var requiresAdministrator: Bool { self == .needsAdministrator }
 
     public var explanation: String {
         switch self {
         case .removable: "Can be moved to quarantine"
         case .appleApp: "Apple app — part of macOS, never removed"
         case .openClean: "This is OpenClean itself"
-        case .needsAdministrator: "Needs administrator — not supported yet"
+        case .needsAdministrator: "Needs your administrator password to uninstall"
         case .listOnly: "In Utilities — listed for information only"
         case .noBundleID: "Has no bundle identifier, so it can't be checked safely"
         }

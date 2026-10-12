@@ -95,4 +95,39 @@ struct CoordinatorUninstallerTests {
         #expect(FileStat.of(app) != nil)
         #expect(subject.history().isEmpty)
     }
+
+    @Test func uninstallsAnAppThatNeedsAdministratorWithOnePromptAndRestores() async throws {
+        let home = try TempDirectory()
+        let app = try makeApp(home, "Applications/Foo.app", id: "com.example.foo")
+        let support = try home.directory("Library/Caches/com.example.foo")
+        let applications = home.path + "/Applications"
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: applications)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: applications) }
+        // The fake stands in for root by making the folder writable, then runs the real mv && chown text.
+        let admin = FakeAdminExecutor(runForReal: true) { _ in
+            try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: applications)
+        }
+        let subject = OpenCleanCoordinator(
+            home: home.path, environment: [:], registry: ProbeRegistry([]), processChecker: FakeProcessChecker(),
+            openFiles: FakeOpenFiles(), admin: admin, fullDiskAccess: { .granted }, trash: { _ in nil })
+
+        let foo = try #require(await subject.installedApps(lastUsed: nil).first)
+        #expect(foo.status == .needsAdministrator)
+        #expect(foo.status.isRemovable && foo.status.requiresAdministrator)
+        let leftovers = subject.leftovers(for: foo, systemLibrary: home.path + "/SystemLibrary")
+        guard case .finished(let report) = try subject.uninstall(foo, leftovers: leftovers) else {
+            Issue.record("expected the uninstall to finish")
+            return
+        }
+        #expect(admin.bundleMoves.map(\.source) == [app])
+        #expect(admin.commands.count == 1)
+        #expect(report.manifest.entries.map(\.originalPath) == [app, support])
+        #expect(report.manifest.entries.allSatisfy { $0.outcome == .quarantined })
+        #expect(FileStat.of(app) == nil)
+
+        let restored = try subject.restore(sessionID: report.manifest.id, onConflict: .skip)
+        #expect(restored.skipped.isEmpty)
+        #expect(FileStat.of(app + "/Contents/Info.plist") != nil)
+        #expect(FileStat.of(app)?.ownerUID == getuid())
+    }
 }

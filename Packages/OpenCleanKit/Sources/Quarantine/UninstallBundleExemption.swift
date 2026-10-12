@@ -26,7 +26,7 @@ public enum UninstallRefusal: Error, Sendable, Equatable, CustomStringConvertibl
         case .notCanonical: "the app's path goes through a symbolic link or is not canonical"
         case .notAnAppBundle: "this is not an application bundle"
         case .outsideApplicationFolders: "only apps directly inside an Applications folder can be uninstalled"
-        case .needsAdministrator: "needs administrator — not supported yet"
+        case .needsAdministrator: "needs your administrator password to uninstall"
         case .notWritable: "you don't have permission to move this app"
         case .protected(let reason): "protected (\(reason))"
         case .leftoverOutsideLibrary(let path): "\(path) is not inside your Library folder"
@@ -38,6 +38,8 @@ public enum UninstallRefusal: Error, Sendable, Equatable, CustomStringConvertibl
 /// Lets exactly one application bundle past the deny-list's "application bundle" rule for one uninstall
 /// request. Built only by `authorize`, which checks that the path is a canonical, user-writable,
 /// non-Apple, non-OpenClean `.app` directly inside one of the allowed Applications folders.
+/// With `administrator: true` (the bundle will be moved by `AppBundleAdminMove` after a password prompt)
+/// the "not owned by root" and "writable by you" checks are left out; every other check still applies.
 /// Every other deny-list rule, and every other path (including paths inside the bundle), stays denied.
 public struct UninstallBundleExemption: Sendable, Equatable {
     public let bundlePath: String
@@ -47,7 +49,7 @@ public struct UninstallBundleExemption: Sendable, Equatable {
 
     public static func authorize(
         bundlePath path: String, bundleID: String, allowedFolders: [String], denyList: DenyList,
-        protectedBundleIDs: Set<String>, protectedPaths: [String]
+        protectedBundleIDs: Set<String>, protectedPaths: [String], administrator: Bool = false
     ) -> Result<UninstallBundleExemption, UninstallRefusal> {
         guard !bundleID.isEmpty, !bundleID.utf8.contains(0x2F), !bundleID.utf8.contains(0) else {
             return .failure(.invalidBundleID)
@@ -88,8 +90,10 @@ public struct UninstallBundleExemption: Sendable, Equatable {
         }
         guard allowed else { return .failure(.outsideApplicationFolders) }
 
-        if stat.ownerUID == 0 { return .failure(.needsAdministrator) }
-        guard access(path, W_OK) == 0, access(parent, W_OK) == 0 else { return .failure(.notWritable) }
+        if !administrator {
+            if stat.ownerUID == 0 { return .failure(.needsAdministrator) }
+            guard access(path, W_OK) == 0, access(parent, W_OK) == 0 else { return .failure(.notWritable) }
+        }
 
         let reason = denyList.denialReason(for: path)
         if let reason, reason != "application bundle \(path)" { return .failure(.protected(reason)) }

@@ -26,6 +26,25 @@ public struct RemovalReport: Sendable {
     public var hadSkips: Bool { !skipped.isEmpty }
 }
 
+/// How request 0 of an uninstall (an app bundle the user can't move: root-owned or not writable) is moved
+/// into quarantine: one `AppBundleAdminMove` behind an administrator password prompt.
+public struct AdminBundleMove: Sendable {
+    public let executor: any AppBundleAdminExecutor
+    public let bundleID: String
+    public let applicationFolders: [String]
+    public let protectedPaths: [String]
+
+    public init(
+        executor: any AppBundleAdminExecutor, bundleID: String, applicationFolders: [String],
+        protectedPaths: [String]
+    ) {
+        self.executor = executor
+        self.bundleID = bundleID
+        self.applicationFolders = applicationFolders
+        self.protectedPaths = protectedPaths
+    }
+}
+
 /// Moves `path` to the Trash and returns where it ended up.
 public typealias TrashOperation = @Sendable (String) throws -> String?
 
@@ -87,7 +106,11 @@ public struct Remover: Sendable {
         self.parentIsProtected = parentIsProtected
     }
 
-    public func remove(_ requests: [RemovalRequest], now: Date = .now) throws -> RemovalReport {
+    /// With `adminBundle`, request 0 is moved with `AppBundleAdminMove` (after the usual pre-delete check)
+    /// and the other requests are only processed if it ended up in quarantine; otherwise they are skipped.
+    public func remove(
+        _ requests: [RemovalRequest], now: Date = .now, adminBundle: AdminBundleMove? = nil
+    ) throws -> RemovalReport {
         var manifest = try store.createSession(now: now)
         let itemsDirectory = store.itemsDirectory(manifest.id)
         let quarantineDevice = deviceOf(itemsDirectory.path)
@@ -106,8 +129,28 @@ public struct Remover: Sendable {
         }
         try store.write(manifest)
 
+        var firstIndex = 0
+        if let adminBundle, let bundle = requests.first {
+            if let reason = checker.check(bundle.item, rule: bundle.rule) {
+                mark(&manifest, 0, .skipped, reason.description)
+            } else {
+                moveBundleAsAdmin(
+                    bundle, &manifest, adminBundle, itemsDirectory: itemsDirectory.path,
+                    quarantineDevice: quarantineDevice)
+            }
+            try store.write(manifest)
+            firstIndex = 1
+            guard manifest.entries[0].outcome == .quarantined else {
+                for index in requests.indices.dropFirst() {
+                    mark(&manifest, index, .skipped, SkipReason.appNotMoved.description)
+                }
+                try store.write(manifest)
+                return RemovalReport(manifest: manifest)
+            }
+        }
+
         var adminIndices: [Int] = []
-        for (index, request) in requests.enumerated() {
+        for (index, request) in requests.enumerated() where index >= firstIndex {
             if request.rule.needs(.admin) && request.rule.effectiveDeleteMode != .immediate {
                 mark(&manifest, index, .skipped, SkipReason.adminRequiresImmediate.description)
             } else if let reason = checker.check(request.item, rule: request.rule) {
@@ -150,6 +193,66 @@ public struct Remover: Sendable {
         } catch {
             mark(&manifest, index, .failed, error.localizedDescription)
         }
+    }
+
+    /// Moves the app bundle (entry 0) into its planned quarantine location with one administrator prompt.
+    /// The outcome is decided by what is on disk afterwards, not only by the prompt's exit status.
+    private func moveBundleAsAdmin(
+        _ request: RemovalRequest, _ manifest: inout SessionManifest, _ plan: AdminBundleMove,
+        itemsDirectory: String, quarantineDevice: Int32?
+    ) {
+        let path = request.item.path
+        guard let stored = manifest.entries[0].storedPath, request.rule.effectiveDeleteMode == .quarantine else {
+            mark(&manifest, 0, .failed, "no quarantine location for the app")
+            return
+        }
+        guard let quarantineDevice, deviceOf(path) == quarantineDevice else {
+            mark(&manifest, 0, .failed, "the app is on a different volume from quarantine")
+            return
+        }
+        do {
+            try FileManager.default.createDirectory(
+                atPath: (stored as NSString).deletingLastPathComponent, withIntermediateDirectories: true)
+        } catch {
+            mark(&manifest, 0, .failed, error.localizedDescription)
+            return
+        }
+        let move: AppBundleAdminMove
+        do {
+            move = try AppBundleAdminMove(
+                source: path, destination: stored, bundleID: plan.bundleID,
+                applicationFolders: plan.applicationFolders, sessionItemsDirectory: itemsDirectory,
+                protectedPaths: plan.protectedPaths)
+        } catch {
+            mark(&manifest, 0, .failed, "\(error)")
+            return
+        }
+        switch plan.executor.runAsAdmin(move) {
+        case .cancelled:
+            mark(&manifest, 0, .failed, SkipReason.adminCancelled.description)
+        case .succeeded:
+            markAfterBundleMove(&manifest, source: path, stored: stored, problem: nil)
+        case .failed(let message):
+            markAfterBundleMove(&manifest, source: path, stored: stored, problem: message)
+        }
+    }
+
+    /// Quarantined only when the source is gone (ENOENT) and a real directory sits at the stored path.
+    private func markAfterBundleMove(
+        _ manifest: inout SessionManifest, source: String, stored: String, problem: String?
+    ) {
+        var info = stat()
+        let sourceGone = lstat(source, &info) != 0 && errno == ENOENT
+        guard sourceGone, let moved = FileStat.of(stored), moved.isDirectory, !moved.isSymlink else {
+            mark(&manifest, 0, .failed, problem ?? "the app is still in place after the administrator move")
+            return
+        }
+        var notes: [String] = []
+        if let problem { notes.append("moved, but: \(problem)") }
+        if moved.ownerUID != getuid() {
+            notes.append("still owned by another user; restoring may need an administrator")
+        }
+        mark(&manifest, 0, .quarantined, notes.isEmpty ? nil : notes.joined(separator: "; "))
     }
 
     private func runAdminBatch(_ indices: [Int], _ requests: [RemovalRequest], _ manifest: inout SessionManifest) {

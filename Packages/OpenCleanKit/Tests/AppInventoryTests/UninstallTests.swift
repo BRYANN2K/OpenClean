@@ -238,3 +238,225 @@ struct UninstallServiceTests {
         #expect(fixture.everythingInPlace)
     }
 }
+
+/// Uninstalling an app the user can't move (`requiresAdministrator`). The fake executor never prompts;
+/// with `runForReal` it runs the rendered `mv && chown` text as the current user against temp folders.
+struct AdminUninstallServiceTests {
+    struct Fixture {
+        let home: TempDirectory
+        let applications: String
+        let app: String
+        let leftovers: [String]
+        let store: QuarantineStore
+
+        init() throws {
+            home = try TempDirectory()
+            applications = home.path + "/Applications"
+            app = try FakeApps.make(home, "Applications/Foo.app", id: "com.example.foo", bytes: 8_192)
+            leftovers = [
+                try home.directory("Library/Application Support/com.example.foo"),
+                try home.file("Library/Preferences/com.example.foo.plist", bytes: 100),
+            ]
+            try home.file("Library/Application Support/com.example.foo/db", bytes: 2_048)
+            store = QuarantineStore(
+                root: home.url.appendingPathComponent("Library/Application Support/OpenClean/Quarantine"))
+        }
+
+        func request(bundle: ScanItem? = nil, requiresAdministrator: Bool = true) throws -> UninstallRequest {
+            UninstallRequest(
+                bundle: try bundle ?? #require(ScanItem.snapshot(of: app, ruleID: UninstallService.appRuleID)),
+                bundleID: "com.example.foo",
+                leftovers: try leftovers.map {
+                    try #require(ScanItem.snapshot(of: $0, ruleID: UninstallService.leftoverRuleID))
+                },
+                requiresAdministrator: requiresAdministrator)
+        }
+
+        func run(
+            _ request: UninstallRequest, executor: FakeAdminExecutor?, running: Set<String> = [],
+            openPaths: Set<String>? = []
+        ) throws -> UninstallOutcome {
+            try UninstallService(
+                store: store, denyList: DenyList(home: home.path),
+                processChecker: FakeProcessChecker(running: running), admin: FakeAdminExecutor(),
+                bundleAdmin: executor, trash: { _ in nil }
+            ).uninstall(
+                request, allowedFolders: [applications], protectedBundleIDs: [InstalledApp.openCleanBundleID],
+                protectedPaths: [], openPaths: openPaths)
+        }
+
+        var everythingInPlace: Bool { ([app] + leftovers).allSatisfy { FileStat.of($0) != nil } }
+
+        /// Makes Applications read-only, like `/Applications` is for a root-owned bundle's parent.
+        func lockApplications() throws { try setPermissions(applications, 0o555) }
+        func unlockApplications() { try? setPermissions(applications, 0o755) }
+    }
+
+    @Test func movesBundleWithOnePromptThenLeftoversAndRestoresAsUser() throws {
+        let fixture = try Fixture()
+        try fixture.lockApplications()
+        defer { fixture.unlockApplications() }
+        let store = fixture.store
+        let leftovers = fixture.leftovers
+        let applications = fixture.applications
+        let seenAtPrompt = Box<SessionManifest>()
+        let executor = FakeAdminExecutor(runForReal: true) { _ in
+            // Intent is on disk before the prompt, and nothing has moved yet.
+            if case .ok(let manifest) = store.listSessions().first { seenAtPrompt.value = manifest }
+            #expect(leftovers.allSatisfy { FileStat.of($0) != nil })
+            try? setPermissions(applications, 0o755)  // stands in for root
+        }
+
+        let outcome = try fixture.run(try fixture.request(), executor: executor)
+        guard case .finished(let report) = outcome else {
+            Issue.record("expected a finished uninstall, got \(outcome)")
+            return
+        }
+        let manifest = report.manifest
+        #expect(seenAtPrompt.value?.entries.map(\.outcome) == [.pending, .pending, .pending])
+        #expect(seenAtPrompt.value?.entries.first?.storedPath == manifest.entries.first?.storedPath)
+        #expect(manifest.entries.map(\.outcome) == [.quarantined, .quarantined, .quarantined])
+        #expect(manifest.entries.allSatisfy { $0.reason == nil })
+        #expect(try fixture.store.read(id: manifest.id) == manifest)
+
+        #expect(executor.bundleMoves.count == 1)
+        let move = try #require(executor.bundleMoves.first)
+        let stored = try #require(manifest.entries.first?.storedPath)
+        #expect(move.source == fixture.app)
+        #expect(move.destination == stored)
+        #expect(pathIsWithin(stored, fixture.store.itemsDirectory(manifest.id).path))
+        #expect(([fixture.app] + fixture.leftovers).allSatisfy { FileStat.of($0) == nil })
+        #expect(FileStat.of(stored)?.ownerUID == getuid())
+
+        let restore = try RestoreService(store: fixture.store, trash: { _ in nil })
+            .restore(sessionID: manifest.id, onConflict: .skip)
+        #expect(restore.skipped.isEmpty)
+        #expect(fixture.everythingInPlace)
+        #expect(FileStat.of(fixture.app)?.ownerUID == getuid())
+        #expect(FileManager.default.fileExists(atPath: fixture.app + "/Contents/Info.plist"))
+    }
+
+    @Test func cancelledPromptMovesNothing() throws {
+        let fixture = try Fixture()
+        let executor = FakeAdminExecutor(outcome: .cancelled)
+        guard case .finished(let report) = try fixture.run(try fixture.request(), executor: executor) else {
+            Issue.record("expected a finished session")
+            return
+        }
+        let entries = report.manifest.entries
+        #expect(executor.bundleMoves.count == 1)
+        #expect(entries.map(\.outcome) == [.failed, .skipped, .skipped])
+        #expect(entries.first?.reason == SkipReason.adminCancelled.description)
+        #expect(entries.dropFirst().allSatisfy { $0.reason == SkipReason.appNotMoved.description })
+        #expect(entries.allSatisfy { $0.storedPath == nil })
+        #expect(report.manifest.restorableEntries.isEmpty)
+        #expect(fixture.everythingInPlace)
+    }
+
+    @Test func failedPromptMovesNothing() throws {
+        let fixture = try Fixture()
+        let executor = FakeAdminExecutor(outcome: .failed("mv: Operation not permitted"))
+        guard case .finished(let report) = try fixture.run(try fixture.request(), executor: executor) else {
+            Issue.record("expected a finished session")
+            return
+        }
+        #expect(report.manifest.entries.map(\.outcome) == [.failed, .skipped, .skipped])
+        #expect(report.manifest.entries.first?.reason == "mv: Operation not permitted")
+        #expect(fixture.everythingInPlace)
+    }
+
+    @Test func reportsAMoveThatHappenedDespiteAFailedStatus() throws {
+        let fixture = try Fixture()
+        // mv worked but chown failed: the bundle is in quarantine and must stay restorable.
+        let executor = FakeAdminExecutor(outcome: .failed("chown: Operation not permitted")) { move in
+            try? FileManager.default.moveItem(atPath: move.source, toPath: move.destination)
+        }
+        guard case .finished(let report) = try fixture.run(try fixture.request(), executor: executor) else {
+            Issue.record("expected a finished session")
+            return
+        }
+        let first = try #require(report.manifest.entries.first)
+        #expect(first.outcome == .quarantined)
+        #expect(first.reason == "moved, but: chown: Operation not permitted")
+        #expect(FileStat.of(try #require(first.storedPath)) != nil)
+        #expect(report.manifest.entries.dropFirst().allSatisfy { $0.outcome == .quarantined })
+    }
+
+    @Test func refusesRunningOrChangedAppsWithoutPrompting() throws {
+        let fixture = try Fixture()
+        let executor = FakeAdminExecutor(runForReal: true)
+        let running = try fixture.run(try fixture.request(), executor: executor, running: ["com.example.foo"])
+        guard case .refused(.skipped(.appRunning("com.example.foo"))) = running else {
+            Issue.record("expected a running refusal, got \(running)")
+            return
+        }
+        let inUse = try fixture.run(try fixture.request(), executor: executor, openPaths: [fixture.app])
+        guard case .refused(.skipped(.inUse)) = inUse else {
+            Issue.record("expected an in-use refusal, got \(inUse)")
+            return
+        }
+
+        let stale = try #require(ScanItem.snapshot(of: fixture.app, ruleID: UninstallService.appRuleID))
+        try FileManager.default.moveItem(atPath: fixture.app, toPath: fixture.home.path + "/Old.app")
+        try FakeApps.make(fixture.home, "Applications/Foo.app", id: "com.example.foo")
+        let changed = try fixture.run(try fixture.request(bundle: stale), executor: executor)
+        guard case .refused(.skipped(.changedSinceScan)) = changed else {
+            Issue.record("expected a changed refusal, got \(changed)")
+            return
+        }
+        #expect(executor.bundleMoves.isEmpty)
+        #expect(fixture.store.listSessions().isEmpty)
+        #expect(fixture.everythingInPlace)
+    }
+
+    @Test func refusesWithoutAnAdministratorExecutor() throws {
+        let fixture = try Fixture()
+        guard case .refused(.needsAdministrator) = try fixture.run(try fixture.request(), executor: nil) else {
+            Issue.record("expected a refusal")
+            return
+        }
+        #expect(fixture.everythingInPlace)
+        #expect(fixture.store.listSessions().isEmpty)
+    }
+
+    @Test func ordinaryRequestsNeverUseTheAdministratorPath() throws {
+        let fixture = try Fixture()
+        let executor = FakeAdminExecutor()
+        guard
+            case .finished(let report) = try fixture.run(
+                try fixture.request(requiresAdministrator: false), executor: executor)
+        else {
+            Issue.record("expected a finished uninstall")
+            return
+        }
+        #expect(report.manifest.entries.map(\.outcome) == [.quarantined, .quarantined, .quarantined])
+        #expect(executor.bundleMoves.isEmpty)
+        #expect(executor.commands.isEmpty)
+    }
+
+    @Test func administratorExemptionKeepsEveryOtherCheck() throws {
+        let home = try TempDirectory()
+        let a = try FakeApps.make(home, "Applications/A.app", id: "com.example.a")
+        try setPermissions(home.path + "/Applications", 0o555)
+        defer { try? setPermissions(home.path + "/Applications", 0o755) }
+        func authorize(_ id: String, folders: [String]? = nil) -> Result<UninstallBundleExemption, UninstallRefusal> {
+            UninstallBundleExemption.authorize(
+                bundlePath: a, bundleID: id, allowedFolders: folders ?? [home.path + "/Applications"],
+                denyList: DenyList(home: home.path), protectedBundleIDs: [InstalledApp.openCleanBundleID],
+                protectedPaths: [], administrator: true)
+        }
+        #expect((try? authorize("com.example.a").get()) != nil)
+        #expect(authorize("com.apple.Safari") == .failure(.appleApp))
+        #expect(authorize(InstalledApp.openCleanBundleID) == .failure(.openClean))
+        #expect(authorize("com.example.a", folders: [home.path + "/Elsewhere"]) == .failure(.outsideApplicationFolders))
+    }
+}
+
+final class Box<Value>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: Value?
+    var value: Value? {
+        get { lock.withLock { stored } }
+        set { lock.withLock { stored = newValue } }
+    }
+}

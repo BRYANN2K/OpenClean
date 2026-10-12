@@ -20,6 +20,8 @@ public struct OpenCleanCoordinator: Sendable {
     let processChecker: any ProcessChecker
     let openFiles: any OpenFilesProvider
     let admin: any AdminExecutor
+    /// Moves a root-owned app bundle into quarantine for the Uninstaller (one password prompt per app).
+    let bundleAdmin: (any AppBundleAdminExecutor)?
     let accessCheck: @Sendable () -> FullDiskAccessStatus
     let trash: TrashOperation
     /// Where update checks go: the GitHub API, or `OPENCLEAN_UPDATE_FEED` (dev override, allows file://).
@@ -33,6 +35,7 @@ public struct OpenCleanCoordinator: Sendable {
         processChecker: any ProcessChecker = RunningProcessChecker(),
         openFiles: any OpenFilesProvider = LsofOpenFilesProvider(),
         admin: any AdminExecutor = OsascriptAdminExecutor(),
+        bundleAdmin: (any AppBundleAdminExecutor)? = nil,
         fullDiskAccess: (@Sendable () -> FullDiskAccessStatus)? = nil,
         trash: @escaping TrashOperation = Remover.systemTrash
     ) {
@@ -46,6 +49,8 @@ public struct OpenCleanCoordinator: Sendable {
         self.processChecker = processChecker
         self.openFiles = openFiles
         self.admin = admin
+        // Defaults to the same executor, so a fake `admin` in tests can never lead to a real prompt.
+        self.bundleAdmin = bundleAdmin ?? (admin as? any AppBundleAdminExecutor)
         accessCheck = fullDiskAccess ?? { FullDiskAccessChecker(home: resolvedHome).status() }
         self.trash = trash
         (updateFeedURL, updateHostPolicy) = ReleaseFeed.source(environment: environment)

@@ -46,15 +46,16 @@ extension OpenCleanCoordinator {
 
     /// Moves `app` and the given user-scope leftovers into one quarantine session. Report-only leftovers
     /// are ignored. Refuses (moving nothing) unless the app is still exactly as listed and safe to move.
+    /// A `.needsAdministrator` app is moved with one administrator password prompt (`AppBundleAdminMove`);
+    /// if the prompt is cancelled or fails, nothing is moved.
     public func uninstall(
         _ app: InstalledApp, leftovers: [Leftover], folders: [ApplicationFolder]? = nil
     ) throws -> UninstallOutcome {
         guard let bundleID = app.bundleID else { return .refused(.invalidBundleID) }
         switch app.status {
-        case .removable: break
+        case .removable, .needsAdministrator: break
         case .appleApp: return .refused(.appleApp)
         case .openClean: return .refused(.openClean)
-        case .needsAdministrator: return .refused(.needsAdministrator)
         case .listOnly: return .refused(.outsideApplicationFolders)
         case .noBundleID: return .refused(.invalidBundleID)
         }
@@ -63,12 +64,13 @@ extension OpenCleanCoordinator {
             bundle: app.scanItem(ruleID: UninstallService.appRuleID), bundleID: bundleID,
             leftovers: leftovers.filter { !$0.isReportOnly }.map {
                 $0.scanItem(ruleID: UninstallService.leftoverRuleID)
-            }
+            },
+            requiresAdministrator: app.status.requiresAdministrator
         )
         let openPaths = try? openFiles.openPaths()
         let service = UninstallService(
             store: store, denyList: DenyList(home: resolvedHome), processChecker: processChecker, admin: admin,
-            trash: trash)
+            bundleAdmin: bundleAdmin, trash: trash)
         return try service.uninstall(
             request, allowedFolders: allowed, protectedBundleIDs: [InstalledApp.openCleanBundleID],
             protectedPaths: uninstallProtectedPaths, openPaths: openPaths)

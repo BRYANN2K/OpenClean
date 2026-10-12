@@ -15,6 +15,7 @@ public enum SkipReason: Sendable, Equatable, CustomStringConvertible {
     case adminBatchFull
     case adminUnsafeParent
     case adminRequiresImmediate
+    case appNotMoved
 
     public var description: String {
         switch self {
@@ -30,6 +31,7 @@ public enum SkipReason: Sendable, Equatable, CustomStringConvertible {
         case .adminBatchFull: "too many system items for one prompt; run cleanup again"
         case .adminUnsafeParent: "a parent folder is not protected by the system"
         case .adminRequiresImmediate: "system items can only be deleted, not quarantined"
+        case .appNotMoved: "the app was not moved, so this was left in place"
         }
     }
 }
