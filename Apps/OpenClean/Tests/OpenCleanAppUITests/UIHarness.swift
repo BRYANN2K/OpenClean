@@ -32,15 +32,20 @@ final class UIHarness {
     private var windows: [NSWindow] = []
     private let suites: [String]
 
-    init(reminderFinding: ScanReminderFinding? = nil) throws {
+    /// - Parameter rulesDirectory: rule packs to load instead of `FixtureRules` (the screenshot recorder
+    ///   uses the bundled `Rules/`).
+    /// - Parameter probes: probes for those rules (packs naming an unknown probe are skipped whole).
+    init(
+        reminderFinding: ScanReminderFinding? = nil, rulesDirectory: String? = nil, probes: [any Probe] = []
+    ) throws {
         _ = NSApplication.shared
         home = try TempDirectory()
-        let rules = try FixtureRules.writeDirectory(in: home)
+        let rules = try rulesDirectory ?? FixtureRules.writeDirectory(in: home)
         // OPENCLEAN_HOME makes the coordinator treat the temp folder as a pretend home everywhere (quarantine,
         // settings, Updates, the Uninstaller's app folders), so nothing reads or writes the real home.
         coordinator = OpenCleanCoordinator(
             home: home.path, environment: ["OPENCLEAN_HOME": home.path, "OPENCLEAN_RULES_DIR": rules],
-            registry: ProbeRegistry([]), processChecker: FakeProcessChecker(), openFiles: FakeOpenFiles(),
+            registry: ProbeRegistry(probes), processChecker: FakeProcessChecker(), openFiles: FakeOpenFiles(),
             admin: FakeAdminExecutor(), fullDiskAccess: { .granted }, trash: { _ in nil })
         let modelSuite = "openclean.ui-tests.\(UUID().uuidString)"
         let updateSuite = "openclean.ui-tests.\(UUID().uuidString)"
@@ -69,6 +74,14 @@ final class UIHarness {
         reminder = ScanReminderModel(
             settings: reminderSettings,
             scan: { ScanReminderFinding(date: Date(), bytes: 0, itemCount: 0) }, notifier: SilentReminderNotifier())
+    }
+
+    /// The repo's bundled rule packs (`Rules/`).
+    nonisolated static var bundledRules: String {
+        // Apps/OpenClean/Tests/OpenCleanAppUITests/<file> → the repo root.
+        URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Rules").path
     }
 
     func tearDown() {
@@ -167,4 +180,46 @@ struct SilentReminderNotifier: ScanReminderNotifying {
     func requestAuthorization() async -> Bool { false }
     func isAuthorized() async -> Bool { false }
     func post(title: String, body: String) async {}
+}
+
+/// Probes for every id the bundled packs name, all finding nothing: the real ones would ask the real Mac
+/// (simctl, brew, tmutil, Docker), and a pack naming an unknown probe is skipped whole.
+enum EmptyProbes {
+    static let all: [any Probe] = [
+        DevProjectBuildOutputs(), DockerDiskImage(), HomebrewCache(), NodeProjectModules(), PythonProjectVenvs(),
+        RustProjectTargets(), TimemachineLocalSnapshots(), XcodeSimulators(),
+    ]
+
+    struct DevProjectBuildOutputs: Probe {
+        static let id = "dev.project-build-outputs"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
+    struct DockerDiskImage: Probe {
+        static let id = "docker.disk-image"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
+    struct HomebrewCache: Probe {
+        static let id = "homebrew.cache"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
+    struct NodeProjectModules: Probe {
+        static let id = "node.project-modules"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
+    struct PythonProjectVenvs: Probe {
+        static let id = "python.project-venvs"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
+    struct RustProjectTargets: Probe {
+        static let id = "rust.project-targets"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
+    struct TimemachineLocalSnapshots: Probe {
+        static let id = "timemachine.local-snapshots"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
+    struct XcodeSimulators: Probe {
+        static let id = "xcode.simulators"
+        func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
+    }
 }

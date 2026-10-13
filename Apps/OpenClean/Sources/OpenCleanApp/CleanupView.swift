@@ -14,36 +14,63 @@ struct CleanupView: View {
     var body: some View {
         if let result = model.result {
             HSplitView {
-                List(result.categories, id: \.category, selection: $category) { entry in
-                    HStack(spacing: 10) {
-                        CheckboxButton(state: model.state(of: entry.category), label: entry.category.displayName) {
-                            model.setSelected(model.state(of: entry.category) != .on, category: entry.category)
+                ScrollView {
+                    LazyVStack(spacing: 2) {
+                        ForEach(result.categories, id: \.category) { entry in
+                            let selected = entry.category == shownCategory(in: result)
+                            SelectableRow(isSelected: selected) {
+                                category = entry.category
+                            } leading: {
+                                CheckboxButton(
+                                    state: model.state(of: entry.category), label: entry.category.displayName
+                                ) {
+                                    model.setSelected(model.state(of: entry.category) != .on, category: entry.category)
+                                }
+                            } content: {
+                                HStack(spacing: 10) {
+                                    CategoryIcon(category: entry.category, size: 26)
+                                    Text(entry.category.displayName)
+                                        .font(.system(size: 13, weight: selected ? .semibold : .regular))
+                                        .lineLimit(1)
+                                    Spacer()
+                                    Text(formatBytes(entry.rules.reduce(Int64(0)) { $0 + $1.totalSize }))
+                                        .monospacedDigit()
+                                        .foregroundStyle(Theme.textSecondary)
+                                }
+                            }
+                            .layoutProbe("cleanup.category.\(entry.category.rawValue)")
                         }
-                        CategoryIcon(category: entry.category, size: 26)
-                        Text(entry.category.displayName)
-                        Spacer()
-                        Text(formatBytes(entry.rules.reduce(Int64(0)) { $0 + $1.totalSize }))
-                            .monospacedDigit()
-                            .foregroundStyle(Theme.textSecondary)
                     }
+                    .padding(8)
                 }
-                .scrollContentBackground(.hidden)
                 .frame(minWidth: 200, idealWidth: 240)
 
-                List(rules(in: result), selection: $ruleID) { rule in
-                    HStack {
-                        CheckboxButton(state: model.state(of: rule), label: rule.rule.name) {
-                            model.setSelected(model.state(of: rule) != .on, rule: rule)
+                ScrollView {
+                    LazyVStack(spacing: 2) {
+                        ForEach(rules(in: result)) { rule in
+                            let selected = rule.id == selectedRule(in: result)?.id
+                            SelectableRow(isSelected: selected) {
+                                ruleID = rule.id
+                            } leading: {
+                                CheckboxButton(state: model.state(of: rule), label: rule.rule.name) {
+                                    model.setSelected(model.state(of: rule) != .on, rule: rule)
+                                }
+                            } content: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(rule.rule.name)
+                                            .font(.system(size: 13, weight: selected ? .semibold : .regular))
+                                        SafetyTag(safety: rule.rule.safety)
+                                    }
+                                    Spacer()
+                                    Text(detail(for: rule)).monospacedDigit().foregroundStyle(Theme.textSecondary)
+                                }
+                            }
+                            .layoutProbe("cleanup.rule.\(rule.id)")
                         }
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(rule.rule.name)
-                            SafetyTag(safety: rule.rule.safety)
-                        }
-                        Spacer()
-                        Text(detail(for: rule)).monospacedDigit().foregroundStyle(Theme.textSecondary)
                     }
+                    .padding(8)
                 }
-                .scrollContentBackground(.hidden)
                 .frame(minWidth: 220, idealWidth: 260)
 
                 RuleDetailView(rule: selectedRule(in: result), previewURL: $previewURL)
@@ -59,8 +86,12 @@ struct CleanupView: View {
         }
     }
 
+    private func shownCategory(in result: ScanResult) -> RuleCategory? {
+        category ?? result.categories.first?.category
+    }
+
     private func rules(in result: ScanResult) -> [RuleResult] {
-        let shown = category ?? result.categories.first?.category
+        let shown = shownCategory(in: result)
         return result.rules.filter { $0.rule.category == shown }
     }
 

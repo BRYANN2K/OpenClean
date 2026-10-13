@@ -67,6 +67,33 @@ struct ScreenRenderTests {
         try show(.history, in: harness)
     }
 
+    /// Cleanup's category and rule lists select with a click on the row, while the row's checkbox only
+    /// ticks. (They are custom rows, not `List(selection:)`, so the selection isn't painted in system blue.)
+    @Test func cleanupRowsSelectOnClickAndCheckboxesOnlyTick() async throws {
+        let harness = try UIHarness(rulesDirectory: UIHarness.bundledRules, probes: EmptyProbes.all)
+        defer { harness.tearDown() }
+        try harness.home.file(".npm/_cacache/content-v2/package.tgz", bytes: 64_000)
+        try harness.home.file("Library/Caches/com.example.editor/cache.db", bytes: 32_000)
+        harness.model.onLaunch()
+        harness.model.startScan()
+        await harness.model.waitForScan()
+        harness.navigation.selection = .cleanup
+        let window = harness.host(ContentView())
+        #expect(harness.frame("cleanup.rule.npm.cache") == nil, "Developer Tools isn't the first category")
+
+        let developer = try #require(harness.frame("cleanup.category.developer"))
+        harness.click(window, at: CGPoint(x: developer.maxX - 60, y: developer.midY))
+        harness.settle()
+        let npm = try #require(harness.frame("cleanup.rule.npm.cache"), "clicking the row didn't show its rules")
+
+        // The checkbox at the row's leading edge ticks the rule without changing the selection.
+        let rule = try #require(harness.model.result?.rule("npm.cache"))
+        let before = harness.model.state(of: rule)
+        harness.click(window, at: CGPoint(x: npm.minX + 20, y: npm.midY))
+        #expect(harness.model.state(of: rule) != before)
+        #expect(harness.frame("cleanup.rule.npm.cache") != nil)
+    }
+
     @Test func skippedItemsBannerRendersAfterACleanThatLeftItemsInPlace() async throws {
         let harness = try UIHarness()
         defer { harness.tearDown() }

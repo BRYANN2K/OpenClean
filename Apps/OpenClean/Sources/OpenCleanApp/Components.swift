@@ -46,6 +46,38 @@ struct CheckboxButton: View {
     }
 }
 
+/// A row in one of Cleanup's lists, selected like `SidebarRow`: soft white fill (the caller sets the
+/// semibold label), white 7% on hover. Not `List(selection:)`, which paints the macOS accent colour.
+/// `leading` (the checkbox) keeps its own clicks; the rest of the row is one plain button that selects it.
+struct SelectableRow<Leading: View, Content: View>: View {
+    let isSelected: Bool
+    let select: () -> Void
+    @ViewBuilder let leading: () -> Leading
+    @ViewBuilder let content: () -> Content
+    @State private var hovering = false
+
+    var body: some View {
+        HStack(spacing: 10) {
+            leading()
+            Button(action: select) {
+                content()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(isSelected ? Theme.rowSelected : hovering ? Theme.rowHover : .clear)
+        )
+        .onHover { hovering = $0 }
+        .animation(.easeOut(duration: 0.15), value: isSelected)
+    }
+}
+
 /// Free space and what OpenClean has freed, at the bottom of the sidebar.
 struct StorageCard: View {
     let disk: DiskSpace?

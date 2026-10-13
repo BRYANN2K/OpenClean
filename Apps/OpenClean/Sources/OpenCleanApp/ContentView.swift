@@ -166,7 +166,7 @@ struct SidebarRow: View {
             .frame(height: 32)
             .background(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(.white.opacity(isSelected ? 0.16 : hovering ? 0.07 : 0))
+                    .fill(isSelected ? Theme.rowSelected : hovering ? Theme.rowHover : .clear)
             )
             .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }

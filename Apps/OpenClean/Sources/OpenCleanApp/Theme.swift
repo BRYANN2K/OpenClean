@@ -36,6 +36,9 @@ enum Theme {
     static let glassFill = Color.white.opacity(0.09)
     static let glassStroke = Color.white.opacity(0.14)
     static let glassDivider = Color.white.opacity(0.08)
+    /// Selected and hovered rows in the sidebar and Cleanup's lists (never the system accent colour).
+    static let rowSelected = Color.white.opacity(0.16)
+    static let rowHover = Color.white.opacity(0.07)
     static let sidebar = Color(hex: 0x05181D)
 
     static let panelRadius: CGFloat = 16
