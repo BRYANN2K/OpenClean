@@ -21,6 +21,30 @@ admin prompt, Trash, lsof and process list are injected. Keep it that way.
 
 Only `Quarantine` and `Privilege` may remove files. `RemovalGuardTests` fails the build otherwise.
 
+## Add a rule in 5 minutes
+
+1. Find the folder. Check that the app rebuilds it: quit the app, move the folder aside, reopen the app
+   and use it. Note what, if anything, was lost.
+2. Copy the commented template and edit it:
+   ```sh
+   cp Rules/TEMPLATE.yaml.example Rules/my-tool.yaml
+   ```
+   Or add the rule to the existing pack it fits (`Rules/dev-tools.yaml`, `Rules/ai.yaml`, ...).
+3. Pick the safety level (see "Choosing a level" below). When in doubt, `review`: it is quarantined and
+   can be restored.
+4. Lint it and see what it finds (all read-only):
+   ```sh
+   swift run openclean rules lint Rules/my-tool.yaml
+   swift run openclean rules explain my-tool.cache
+   swift run openclean scan --category developer --json   # find "id" : "my-tool.cache" and its items
+   ```
+5. Run `make lint`, then open a pull request with a `feat(rules): …` commit. Mention how you checked that
+   the app rebuilds the folder, and link its docs if there are any.
+
+Not ready to write YAML? Open a
+[rule suggestion](https://github.com/leoAnimesh/OpenClean/issues/new?template=rule-suggestion.yml)
+instead. To keep a rule just for yourself, put the pack in `~/Library/Application Support/OpenClean/rules/`.
+
 ## Writing a rule
 
 ```yaml
