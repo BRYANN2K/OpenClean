@@ -148,7 +148,7 @@ h1 { margin: 0 auto 10px; max-width: 900px; text-wrap: balance; font-weight: 700
 .fine { margin: 0; font-size: 13px; color: var(--text-3); }
 
 /* Window frame for screenshots */
-.shot { margin: 64px auto 0; max-width: 1000px; }
+.shot { margin: 0 auto 40px; max-width: 1000px; }
 .window {
   border-radius: 14px; overflow: hidden;
   border: 1px solid var(--glass-stroke);
@@ -220,8 +220,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
 
 /* Hero on wide screens: compact, centred, with the screenshot sized by viewport height so it fits the fold */
 @media (min-width: 1024px) {
-  .hero { padding: 76px 0 28px; }
-  .hero .app-icon { width: 76px; height: 76px; margin-bottom: 14px; filter: drop-shadow(0 10px 22px rgba(0,0,0,.35)); }
+  .hero { padding: 88px 0 56px; }
   .hero h1 { max-width: none; font-size: clamp(32px, 3.6vw, 40px); white-space: nowrap; margin-bottom: 8px; }
   .hero .sub { font-size: 16px; }
   .hero .actions { flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 18px; row-gap: 12px; margin-top: 26px; }
@@ -233,10 +232,11 @@ footer p { margin: 18px 0 0; max-width: 720px; }
   .hero .meta { order: 4; flex-basis: 100%; text-align: center; }
   .hero .brew-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
   .hero .brew { min-height: 56px; }
-  .hero .shot { margin: 24px auto 0; max-width: 1000px; }
+  .hero .shot { margin: 0 auto 40px; max-width: 1000px; }
   .hero .window { width: fit-content; max-width: 100%; margin-inline: auto; }
-  .hero .window img { width: auto; max-width: 100%; max-height: max(300px, calc(100svh - 476px)); }
+  .hero .window img { width: auto; max-width: 100%; max-height: max(320px, 62svh); }
   .hero .shot figcaption { margin-top: 10px; }
+  .hero h1 { margin-top: 0; }
 }
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
@@ -249,7 +249,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
   .safe-grid li:nth-child(2) { border-top: 1px solid var(--glass-divider); }
   .safe-grid li:nth-child(odd) { border-right: 0; }
   section { padding: 64px 0; }
-  .shot { margin-top: 48px; }
+  .shot { margin-top: 0; }
   .btn-primary, .btn-secondary { width: 100%; }
   .cta-row { flex-direction: column; width: 100%; max-width: 360px; margin-inline: auto; }
   .cta-group { width: 100%; }
@@ -284,8 +284,15 @@ footer p { margin: 18px 0 0; max-width: 720px; }
 <main id="main">
   <div class="hero bd-scan">
     <div class="wrap hero-grid">
+      <figure class="shot">
+        <div class="window">
+          <img src="assets/smart-scan-results.webp" width="1600" height="1000" fetchpriority="high"
+               alt="OpenClean's Smart Scan results: user caches and logs marked Safe, developer tools, AI models and Trash marked Review, with sizes and a round Clean button.">
+        </div>
+        <figcaption>Smart Scan explains every item before anything is removed.</figcaption>
+      </figure>
+
       <div class="hero-copy">
-      <img class="app-icon" src="favicon.svg" alt="" width="112" height="112">
       <h1>A free, open-source Mac cleaner you can read and undo.</h1>
       <p class="sub">An open alternative to CleanMyMac for macOS.</p>
 
@@ -306,13 +313,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
       </div>
       </div>
 
-      <figure class="shot">
-        <div class="window">
-          <img src="assets/smart-scan-results.webp" width="1600" height="1000" fetchpriority="high"
-               alt="OpenClean's Smart Scan results: user caches and logs marked Safe, developer tools, AI models and Trash marked Review, with sizes and a round Clean button.">
-        </div>
-        <figcaption>Smart Scan explains every item before anything is removed.</figcaption>
-      </figure>
+
     </div>
   </div>
 
