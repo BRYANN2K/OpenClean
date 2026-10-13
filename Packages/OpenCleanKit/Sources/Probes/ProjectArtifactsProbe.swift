@@ -7,7 +7,7 @@ import ScanEngine
 public enum ProjectArtifactKind: String, Sendable, CaseIterable {
     /// `node_modules` next to a `package.json`.
     case nodeModules
-    /// A Python virtual environment: any folder holding a `pyvenv.cfg`.
+    /// A Python virtual environment: a folder holding a `pyvenv.cfg` and no project marker.
     case pythonVirtualEnv
     /// Cargo's `target` next to a `Cargo.toml`.
     case rustTarget
@@ -74,11 +74,7 @@ public struct ProjectArtifactFinder: Sendable {
     ]
 
     /// Files whose presence makes a folder a project for the "enclosing project" activity check.
-    static let projectMarkers: Set<String> = [
-        ".git", "package.json", "Cargo.toml", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt",
-        "Pipfile", "Package.swift", "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle",
-        "settings.gradle.kts", "pubspec.yaml", "go.mod", "Gemfile", "composer.json", "deno.json",
-    ]
+    static let projectMarkers = ProjectArtifactSignature.projectMarkers
 
     /// Every artifact found below `home` (which must be canonical) and below each of `projectFolders`
     /// (canonical folders the user chose; see `ProjectFolderExemption`), with its project's last activity.
@@ -118,7 +114,7 @@ public struct ProjectArtifactFinder: Sendable {
             found.append(("target", .rustTarget, "cargo build recreates it."))
         }
         for name in directories.sorted() where !found.contains(where: { $0.0 == name }) {
-            if ProjectArtifactSignature.isRegularFile(directory + "/" + name + "/pyvenv.cfg") {
+            if ProjectArtifactSignature.isVirtualEnv(directory + "/" + name) {
                 found.append(
                     (
                         name, .pythonVirtualEnv,

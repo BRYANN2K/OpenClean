@@ -89,6 +89,9 @@ public struct RuleLinter: Sendable {
             }
         }
         if rule.makeWritable {
+            if rule.safety != .regenerable {
+                problems.append("make_writable is only allowed for regenerable rules")
+            }
             if rule.effectiveDeleteMode != .immediate {
                 problems.append("make_writable is only allowed for rules that delete immediately")
             }

@@ -39,6 +39,13 @@ public struct DenyList: Sendable {
     }
 
     public func denialReason(for rawPath: String) -> String? {
+        denialReason(for: rawPath, ignoringDocumentsAndDesktop: false)
+    }
+
+    /// `ignoringDocumentsAndDesktop` skips only the "inside ~/Documents" and "inside ~/Desktop" rules, so
+    /// `ProjectFolderExemption` can confirm nothing else protects a path. Every other rule, including
+    /// "contains protected location" for Documents and Desktop themselves, still applies.
+    public func denialReason(for rawPath: String, ignoringDocumentsAndDesktop: Bool) -> String? {
         // Fail closed: a path we cannot reason about lexically is never deletable.
         guard rawPath.utf8.first == 0x2F else { return "non-canonical path (not absolute)" }
         if hasNonCanonicalComponent(rawPath) {
@@ -54,8 +61,10 @@ public struct DenyList: Sendable {
         for location in exact where key == pathKey(location) {
             return "protected location \(location)"
         }
+        let documentsAndDesktop = ["\(home)/Documents", "\(home)/Desktop"]
         for root in subtrees where within(root) {
             if allowedInside.contains(where: within) { continue }
+            if ignoringDocumentsAndDesktop && documentsAndDesktop.contains(root) { continue }
             return Self.insideReason(root)
         }
         let components = pathComponents(path)

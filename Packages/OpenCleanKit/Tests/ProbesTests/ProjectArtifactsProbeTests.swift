@@ -148,6 +148,26 @@ struct ProjectArtifactsProbeTests {
             ])
     }
 
+    /// `python -m venv .` inside a project puts `pyvenv.cfg` next to the source code. That folder is the
+    /// project, not a disposable environment, and must never be reported as one.
+    @Test func neverTakesAProjectWithAVenvAtItsRootForAVirtualEnv() async throws {
+        let home = try TempDirectory()
+        try home.file("Developer/thesis/pyvenv.cfg", bytes: 10)
+        try home.file("Developer/thesis/bin/python", bytes: 10)
+        try home.file("Developer/thesis/analysis.py", bytes: 10)
+        try home.file("Developer/thesis/.git/HEAD", bytes: 10)
+        try home.file("Developer/tool/pyvenv.cfg", bytes: 10)
+        try home.file("Developer/tool/pyproject.toml", bytes: 10)
+        try home.file("Developer/tool/.venv/pyvenv.cfg", bytes: 10)
+        #expect(
+            try await paths(PythonVirtualEnvProbe(index: ProjectArtifactIndex()), home) == [
+                home.path + "/Developer/tool/.venv"
+            ])
+        #expect(!ProjectArtifactSignature.isVirtualEnv(home.path + "/Developer/thesis"))
+        #expect(!ProjectArtifactSignature.isVirtualEnv(home.path + "/Developer/tool"))
+        #expect(ProjectArtifactSignature.isVirtualEnv(home.path + "/Developer/tool/.venv"))
+    }
+
     @Test func findsRustTargets() async throws {
         let home = try TempDirectory()
         try home.file("Developer/crate/Cargo.toml", bytes: 10)

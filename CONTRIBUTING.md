@@ -72,7 +72,7 @@ rules:
 | `conditions` | `app_not_running`, `min_age_days`, `min_size` (e.g. `100MB`). |
 | `exclude` | Globs to leave out. |
 | `requires` | `full_disk_access`, or `admin` (only for `regenerable` rules). |
-| `make_writable` | `true` for a tool that makes its cache read-only (Go's `~/go/pkg/mod`): before deleting, OpenClean adds `u+w` to the folders you own inside the item, never following a symlink. Only for rules that delete immediately and don't need `admin`. |
+| `make_writable` | `true` for a tool that makes its cache read-only (Go's `~/go/pkg/mod`): before deleting, OpenClean adds `u+w` to the folders you own inside the item, never following a symlink. Only for `regenerable` rules that delete immediately and don't need `admin`. |
 
 Choosing a level: if the app silently rebuilds it and nothing the user made is lost, it is
 `regenerable`. If it costs a long re-download (AI models, device symbols) or holds user data

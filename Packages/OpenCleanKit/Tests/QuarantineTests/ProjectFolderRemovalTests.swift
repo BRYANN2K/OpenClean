@@ -138,6 +138,21 @@ struct ProjectFolderRemovalTests {
         #expect(FileManager.default.fileExists(atPath: home.path + "/go/pkg"))
     }
 
+    /// Defence in depth behind the linter: the Remover only prepares regenerable rules' items.
+    @Test func makeWritableIsIgnoredForRulesThatAreNotRegenerable() throws {
+        let home = try TempDirectory()
+        let root = try readOnlyModuleCache(home)
+        defer { unlock(root) }
+        var rule = goRule(makeWritable: true)
+        rule.safety = .review
+        rule.deleteMode = .immediate
+        let report = try remove(root, rule: rule, home: home)
+        #expect(report.manifest.entries.map(\.outcome) == [.failed])
+        var info = stat()
+        #expect(lstat(root + "/github.com", &info) == 0)
+        #expect(info.st_mode & S_IWUSR == 0)
+    }
+
     @Test func makeWritableNeverFollowsSymlinksOutOfTheItem() throws {
         let home = try TempDirectory()
         let outside = try TempDirectory()

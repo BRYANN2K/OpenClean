@@ -144,7 +144,18 @@ struct ProjectFoldersAndCancellationTests {
             projectFolders: [home.path + "/Documents"])
         #expect(artifacts.count == 9)
         for artifact in artifacts {
-            #expect(ProjectArtifactSignature.matches(artifact.path), "\(artifact.path)")
+            let probe =
+                switch artifact.kind {
+                case .nodeModules: NodeModulesProbe.id
+                case .pythonVirtualEnv: PythonVirtualEnvProbe.id
+                case .rustTarget: RustTargetProbe.id
+                case .buildOutput: ProjectBuildOutputProbe.id
+                }
+            #expect(ProjectArtifactSignature.matches(artifact.path, probe: probe), "\(artifact.path)")
+            // And only for that probe.
+            for other in ProjectArtifactSignature.probeIDs where other != probe {
+                #expect(!ProjectArtifactSignature.matches(artifact.path, probe: other), "\(artifact.path) \(other)")
+            }
         }
     }
 

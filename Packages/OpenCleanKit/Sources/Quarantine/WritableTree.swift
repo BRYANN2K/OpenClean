@@ -50,13 +50,13 @@ enum WritableTree {
             // Failure is not fatal: the delete then fails for this folder and is reported.
             _ = fchmod(fd, (info.st_mode & 0o7777) | S_IWUSR)
         }
-        // fdopendir takes ownership of its descriptor, so give it a duplicate.
+        // fdopendir takes ownership of its descriptor, so give it a duplicate. The listing is closed before
+        // descending, so a deep tree holds one descriptor per level.
         let listing = dup(fd)
         guard listing >= 0, let dir = fdopendir(listing) else {
             if listing >= 0 { close(listing) }
             return
         }
-        defer { closedir(dir) }
         var children: [String] = []
         while let entry = readdir(dir) {
             let type = Int32(entry.pointee.d_type)
@@ -67,6 +67,7 @@ enum WritableTree {
             }
             if name != "." && name != ".." { children.append(name) }
         }
+        closedir(dir)
         for name in children {
             let child = openat(fd, name, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
             // Not a folder (DT_UNKNOWN files, symlinks) or unreadable: nothing to do here.

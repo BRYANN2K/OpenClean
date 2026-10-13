@@ -106,4 +106,18 @@ struct DenyListTests {
         #expect(nfcHome.isDenied("/Users/Jose\u{301}/Documents/x"))
         #expect(nfdHome.isDenied("/Users/Jos\u{e9}/Documents/x"))
     }
+
+    /// Used by `ProjectFolderExemption`: drops only the "inside ~/Documents" and "inside ~/Desktop" rules.
+    @Test func ignoringDocumentsAndDesktopKeepsEveryOtherRule() {
+        func reason(_ path: String) -> String? { deny.denialReason(for: path, ignoringDocumentsAndDesktop: true) }
+        #expect(reason("/Users/tester/Documents/Code/app/node_modules") == nil)
+        #expect(reason("/Users/tester/desktop/p/target") == nil)
+        #expect(reason("/Users/tester/Documents") == "contains protected location /Users/tester/Documents")
+        #expect(reason("/Users/tester/Desktop") == "contains protected location /Users/tester/Desktop")
+        #expect(reason("/Users/tester") == "protected location /Users/tester")
+        #expect(reason("/Users/tester/Documents/../.ssh") != nil)
+        #expect(reason("/Users/tester/.ssh/keys") != nil)
+        #expect(reason("/Users/tester/Library/Mobile Documents/com~apple~CloudDocs/Documents/x") != nil)
+        #expect(deny.denialReason(for: "/Users/tester/Documents/Code/app/node_modules") != nil)
+    }
 }

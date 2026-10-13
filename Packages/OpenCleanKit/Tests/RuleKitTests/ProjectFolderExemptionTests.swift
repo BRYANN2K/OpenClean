@@ -78,12 +78,52 @@ struct ProjectFolderExemptionTests {
         try Data("Signature: 8a477f597d28d172789f06886806bc55\n".utf8).write(
             to: URL(fileURLWithPath: try home.directory("Desktop/w/.pytest_cache") + "/CACHEDIR.TAG"))
         let exemption = ProjectFolderExemption(home: home.path, folders: [home.path + "/Desktop"])
-        for relative in [
-            "p/target", "p/.venv", "s/.build", "g/build", "g/.gradle", "w/.next", "w/.pytest_cache",
+        for (relative, probe) in [
+            ("p/target", "rust.project-targets"), ("p/.venv", "python.project-venvs"),
+            ("s/.build", "dev.project-build-outputs"), ("g/build", "dev.project-build-outputs"),
+            ("g/.gradle", "dev.project-build-outputs"), ("w/.next", "dev.project-build-outputs"),
+            ("w/.pytest_cache", "dev.project-build-outputs"),
         ] {
             let path = home.path + "/Desktop/" + relative
-            #expect(exemption.permits(path, deniedFor: try reason(home, path), rule: rule()), "\(relative)")
+            #expect(
+                exemption.permits(path, deniedFor: try reason(home, path), rule: rule(probe: probe)), "\(relative)")
         }
+    }
+
+    /// Each probe's rule may only use the exemption for the kind of folder that probe reports: a
+    /// `node_modules` rule can't remove a virtual environment, and so on.
+    @Test func permitsOnlyWhatTheRulesOwnProbeReports() throws {
+        let home = try TempDirectory()
+        let modules = try documentsProject(home)
+        try home.file("Documents/Code/app/.venv/pyvenv.cfg")
+        try home.file("Documents/Code/crate/Cargo.toml")
+        try home.directory("Documents/Code/crate/target")
+        let venv = home.path + "/Documents/Code/app/.venv"
+        let target = home.path + "/Documents/Code/crate/target"
+        let exemption = ProjectFolderExemption(home: home.path, folders: [home.path + "/Documents/Code"])
+        func permits(_ path: String, _ probe: String) throws -> Bool {
+            exemption.permits(path, deniedFor: try reason(home, path), rule: rule(probe: probe))
+        }
+        #expect(try permits(modules, "node.project-modules"))
+        #expect(try permits(venv, "python.project-venvs"))
+        #expect(try permits(target, "rust.project-targets"))
+        #expect(try !permits(venv, "node.project-modules"))
+        #expect(try !permits(modules, "python.project-venvs"))
+        #expect(try !permits(target, "dev.project-build-outputs"))
+        #expect(try !permits(modules, "rust.project-targets"))
+    }
+
+    /// A project whose root holds a `pyvenv.cfg` (`python -m venv .`) is source code, not an artifact.
+    @Test func neverPermitsAProjectThatHoldsAVenvAtItsRoot() throws {
+        let home = try TempDirectory()
+        try home.file("Documents/Code/thesis/pyvenv.cfg")
+        try home.file("Documents/Code/thesis/analysis.py")
+        try home.file("Documents/Code/thesis/.git/HEAD")
+        let project = home.path + "/Documents/Code/thesis"
+        let exemption = ProjectFolderExemption(home: home.path, folders: [home.path + "/Documents/Code"])
+        #expect(
+            !exemption.permits(project, deniedFor: try reason(home, project), rule: rule(probe: "python.project-venvs"))
+        )
     }
 
     @Test func neverPermitsTheFolderItsAncestorsOrTheProtectedRoots() throws {
@@ -190,6 +230,12 @@ struct ProjectFolderExemptionTests {
         #expect(issues(good).isEmpty)
         good.safety = .review
         #expect(issues(good).contains { $0.contains("make_writable") })
+        // A review or caution rule that deletes immediately still can't use it: only regenerable rules may.
+        good.deleteMode = .immediate
+        #expect(issues(good).contains { $0.contains("make_writable") })
+        good.safety = .caution
+        #expect(issues(good).contains { $0.contains("make_writable") })
+        good.deleteMode = nil
         good.safety = .regenerable
         good.requires = [.admin]
         #expect(issues(good).contains { $0.contains("make_writable") })

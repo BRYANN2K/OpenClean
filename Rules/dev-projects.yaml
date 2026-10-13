@@ -10,7 +10,7 @@ rules:
   - id: python.project-venvs
     name: Python virtual environments in old projects
     category: developer
-    explain: Virtual environments (folders with a pyvenv.cfg, such as .venv) in projects you haven't changed for 30 days. Recreate one with python -m venv, uv sync or poetry install; any package you installed by hand and never wrote down must be installed again. Moved to quarantine, so you can restore them.
+    explain: Virtual environments (folders with a pyvenv.cfg, such as .venv, that aren't themselves a project) in projects you haven't changed for 30 days. Recreate one with python -m venv, uv sync or poetry install; any package you installed by hand and never wrote down must be installed again. Moved to quarantine, so you can restore them.
     probe: python.project-venvs
     safety: review
   - id: rust.project-targets
