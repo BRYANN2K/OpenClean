@@ -406,6 +406,7 @@ struct CleanupCompleteView: View {
                 .padding(.top, 28)
                 if report.hadSkips {
                     SkippedItemsBanner(skipped: SkippedItems(report: report))
+                        .layoutProbe("smartScan.skippedBanner")
                         .padding(.top, 14)
                 }
             }

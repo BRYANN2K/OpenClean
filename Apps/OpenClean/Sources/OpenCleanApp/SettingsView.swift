@@ -72,6 +72,7 @@ struct SettingsView: View {
                 }
 
                 ScanReminderSettingsSection()
+                    .layoutProbe("settings.scanReminder")
 
                 section("Excluded locations", symbol: "eye.slash") {
                     if model.settings.excludedPaths.isEmpty {
@@ -112,6 +113,7 @@ struct SettingsView: View {
                             .buttonStyle(CapsuleButtonStyle())
                     }
                 }
+                .layoutProbe("settings.projectFolders")
 
                 section("Permissions", symbol: "lock.shield") {
                     row("Full Disk Access", detail: accessDetail) {

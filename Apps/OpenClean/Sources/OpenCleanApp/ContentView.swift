@@ -64,6 +64,7 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
+                .layoutProbe("sidebar.header")
 
                 VStack(spacing: 2) {
                     ForEach(SidebarItem.modules) { item in
@@ -79,6 +80,7 @@ struct ContentView: View {
 
                 VStack(spacing: 6) {
                     StorageCard(disk: model.disk, stats: model.stats)
+                        .layoutProbe("sidebar.storage")
                     SidebarRow(item: .settings, isSelected: navigation.selection == .settings) {
                         navigation.selection = .settings
                     }
@@ -108,6 +110,8 @@ struct ContentView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .layoutProbe("detail")
+                .layoutProbe("screen.\((navigation.selection ?? .smartScan).rawValue)")
             }
             // The hidden title bar still reserves a ~40 pt inset above the detail column; pull the content
             // up so the first element sits level with the window buttons instead of below an empty strip.
@@ -167,6 +171,7 @@ struct SidebarRow: View {
             .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
         .buttonStyle(.plain)
+        .layoutProbe("sidebar.\(item.rawValue)")
         .onHover { hovering = $0 }
         .animation(.easeOut(duration: 0.15), value: isSelected)
         .accessibilityAddTraits(isSelected ? .isSelected : [])

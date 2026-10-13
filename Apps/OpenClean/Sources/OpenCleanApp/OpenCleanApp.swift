@@ -15,6 +15,8 @@ struct OpenCleanApp: App {
     @State private var reminder: ScanReminderModel
     @State private var navigation = AppNavigation()
     @State private var onboarding = OnboardingModel(defaults: .standard)
+    /// Only set in the UI tests' layout-report mode (see `LayoutReport`).
+    @State private var layoutProbe: LayoutProbe? = LayoutReport.outputPath == nil ? nil : LayoutProbe()
     @AppStorage(MenuBarSettings.enabledKey) private var menuBarEnabled = true
 
     init() {
@@ -64,12 +66,18 @@ struct OpenCleanApp: App {
             .environment(onboarding)
             .environment(updates)
             .environment(reminder)
+            .environment(\.layoutProbe, layoutProbe)
             .frame(minWidth: 1200, minHeight: 720)
             .sheet(isPresented: $updates.isSheetPresented) {
                 SoftwareUpdateSheet().environment(updates)
             }
             .task {
                 model.onLaunch()
+                if let output = LayoutReport.outputPath, let layoutProbe {
+                    // No update check: the report must not touch the network.
+                    await LayoutReport.run(output: output, probe: layoutProbe, navigation: navigation)
+                    return
+                }
                 updates.onLaunch()
             }
         }

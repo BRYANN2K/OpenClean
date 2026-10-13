@@ -20,6 +20,23 @@ developer-tool and AI-tool leftovers you can safely remove, shows you exactly wh
 keeps anything that is not trivially regenerable in a quarantine you can restore from for 7 days.
 No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/demo.gif" width="720" alt="Smart Scan in action: scanning, the results by category, and the review sheet before anything is removed">
+</p>
+
+| | |
+|---|---|
+| ![Smart Scan results: 19.39 GB found, safe items picked, review items left for you](docs/screenshots/smart-scan-results.png) | ![Review sheet: what is deleted now and what goes to quarantine for 7 days](docs/screenshots/review.png) |
+| **Smart Scan** — safe items are picked for you; anything else waits for your review. | **Review** — see what is deleted now and what is quarantined before you confirm. |
+| ![History: a cleanup with 2.31 GB in quarantine and 7 days left to restore it](docs/screenshots/history.png) | ![Uninstaller: an app with its Application Support folder and preferences, all moved to quarantine together](docs/screenshots/uninstaller.png) |
+| **History** — restore quarantined items until they expire. | **Uninstaller** — an app and its exact-match leftovers, restorable for 7 days. |
+| ![Space Lens: a sunburst map of the home folder with the largest folders listed](docs/screenshots/space-lens.png) | ![Performance: live CPU, memory, disk and network figures](docs/screenshots/performance.png) |
+| **Space Lens** — see what takes up space, plus large, old and duplicate files. | **Performance** — live figures, heavy consumers, login items and maintenance. |
+
+<sub>Captured on a demo home folder filled with sample caches and apps; no real user files are shown.</sub>
+
 ## Features
 
 - **Smart Scan** — one click to find System Junk, user caches and logs, browser caches, Trash, Mail
