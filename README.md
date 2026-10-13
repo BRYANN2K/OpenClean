@@ -72,6 +72,22 @@ screenshot is rendered by the UI test harness (`OPENCLEAN_RECORD_SCREENSHOTS`), 
   background while OpenClean or its menu bar item is running and tells you how much can be cleaned. It
   never cleans by itself.
 - **Native and private** — Swift 6 + SwiftUI, no telemetry, GPL-3.0.
+- **In your language** — the app is translated into German, Spanish, French, Japanese and Simplified
+  Chinese (see Languages below).
+
+## Languages
+
+The app follows your macOS language: English, Deutsch, Español, Français, 日本語 and 简体中文. To use
+a different language for OpenClean only, pick it under System Settings → General → Language & Region →
+Applications.
+
+The translations are **machine-assisted** and have not yet been reviewed by native speakers. If something
+reads oddly, or a safety message (quarantine, restore, "deleted immediately", administrator password)
+could be misread, please open an issue or a pull request — see [CONTRIBUTING.md](CONTRIBUTING.md#translations).
+
+Rule names and explanations come from the YAML rule packs and stay in English, as do a few detailed error
+messages from the shared core. The `openclean` CLI is English-only on purpose: its text output and
+`--json` are a stable contract for scripts.
 
 ## Why OpenClean
 

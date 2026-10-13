@@ -98,6 +98,27 @@ checks for cancellation before listing each folder, so stopping a scan stops it 
 Check your pack with `openclean rules lint path/to/pack.yaml`, then try it with
 `openclean scan --json` before opening a pull request.
 
+## Translations
+
+The app (not the CLI) is localized with String Catalogs: `Apps/OpenClean/Sources/OpenCleanApp/Resources/Localizable.xcstrings`
+for the views and `Apps/OpenClean/Sources/OpenCleanAppModel/Resources/Localizable.xcstrings` for the
+model's messages. Open them in Xcode, or edit the JSON directly. The current German, Spanish, French,
+Japanese and Simplified Chinese translations are machine-assisted, so **native-speaker review is very
+welcome**: a pull request that only fixes wording is a great first contribution.
+
+- Keep the voice plain and factual, like the English. Translate safety wording precisely and never
+  soften it: what goes to quarantine, what can be restored and for how long, what is deleted immediately,
+  and when macOS asks for the administrator password.
+- Use the names macOS uses in your language for its own features (Full Disk Access, Trash, System
+  Settings, Login Items). "Smart Scan" and "Space Lens" stay as they are.
+- Keep every format specifier (`%@`, `%lld`); reorder them with positions (`%2$@`) if your language needs
+  to. Counts use plural variations; a sentence with two arguments uses a substitution for the counted one.
+- New UI text: a `Text("…")` literal is localized automatically; a `String` shown in the UI must come
+  from `String(localized: "…")` (in OpenCleanAppModel: `String(localized: "…", bundle: .appModel)`).
+  Then add the key with all five translations. `LocalizationCatalogTests` fails if a key misses a
+  language or a translation reads different arguments than its key.
+- The CLI stays English: its output and `--json` are a contract for scripts.
+
 ## Pull requests
 
 - One logical change per PR, with tests.

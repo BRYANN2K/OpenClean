@@ -83,6 +83,7 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 - Say what happens to files: "freed now" vs "to quarantine", "undo for N days".
 - Use the product's own terms: Smart Scan, Cleanup, History, quarantine. No game words (raid, loot, quest, XP, level, streak, milestone, achievement).
 - Sentence case for headlines and buttons; verbs on buttons (Scan, Clean, Restore All…, Done). Use an ellipsis when the button opens a confirmation.
+- Every user-facing string is localized (de, es, fr, ja, zh-Hans; see AGENTS.md → Localization). Write English that translates cleanly: one sentence per idea, counts as plural keys ("\(n) items"), never "item(s)" or string concatenation of sentence fragments. Check new screens in German (longest) for truncation.
 
 ## Layout rules learned from testing the real app
 
