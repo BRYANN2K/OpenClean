@@ -42,6 +42,10 @@ struct CommandRunnerTests {
         #expect(output.stdoutText == "hi\n")
     }
 
+    /// Catches the dispatch-pool starvation hang (runs that never finish), not slowness: these take well
+    /// under a second, but a shared CI runner has frozen the whole test process for 20+ seconds.
+    static let hangLimit: Duration = .seconds(90)
+
     @Test func survivesConcurrentRuns() async {
         let clock = ContinuousClock()
         let start = clock.now
@@ -61,7 +65,7 @@ struct CommandRunnerTests {
             #expect(output?.stdoutText == "out\n")
             #expect(output?.stderrText == "err\n")
         }
-        #expect(clock.now - start < .seconds(20))
+        #expect(clock.now - start < Self.hangLimit)
     }
 
     @Test func survivesConcurrentTimeouts() async {
@@ -85,6 +89,6 @@ struct CommandRunnerTests {
             return count
         }
         #expect(timedOut == 64)
-        #expect(clock.now - start < .seconds(20))
+        #expect(clock.now - start < Self.hangLimit)
     }
 }
