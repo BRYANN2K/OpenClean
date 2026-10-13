@@ -2,23 +2,39 @@
   <img src="docs/brand/hero.jpg" alt="OpenClean — the free, open-source Mac cleaner: Smart Scan, Uninstaller, Space Lens, duplicates, Performance and a menu bar monitor, with undo">
 </p>
 
+<h1 align="center">OpenClean: free, open-source Mac cleaner</h1>
+
 <p align="center">
-  <strong>Free, open-source Mac cleaner — a transparent CleanMyMac alternative for macOS.</strong><br>
+  <strong>A free, open-source Mac cleaner you can read and undo: an open CleanMyMac alternative for macOS.</strong><br>
   Clear caches, logs, Xcode DerivedData, npm/Gradle/Cargo caches and AI model leftovers, with undo.
 </p>
 
 <p align="center">
   <a href="https://github.com/leoAnimesh/OpenClean/releases/latest"><img src="https://img.shields.io/github/v/release/leoAnimesh/OpenClean?label=download&color=12A88B" alt="Latest release"></a>
+  <a href="#install"><img src="https://img.shields.io/badge/Homebrew-leoanimesh%2Fopenclean-FBB040?logo=homebrew&logoColor=white" alt="Install with Homebrew"></a>
   <a href="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml"><img src="https://github.com/leoAnimesh/OpenClean/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/macOS-14%2B-0A4756" alt="macOS 14+">
+  <img src="https://img.shields.io/badge/macOS-14%2B-0A4756" alt="macOS 14 or later">
   <img src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white" alt="Swift 6">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="GPL-3.0"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/leoAnimesh/OpenClean" alt="License: GPL-3.0"></a>
 </p>
 
-OpenClean is a native macOS disk cleanup app and command-line tool. Smart Scan finds caches, logs,
-developer-tool and AI-tool leftovers you can safely remove, shows you exactly why each item is safe, and
-keeps anything that is not trivially regenerable in a quarantine you can restore from for 7 days.
-No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
+OpenClean is a free, open-source Mac cleaner: a native macOS app and command-line tool that frees disk
+space by cleaning caches, logs and developer-tool leftovers such as Xcode DerivedData. It also includes a
+Mac app uninstaller that removes leftovers too, and a disk space analyzer (Space Lens) that shows what
+fills your disk. Smart Scan shows you why each item is safe to remove and keeps anything that is not
+trivially regenerable in a quarantine you can restore from for 7 days. No accounts, no analytics, no
+tracking; every cleaning rule is readable YAML. It runs on macOS 14 or later, on Apple silicon and Intel.
+
+## Install
+
+```sh
+brew install --cask leoanimesh/openclean/openclean   # the app
+brew install leoanimesh/openclean/openclean          # the openclean CLI
+```
+
+Or download `OpenClean-X.Y.Z.dmg` from the [latest release](https://github.com/leoAnimesh/OpenClean/releases/latest)
+and drag OpenClean onto Applications. Releases are signed with a Developer ID and notarized by Apple.
+More options (checksums, building from source, Full Disk Access) are under [Installation details](#installation-details).
 
 ## Screenshots
 
@@ -91,17 +107,23 @@ messages from the shared core. The `openclean` CLI is English-only on purpose: i
 
 ## Why OpenClean
 
-| CleanMyMac | OpenClean |
-|---|---|
-| App Store build is sandboxed and asks for folders one by one | Full Disk Access once, plus an admin prompt only for system caches |
-| Most removals are permanent | Quarantine with History and Restore |
-| Cleaning logic is a black box | Every rule is readable YAML with an explanation, shown in the app |
-| Rules come only from the vendor | Community rule packs, linted in CI; add your own |
-| Analytics, accounts, upsell | No analytics or accounts; the only network use is the daily update check |
-| GUI only | App and a scriptable CLI with JSON output |
-| General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face and old-project cleanup |
+If you are looking for a CleanMyMac alternative or another Mac cleaner, this is what OpenClean does
+differently. It describes OpenClean only; compare it with the tool you use now.
 
-## Install
+| | OpenClean |
+|---|---|
+| Price and license | Free and open source (GPL-3.0); no account, trial or subscription |
+| What gets removed | Every rule is readable YAML with a plain-language explanation, shown in the app before you clean |
+| Undo | Anything that is not trivially regenerable goes to a quarantine with History and Restore (1–90 days) |
+| Rules | Community rule packs, linted in CI; write and lint your own |
+| Privacy | No analytics or accounts; the only network request is the daily update check, which you can turn off |
+| Permissions | Full Disk Access once, plus an administrator prompt only for system caches |
+| Automation | A scriptable `openclean` CLI with JSON output, alongside the app |
+| Developers | Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face and old-project (`node_modules`, `target`, virtual environments) cleanup |
+
+OpenClean is an independent project, not affiliated with MacPaw. CleanMyMac is a trademark of MacPaw.
+
+## Installation details
 
 ### Download (recommended)
 
@@ -212,6 +234,39 @@ anything; use the app to move files to the Trash or quit processes.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md#writing-a-rule). Your own packs go in
 `~/Library/Application Support/OpenClean/rules/`.
+
+## FAQ
+
+**Is OpenClean free?**
+Yes. It is free and open source under GPL-3.0, with no account, trial or in-app purchase.
+
+**Is it safe to clean my Mac with it?**
+OpenClean removes only what its rules describe, never touches a built-in deny-list (System, Documents,
+Desktop, Keychains, Mail, iCloud Drive, app bundles, Photos libraries), and checks each item again right
+before removal. Items that are not trivially regenerable go to quarantine first, so you can restore them
+from History. See [How it stays safe](#how-it-stays-safe).
+
+**How do I clear Xcode DerivedData and other developer caches?**
+Run Smart Scan or open Cleanup → Developer Tools in the app, or run `openclean scan --category developer`
+and `openclean clean --yes` in Terminal. DerivedData is rebuilt by Xcode, so it is deleted right away;
+items you might want back, such as Xcode archives, device support files and old project folders, go to
+quarantine.
+
+**How do I uninstall a Mac app completely, with its leftovers?**
+Use the Uninstaller (or `openclean apps uninstall <bundle-id>`). It moves the app and its Application
+Support, caches, preferences, containers and launch agents to quarantine together, so you can restore the
+whole app if you change your mind.
+
+**How do I see what is taking up disk space?**
+Space Lens maps your home folder by size and lists large, old and duplicate files. It never pre-selects
+anything, and files you remove there go to the macOS Trash.
+
+**Does OpenClean send any data?**
+No. The only network request is a once-a-day check for a new release on GitHub, which you can turn off.
+See [Updates and privacy](#updates-and-privacy).
+
+**Which Macs does it run on?**
+macOS 14 Sonoma or later, on Apple silicon and Intel (universal build).
 
 ## Clean-room statement
 
