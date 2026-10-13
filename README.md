@@ -52,7 +52,7 @@ Yes. Free and open source under GPL-3.0, with no account, trial or purchase.
 Yes. Anything that is not trivially rebuilt is moved to quarantine, and History restores it until it expires.
 
 **Does it need special permissions?**
-Full Disk Access, once, so it can see the Trash, Mail and iOS backups. It asks for your administrator
+Full Disk Access, once, so it can see the Trash, old iOS backups and other protected folders. It asks for your administrator
 password only to clean system caches.
 
 **Does it send my data anywhere?**
