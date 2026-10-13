@@ -31,9 +31,15 @@ No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 - **Performance & menu bar monitor** — live CPU, memory, disk and network in the menu bar, heavy apps with
   Quit/Force Quit, login items and launch agents, and one-click maintenance (flush DNS, reindex Spotlight,
   rebuild Launch Services, thin Time Machine snapshots).
-- **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; npm, Yarn, pnpm,
-  pip, Cargo, Gradle, CocoaPods and Homebrew caches; Docker disk image reporting.
-- **AI model cleanup** — Ollama, LM Studio and Hugging Face caches.
+- **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; package caches for
+  npm/npx, Yarn, pnpm, Bun, Deno, Corepack, pip, uv, Poetry, conda, Cargo, Go, Gradle, Maven, Coursier, Ivy,
+  SwiftPM, CocoaPods, pub, Bundler, Composer, Terraform and Homebrew; Playwright, Puppeteer, Cypress and
+  Electron downloads; JetBrains indexes and VS Code / Cursor caches; Docker disk image reporting.
+- **Old project cleanup** — finds `node_modules`, Python virtual environments, Rust `target` folders and
+  build output (SwiftPM, Maven, Gradle, Flutter, Next.js and more) in projects you haven't touched for 30
+  days; they go to quarantine, so a project can be restored as it was.
+- **AI model cleanup** — Ollama, LM Studio, Hugging Face (models, datasets, Xet), PyTorch Hub, Whisper,
+  Keras, TensorFlow Datasets and Kaggle downloads.
 - **Safe by design** — Safe / Review / Caution levels, a hard deny-list, pre-delete checks, and a
   quarantine with **History and Restore** (undo for 1–90 days).
 - **Transparent rules** — every rule explains itself in the app; write and lint your own YAML packs.
@@ -52,7 +58,7 @@ No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 | Rules come only from the vendor | Community rule packs, linted in CI; add your own |
 | Analytics, accounts, upsell | No analytics or accounts; the only network use is the daily update check |
 | GUI only | App and a scriptable CLI with JSON output |
-| General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face cleanup |
+| General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face and old-project cleanup |
 
 ## Install
 

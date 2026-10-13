@@ -51,7 +51,21 @@ rules:
 
 Choosing a level: if the app silently rebuilds it and nothing the user made is lost, it is
 `regenerable`. If it costs a long re-download (AI models, device symbols) or holds user data
-(backups, archives, downloads), it is `review`.
+(backups, archives, downloads), it is `review`. Anything inside a user's project, a virtual environment, or a cache a
+project loads directly (Yarn Plug'n'Play, pub, Maven's local repository, which also holds `mvn install`
+output) is `review` too, so it is quarantined and can be restored.
+
+A rule whose `paths` sit in `~/Library/Caches` should also be added to the `exclude` list of
+`user.app-caches` (`Rules/user-caches.yaml`), so the generic App caches rule never picks the folder up
+when your rule is skipped (for example because its app is running).
+
+Targets that a glob can't express are `Probe`s in `Packages/OpenCleanKit/Sources/Probes/`. The project
+probes (`node.project-modules`, `python.project-venvs`, `rust.project-targets`,
+`dev.project-build-outputs`) share one walk of the home folder (`ProjectArtifactFinder`): it never follows
+symlinks, stays on the home volume, skips hidden folders, `~/Library`, Documents, Desktop, Downloads, the
+media folders, deny-listed places and your exclusions, and only reports a folder next to the file that
+proves which tool made it (`package.json`, `Cargo.toml`, `pyvenv.cfg`, `Package.swift`, ...) in a project
+unchanged for 30 days (including its enclosing git repository).
 
 Check your pack with `openclean rules lint path/to/pack.yaml`, then try it with
 `openclean scan --json` before opening a pull request.
