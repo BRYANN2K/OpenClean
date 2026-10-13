@@ -88,6 +88,29 @@ struct SettingsView: View {
                     }
                 }
 
+                section("Project folders", symbol: "folder.badge.gearshape") {
+                    if model.settings.projectFolders.isEmpty {
+                        note(
+                            "OpenClean looks for old projects in your home folder, but never in Documents or Desktop. Add a folder where you keep code, such as Documents/Code, to search it too."
+                        )
+                    }
+                    ForEach(model.settings.projectFolders, id: \.self) { path in
+                        row((path as NSString).abbreviatingWithTildeInPath) {
+                            Button("Remove") { model.removeProjectFolder(path) }
+                                .buttonStyle(CapsuleButtonStyle())
+                        }
+                        divider
+                    }
+                    row(
+                        "Add a project folder",
+                        detail:
+                            "Only node_modules, virtual environments and build output go to quarantine. Nothing else in it is touched."
+                    ) {
+                        Button("Add…") { addProjectFolder() }
+                            .buttonStyle(CapsuleButtonStyle())
+                    }
+                }
+
                 section("Permissions", symbol: "lock.shield") {
                     row("Full Disk Access", detail: accessDetail) {
                         HStack(spacing: 10) {
@@ -183,6 +206,18 @@ struct SettingsView: View {
         panel.allowsMultipleSelection = false
         if panel.runModal() == .OK, let url = panel.url {
             model.addExclusion(url.path)
+        }
+    }
+
+    private func addProjectFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.prompt = "Add"
+        panel.message = "Choose a folder where you keep code projects."
+        if panel.runModal() == .OK, let url = panel.url {
+            model.addProjectFolder(url.path)
         }
     }
 

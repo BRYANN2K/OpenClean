@@ -398,28 +398,26 @@ struct CleanupCompleteView: View {
                 .font(.system(size: 15))
                 .foregroundStyle(Theme.textSecondary)
                 .padding(.top, 8)
-                if report.hadSkips {
-                    Text(
-                        "\(report.skipped.count) item(s) were skipped because they changed or were in use. Details are in History."
-                    )
-                    .font(.system(size: 13))
-                    .foregroundStyle(Theme.gold)
-                    .padding(.top, 6)
-                }
             }
             if let report = model.lastReport {
                 OutcomeCards(
                     report: report, retentionDays: model.settings.clampedRetentionDays
                 )
                 .padding(.top, 28)
+                if report.hadSkips {
+                    SkippedItemsBanner(skipped: SkippedItems(report: report))
+                        .padding(.top, 14)
+                }
             }
             Spacer(minLength: 24)
             HStack(spacing: 12) {
                 Button("Done") { model.closeSummary() }
                     .buttonStyle(CapsuleButtonStyle(prominent: true))
                     .keyboardShortcut(.defaultAction)
-                Button("Scan Again") { model.startScan() }
-                    .buttonStyle(CapsuleButtonStyle())
+                if model.lastReport?.hadSkips != true {
+                    Button("Scan Again") { model.startScan() }
+                        .buttonStyle(CapsuleButtonStyle())
+                }
             }
             .padding(.bottom, 36)
         }
@@ -427,6 +425,80 @@ struct CleanupCompleteView: View {
         .padding(.horizontal, 32)
         .frame(maxWidth: .infinity)
     }
+}
+
+/// What a clean left in place and why, with the reasons in plain words and a way to scan again.
+struct SkippedItemsBanner: View {
+    @Environment(AppModel.self) private var model
+    let skipped: SkippedItems
+    @State private var expanded = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.title2)
+                    .foregroundStyle(Theme.gold)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(skipped.headline).font(.system(size: 14, weight: .semibold))
+                    Text(
+                        skipped.suggestsRescan
+                            ? "\(skipped.summary) Scan again to pick them up."
+                            : skipped.summary
+                    )
+                    .font(.system(size: 12))
+                    .foregroundStyle(Theme.textSecondary)
+                    .lineLimit(2)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { expanded.toggle() }
+                } label: {
+                    Label(expanded ? "Hide details" : "Details", systemImage: expanded ? "chevron.up" : "chevron.down")
+                }
+                .buttonStyle(CapsuleButtonStyle())
+                Button("Scan Again") { model.startScan() }
+                    .buttonStyle(CapsuleButtonStyle())
+            }
+            if expanded {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(skipped.groups) { group in
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(group.explanation)
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .lineLimit(2)
+                                ForEach(group.paths.prefix(Self.pathsShown), id: \.self) { path in
+                                    Text((path as NSString).abbreviatingWithTildeInPath)
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(Theme.textSecondary)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                }
+                                if group.paths.count > Self.pathsShown {
+                                    Text("and \(group.paths.count - Self.pathsShown) more")
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(Theme.textTertiary)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        Text("Every item is also listed in History.")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Theme.textTertiary)
+                    }
+                }
+                .frame(maxHeight: 150)
+            }
+        }
+        .multilineTextAlignment(.leading)
+        .padding(14)
+        .frame(maxWidth: 640)
+        .glassPanel(radius: 14)
+    }
+
+    static let pathsShown = 4
 }
 
 struct OutcomeCards: View {

@@ -33,7 +33,9 @@ enum ItemBuilder {
         if let prefixReal, !pathIsWithin(real, prefixReal) {
             return .dropped("resolves outside \(prefixReal)")
         }
-        if let reason = context.denyList.denialReason(for: real) {
+        if let reason = context.denyList.denialReason(for: real),
+            !context.projectFolderExemption.permits(real, deniedFor: reason, rule: rule)
+        {
             return .dropped("protected: \(reason)")
         }
         // Items are removed whole, so an exclude equal to, inside, or above the item protects it.

@@ -178,7 +178,7 @@ public final class AppModel {
         }
     }
 
-    /// Applies the outcome of a clean. If exclusions or Advanced changed while it ran (`generation` is
+    /// Applies the outcome of a clean. If exclusions, project folders or Advanced changed while it ran (`generation` is
     /// stale), the scan result no longer matches the settings and is discarded, success or failure.
     func finishClean(report: RemovalReport?, error: (any Error)?, generation: Int) {
         if let report { lastReport = report }
@@ -238,6 +238,7 @@ public final class AppModel {
         let invalidates =
             previous.advancedEnabled != settings.advancedEnabled
             || previous.excludedPaths != settings.excludedPaths
+            || previous.projectFolders != settings.projectFolders
         if invalidates { settingsGeneration += 1 }
         if invalidates, result != nil, phase != .scanning, phase != .cleaning {
             result = nil
@@ -266,6 +267,22 @@ public final class AppModel {
 
     public func removeExclusion(_ path: String) {
         updateSettings { $0.excludedPaths.removeAll { $0 == path } }
+    }
+
+    /// Adds a folder the project probes should search (Settings → Project folders). A folder that can't be
+    /// one (outside home, protected, a symlink, ...) is refused with an explanation in `errorMessage`.
+    public func addProjectFolder(_ path: String) {
+        if let problem = coordinator.projectFolderProblem(path) {
+            errorMessage = problem
+            return
+        }
+        updateSettings { settings in
+            if !settings.projectFolders.contains(path) { settings.projectFolders.append(path) }
+        }
+    }
+
+    public func removeProjectFolder(_ path: String) {
+        updateSettings { $0.projectFolders.removeAll { $0 == path } }
     }
 
     // MARK: Selection

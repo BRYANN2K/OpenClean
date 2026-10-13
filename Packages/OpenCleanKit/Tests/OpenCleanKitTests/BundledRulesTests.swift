@@ -16,7 +16,7 @@ struct BundledRulesTests {
     @Test func everyBundledPackLintsClean() throws {
         let loaded = try load()
         #expect(loaded.problems.isEmpty, "\(loaded.problems)")
-        #expect(loaded.rules.count == 71)
+        #expect(loaded.rules.count == 72)
         #expect(
             Set(loaded.rules.map(\.id)) == [
                 "system.caches",
@@ -60,6 +60,7 @@ struct BundledRulesTests {
                 "conda.package-archives",
                 "pre-commit.cache",
                 "go.build-cache",
+                "go.module-cache",
                 "cargo.registry-src",
                 "cargo.git-checkouts",
                 "maven.repository",
@@ -123,5 +124,8 @@ struct BundledRulesTests {
             #expect(appCaches.exclude.contains("~/Library/Caches/\(folder)"), "\(folder)")
         }
         #expect(rules.first { $0.id == "deno.cache" }?.exclude == ["~/Library/Caches/deno/location_data"])
+        // Only Go's read-only module cache is made writable before it is deleted.
+        #expect(rules.filter(\.makeWritable).map(\.id) == ["go.module-cache"])
+        #expect(rules.first { $0.id == "go.module-cache" }?.effectiveDeleteMode == .immediate)
     }
 }

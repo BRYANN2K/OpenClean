@@ -228,6 +228,14 @@ rules:
     paths:
       - "~/Library/Caches/go-build"
     safety: regenerable
+  - id: go.module-cache
+    name: Go module cache
+    category: developer
+    explain: Module sources the go command downloaded. Removed as a whole, the same as go clean -modcache; the next build downloads what it needs again, so it needs a network connection. Go makes these folders read-only, so OpenClean first gives you write permission on the folders you own inside it, then deletes it.
+    paths:
+      - "~/go/pkg/mod"
+    safety: regenerable
+    make_writable: true
   - id: cargo.registry-src
     name: Cargo unpacked crate sources
     category: developer
