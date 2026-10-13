@@ -211,6 +211,20 @@ h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.3; }
 
 /* CTA + footer */
 .cta { text-align: center; }
+/* Hero actions: stacked by default (button, note, label, brew box); side by side from 900px */
+.hero .hero-row { display: contents; }
+.hero .btn-primary { order: 1; }
+.hero .or { display: none; order: 2; font-size: 14px; color: var(--text-3); }
+.hero .cta-note { order: 2; }
+.hero .brew-label { order: 3; }
+.hero .brew { order: 4; }
+.hero .meta { order: 5; }
+@media (min-width: 900px) {
+  .hero .hero-row { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .hero .or { display: inline; }
+  .hero .brew-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
+  .hero .brew { min-height: 56px; box-sizing: border-box; }
+}
 .cta .actions { margin-top: 24px; }
 footer { padding: 40px 0 48px; font-size: 14px; color: var(--text-3); border-top: 1px solid var(--glass-divider); }
 footer .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px 32px; align-items: flex-start; }
@@ -265,15 +279,16 @@ footer p { margin: 18px 0 0; max-width: 720px; }
       <p class="sub">An open alternative to CleanMyMac for macOS.</p>
 
       <div class="actions">
-        <div class="cta-group">
+        <div class="hero-row">
           <a class="btn-primary" href="https://github.com/leoAnimesh/OpenClean/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Download for Mac</a>
-          <p class="cta-note">Free and open source</p>
+          <span class="or" aria-hidden="true">or</span>
+          <p class="brew-label" id="brew-label">Or install with Homebrew</p>
+          <div class="brew" role="group" aria-labelledby="brew-label">
+            <code id="brew-cmd">brew install --cask leoanimesh/openclean/openclean</code>
+            <button class="capsule" type="button" aria-live="polite" data-copy="brew-cmd" aria-label="Copy Homebrew command">Copy</button>
+          </div>
         </div>
-        <p class="brew-label" id="brew-label">Or install with Homebrew</p>
-        <div class="brew" role="group" aria-labelledby="brew-label">
-          <code id="brew-cmd">brew install --cask leoanimesh/openclean/openclean</code>
-          <button class="capsule" type="button" aria-live="polite" data-copy="brew-cmd" aria-label="Copy Homebrew command">Copy</button>
-        </div>
+        <p class="cta-note">Free and open source</p>
         <p class="meta">macOS 14+<span aria-hidden="true">·</span>Apple silicon &amp; Intel<span aria-hidden="true">·</span>Signed &amp; notarized</p>
       </div>
 
