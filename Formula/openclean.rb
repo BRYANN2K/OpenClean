@@ -10,8 +10,8 @@
 class Openclean < Formula
   desc "Transparent, open-source cleanup for macOS"
   homepage "https://github.com/leoAnimesh/OpenClean"
-  url "https://github.com/leoAnimesh/OpenClean/releases/download/v0.2.1/openclean-cli-0.2.1.zip"
-  sha256 "ce967050046859133219c5cefc05eead63e2e221a8f2b8d75a273d31b9ab3468"
+  url "https://github.com/leoAnimesh/OpenClean/releases/download/v0.3.0/openclean-cli-0.3.0.zip"
+  sha256 "9c02cf850d0171402d8b805a4b09f8a272d6a31c42dd59e5f9d2abd419a1e4ce"
   license "GPL-3.0-only"
 
   livecheck do
