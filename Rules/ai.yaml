@@ -27,3 +27,53 @@ rules:
     paths:
       - "~/.cache/huggingface/hub/*"
     safety: review
+  - id: huggingface.datasets
+    name: Hugging Face datasets cache
+    category: ai
+    explain: Datasets the Hugging Face datasets library converted to Arrow files. They are rebuilt from the Hub cache, or downloaded again, the next time you load them.
+    paths:
+      - "~/.cache/huggingface/datasets/*"
+    safety: review
+  - id: huggingface.xet
+    name: Hugging Face Xet cache
+    category: ai
+    explain: Chunks the Hugging Face Xet storage backend keeps to speed up repeat downloads. They are downloaded again when needed.
+    paths:
+      - "~/.cache/huggingface/xet/*"
+    safety: review
+  - id: torch.hub
+    name: PyTorch Hub cache
+    category: ai
+    explain: Model code and weights downloaded by torch.hub and torchvision. They are downloaded again the next time a model loads them.
+    paths:
+      - "~/.cache/torch/hub/*"
+    safety: review
+  - id: whisper.models
+    name: Whisper models
+    category: ai
+    explain: Speech recognition models downloaded by OpenAI's whisper package. A model is downloaded again the next time you use it.
+    paths:
+      - "~/.cache/whisper/*"
+    safety: review
+  - id: keras.cache
+    name: Keras datasets and models
+    category: ai
+    explain: Datasets and pretrained weights Keras downloaded. They are downloaded again the next time your code loads them.
+    paths:
+      - "~/.keras/datasets/*"
+      - "~/.keras/models/*"
+    safety: review
+  - id: tensorflow.datasets
+    name: TensorFlow Datasets
+    category: ai
+    explain: Datasets TensorFlow Datasets downloaded and prepared. They are downloaded and prepared again on next use, which can take a long time for large datasets.
+    paths:
+      - "~/tensorflow_datasets/*"
+    safety: review
+  - id: kaggle.cache
+    name: Kaggle downloads
+    category: ai
+    explain: Datasets and models downloaded with kagglehub. They are downloaded again the next time your code asks for them.
+    paths:
+      - "~/.cache/kagglehub/*"
+    safety: review

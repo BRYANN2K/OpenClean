@@ -4,7 +4,7 @@ rules:
   - id: user.app-caches
     name: App caches
     category: user
-    explain: Per-app cache folders that apps recreate on demand; quit apps first for the best result. Apple system caches, browser caches, IDE history and test-browser downloads are left alone or handled separately.
+    explain: Per-app cache folders that apps recreate on demand; quit apps first for the best result. Apple system caches, browser caches, IDE history, developer tool caches and test-browser downloads are left alone or handled separately.
     paths:
       - "~/Library/Caches/*"
     exclude:
@@ -25,6 +25,16 @@ rules:
       - "~/Library/Caches/Arc"
       - "~/Library/Caches/Microsoft Edge"
       - "~/Library/Caches/BraveSoftware"
+      - "~/Library/Caches/deno"
+      - "~/Library/Caches/node-gyp"
+      - "~/Library/Caches/electron"
+      - "~/Library/Caches/electron-builder"
+      - "~/Library/Caches/Cypress"
+      - "~/Library/Caches/pypoetry"
+      - "~/Library/Caches/go-build"
+      - "~/Library/Caches/Coursier"
+      - "~/Library/Caches/org.swift.swiftpm"
+      - "~/Library/Caches/composer"
     safety: regenerable
   - id: user.logs
     name: User logs
