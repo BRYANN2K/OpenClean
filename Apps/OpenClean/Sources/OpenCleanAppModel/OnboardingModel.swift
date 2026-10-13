@@ -29,11 +29,16 @@ public enum OnboardingStep: Int, CaseIterable, Sendable, Identifiable {
 }
 
 /// First-launch onboarding. It is complete only when every feature step has been seen and Full Disk
-/// Access is granted; there is no skip. Completion is remembered per onboarding version.
+/// Access is granted; there is no skip. Completion is remembered per onboarding version. Progress
+/// through an unfinished tour is saved too, because granting Full Disk Access asks the user to quit and
+/// reopen the app: it reopens on the step it was quit on.
 @MainActor
 @Observable
 public final class OnboardingModel {
     public static let completedKey = "onboarding.completedVersion"
+    /// The step an unfinished tour was on, and the steps it had seen (raw values).
+    public static let stepKey = "onboarding.step"
+    public static let visitedKey = "onboarding.visited"
     /// Bump to show onboarding again after a release that changes it.
     public static let currentVersion = 1
 
@@ -46,6 +51,7 @@ public final class OnboardingModel {
     public init(defaults: UserDefaults) {
         self.defaults = defaults
         isCompleted = defaults.integer(forKey: Self.completedKey) >= Self.currentVersion
+        if !isCompleted { restoreProgress() }
     }
 
     public var featuresSeen: Bool {
@@ -89,6 +95,7 @@ public final class OnboardingModel {
         guard canFinish(accessGranted: accessGranted) else { return false }
         isCompleted = true
         defaults.set(Self.currentVersion, forKey: Self.completedKey)
+        clearProgress()
         return true
     }
 
@@ -97,10 +104,30 @@ public final class OnboardingModel {
         step = .welcome
         visited = [.welcome]
         isCompleted = false
+        clearProgress()
     }
 
     private func move(to target: OnboardingStep) {
         step = target
         visited.insert(target)
+        defaults.set(step.rawValue, forKey: Self.stepKey)
+        defaults.set(visited.map(\.rawValue).sorted(), forKey: Self.visitedKey)
+    }
+
+    /// Restores a saved tour. Unknown values are ignored, and the step must be one it had seen.
+    private func restoreProgress() {
+        let saved = (defaults.array(forKey: Self.visitedKey) as? [Int] ?? []).compactMap(OnboardingStep.init(rawValue:))
+        visited.formUnion(saved)
+        if defaults.object(forKey: Self.stepKey) != nil,
+            let savedStep = OnboardingStep(rawValue: defaults.integer(forKey: Self.stepKey)),
+            visited.contains(savedStep)
+        {
+            step = savedStep
+        }
+    }
+
+    private func clearProgress() {
+        defaults.removeObject(forKey: Self.stepKey)
+        defaults.removeObject(forKey: Self.visitedKey)
     }
 }
