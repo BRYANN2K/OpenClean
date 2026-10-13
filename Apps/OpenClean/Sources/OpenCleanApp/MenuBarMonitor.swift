@@ -44,7 +44,7 @@ struct MenuBarLabel: View {
         case .cpu: formatPercent(model.cpu)
         case .memory: formatPercent(model.memory?.usedFraction)
         case .cpuAndMemory:
-            "CPU \(formatPercent(model.cpu)), memory \(formatPercent(model.memory?.usedFraction))"
+            String(localized: "CPU \(formatPercent(model.cpu)), memory \(formatPercent(model.memory?.usedFraction))")
         case .network: "↓" + formatRate(model.network?.receivedPerSecond)
         }
     }
@@ -67,14 +67,15 @@ struct MenuBarPopover: View {
             }
 
             VStack(spacing: 10) {
-                meterRow("CPU", value: formatPercent(model.cpu), fraction: model.cpu ?? 0)
+                meterRow(String(localized: "CPU"), value: formatPercent(model.cpu), fraction: model.cpu ?? 0)
                 meterRow(
-                    "Memory",
+                    String(localized: "Memory"),
                     value: model.memory.map { "\(formatBytes(Int64($0.used))) · \(pressureLabel($0.pressure))" } ?? "–",
                     fraction: model.memory?.usedFraction ?? 0,
                     color: model.memory.map { pressureColor($0.pressure) } ?? Theme.accent)
                 meterRow(
-                    "Disk", value: model.disk.map { "\(formatCapacity($0.available)) free" } ?? "–",
+                    String(localized: "Disk"),
+                    value: model.disk.map { String(localized: "\(formatCapacity($0.available)) free") } ?? "–",
                     fraction: model.disk?.usedFraction ?? 0)
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
@@ -122,7 +123,7 @@ struct MenuBarPopover: View {
                             }
                             .buttonStyle(.plain)
                             .disabled(!allowed)
-                            .help(allowed ? "Force Quit \(group.name)…" : AppQuitter.protectedReason)
+                            .help(allowed ? String(localized: "Force Quit \(group.name)…") : AppQuitter.protectedReason)
                             .accessibilityLabel("Force quit \(group.name)")
                         }
                     }
@@ -133,16 +134,13 @@ struct MenuBarPopover: View {
                 }
             }
 
+            ScanReminderNotice(review: startSmartScan)
+
             HStack(spacing: 8) {
                 Button("Open OpenClean") { showMainWindow() }
                     .buttonStyle(CapsuleButtonStyle(prominent: true))
-                Button("Smart Scan") {
-                    navigation.selection = .smartScan
-                    showMainWindow()
-                    // Never throw away results the user hasn't acted on, or interrupt a cleanup.
-                    if app.phase == .idle || app.phase == .finished { app.startScan() }
-                }
-                .buttonStyle(CapsuleButtonStyle())
+                Button("Smart Scan") { startSmartScan() }
+                    .buttonStyle(CapsuleButtonStyle())
             }
         }
         .foregroundStyle(Theme.textPrimary)
@@ -165,6 +163,13 @@ struct MenuBarPopover: View {
         .accessibilityElement(children: .combine)
     }
 
+    private func startSmartScan() {
+        navigation.selection = .smartScan
+        showMainWindow()
+        // Never throw away results the user hasn't acted on, or interrupt a cleanup.
+        if app.phase == .idle || app.phase == .finished { app.startScan() }
+    }
+
     /// Brings the existing main window forward, or opens one if it was closed.
     /// Asks with a standard alert first. The group is captured when the button is pressed, so the list
     /// re-sorting meanwhile can't change which app is quit.
@@ -172,10 +177,10 @@ struct MenuBarPopover: View {
         NSApp.activate(ignoringOtherApps: true)
         let alert = NSAlert()
         alert.alertStyle = .warning
-        alert.messageText = "Force quit \(group.name)?"
-        alert.informativeText = "Any unsaved changes in \(group.name) will be lost."
-        alert.addButton(withTitle: "Force Quit")
-        alert.addButton(withTitle: "Cancel")
+        alert.messageText = String(localized: "Force quit \(group.name)?")
+        alert.informativeText = String(localized: "Any unsaved changes in \(group.name) will be lost.")
+        alert.addButton(withTitle: String(localized: "Force Quit"))
+        alert.addButton(withTitle: String(localized: "Cancel"))
         alert.buttons.first?.hasDestructiveAction = true
         if alert.runModal() == .alertFirstButtonReturn { forceQuit(group) }
     }
@@ -214,7 +219,7 @@ enum MenuBarFiguresImage {
         renderer.scale = 2
         let image = renderer.nsImage ?? MenuBarGlyph.image
         image.isTemplate = true
-        image.accessibilityDescription = "OpenClean, CPU \(cpu), memory \(memory)"
+        image.accessibilityDescription = String(localized: "OpenClean, CPU \(cpu), memory \(memory)")
         return image
     }
 }

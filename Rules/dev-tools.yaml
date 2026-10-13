@@ -98,3 +98,288 @@ rules:
     probe: docker.disk-image
     safety: review
     requires: [full_disk_access]
+  - id: npm.npx-cache
+    name: npx cache
+    category: developer
+    explain: Packages npx downloaded to run a command once. npx downloads them again the next time you run that command.
+    paths:
+      - "~/.npm/_npx/*"
+    safety: regenerable
+  - id: bun.cache
+    name: Bun cache
+    category: developer
+    explain: Bun's package download cache. Installed node_modules keep their own copies; Bun downloads packages again on the next install.
+    paths:
+      - "~/.bun/install/cache/*"
+    safety: regenerable
+  - id: deno.cache
+    name: Deno cache
+    category: developer
+    explain: Remote modules, npm packages and compiled code Deno cached. Deno downloads and compiles them again on the next run. Data your scripts saved with localStorage is left alone.
+    paths:
+      - "~/Library/Caches/deno/*"
+    exclude:
+      - "~/Library/Caches/deno/location_data"
+    safety: regenerable
+  - id: yarn.berry-cache
+    name: Yarn (v2+) global cache
+    category: developer
+    explain: Package archives Yarn 2 and later keep in one shared cache. Projects that use Plug'n'Play load packages straight from these archives, so run yarn install in a project before using it again.
+    paths:
+      - "~/.yarn/berry/cache/*"
+    safety: review
+  - id: corepack.cache
+    name: Corepack cache
+    category: developer
+    explain: Package manager versions (pnpm, Yarn) Corepack downloaded. Corepack downloads the version a project asks for the next time you use it.
+    paths:
+      - "~/.cache/node/corepack/*"
+    safety: regenerable
+  - id: node-gyp.cache
+    name: node-gyp headers
+    category: developer
+    explain: Node.js headers node-gyp downloads to build native modules. It downloads them again the next time a native module is built.
+    paths:
+      - "~/Library/Caches/node-gyp/*"
+      - "~/.node-gyp/*"
+    safety: regenerable
+  - id: electron.cache
+    name: Electron downloads
+    category: developer
+    explain: Electron and electron-builder binaries downloaded while installing or packaging Electron apps. They are downloaded again the next time a project needs them.
+    paths:
+      - "~/Library/Caches/electron/*"
+      - "~/Library/Caches/electron-builder/*"
+    safety: regenerable
+  - id: playwright.browsers
+    name: Playwright browsers
+    category: developer
+    explain: Browser builds Playwright downloaded for testing. Tests fail until you run npx playwright install again.
+    paths:
+      - "~/Library/Caches/ms-playwright/*"
+    safety: review
+  - id: puppeteer.browsers
+    name: Puppeteer browsers
+    category: developer
+    explain: Chrome builds Puppeteer downloaded for automation and tests. Reinstalling Puppeteer in a project, or npx puppeteer browsers install, downloads them again.
+    paths:
+      - "~/.cache/puppeteer/*"
+    safety: review
+  - id: cypress.cache
+    name: Cypress app cache
+    category: developer
+    explain: Versions of the Cypress test app. Tests fail until you run npx cypress install again.
+    paths:
+      - "~/Library/Caches/Cypress/*"
+    safety: review
+  - id: uv.cache
+    name: uv cache
+    category: developer
+    explain: uv's package and build cache. Environments uv created keep their own copies; uv downloads packages again when needed. Removed as a whole, the same as uv cache clean.
+    paths:
+      - "~/.cache/uv"
+    safety: regenerable
+  - id: poetry.cache
+    name: Poetry cache
+    category: developer
+    explain: Poetry's package download cache. Poetry downloads packages again on the next install.
+    paths:
+      - "~/Library/Caches/pypoetry/cache"
+      - "~/Library/Caches/pypoetry/artifacts"
+    safety: regenerable
+  - id: poetry.virtualenvs
+    name: Poetry virtual environments
+    category: developer
+    explain: Virtual environments Poetry created for your projects. poetry install recreates one; packages you added by hand with pip must be installed again. Moved to quarantine, so you can restore them.
+    paths:
+      - "~/Library/Caches/pypoetry/virtualenvs/*"
+    safety: review
+  - id: conda.package-archives
+    name: Conda package archives
+    category: developer
+    explain: Downloaded package archives conda and mamba keep after unpacking them, the same files conda clean --tarballs removes. Installed environments do not need them.
+    paths:
+      - "~/miniconda3/pkgs/*.conda"
+      - "~/miniconda3/pkgs/*.tar.bz2"
+      - "~/anaconda3/pkgs/*.conda"
+      - "~/anaconda3/pkgs/*.tar.bz2"
+      - "~/miniforge3/pkgs/*.conda"
+      - "~/miniforge3/pkgs/*.tar.bz2"
+      - "~/mambaforge/pkgs/*.conda"
+      - "~/mambaforge/pkgs/*.tar.bz2"
+      - "~/opt/miniconda3/pkgs/*.conda"
+      - "~/opt/miniconda3/pkgs/*.tar.bz2"
+      - "~/opt/anaconda3/pkgs/*.conda"
+      - "~/opt/anaconda3/pkgs/*.tar.bz2"
+      - "~/.conda/pkgs/*.conda"
+      - "~/.conda/pkgs/*.tar.bz2"
+    safety: regenerable
+  - id: pre-commit.cache
+    name: pre-commit environments
+    category: developer
+    explain: Hook repositories and environments pre-commit installed. pre-commit sets them up again the next time it runs.
+    paths:
+      - "~/.cache/pre-commit"
+    safety: regenerable
+  - id: go.build-cache
+    name: Go build cache
+    category: developer
+    explain: Compiled packages and test results the go command caches. Removed as a whole, the same as go clean -cache; the next build is slower once.
+    paths:
+      - "~/Library/Caches/go-build"
+    safety: regenerable
+  - id: go.module-cache
+    name: Go module cache
+    category: developer
+    explain: Module sources the go command downloaded. Removed as a whole, the same as go clean -modcache; the next build downloads what it needs again, so it needs a network connection. Go makes these folders read-only, so OpenClean first gives you write permission on the folders you own inside it, then deletes it.
+    paths:
+      - "~/go/pkg/mod"
+    safety: regenerable
+    make_writable: true
+  - id: cargo.registry-src
+    name: Cargo unpacked crate sources
+    category: developer
+    explain: Crate sources Cargo unpacked from downloaded archives. Cargo unpacks or downloads them again on the next build that needs them.
+    paths:
+      - "~/.cargo/registry/src/*"
+    safety: regenerable
+  - id: cargo.git-checkouts
+    name: Cargo git checkouts
+    category: developer
+    explain: Working copies of git dependencies. Cargo checks them out again from its git database on the next build.
+    paths:
+      - "~/.cargo/git/checkouts/*"
+    safety: regenerable
+  - id: maven.repository
+    name: Maven local repository
+    category: developer
+    explain: Libraries Maven and other JVM build tools downloaded. They download them again on the next build. Artifacts you installed yourself with mvn install are here too and must be built again. Moved to quarantine, so you can restore them.
+    paths:
+      - "~/.m2/repository/*"
+    safety: review
+  - id: coursier.cache
+    name: Coursier cache
+    category: developer
+    explain: Libraries Coursier, sbt, Mill and Scala CLI downloaded. They are downloaded again on the next build. JVMs that Coursier installed are left alone.
+    paths:
+      - "~/Library/Caches/Coursier/v1/*"
+    safety: regenerable
+  - id: ivy.cache
+    name: Ivy cache
+    category: developer
+    explain: Libraries Ivy and older sbt versions downloaded. They are downloaded again on the next build. Locally published artifacts in ~/.ivy2/local are left alone.
+    paths:
+      - "~/.ivy2/cache/*"
+    safety: regenerable
+  - id: gradle.wrapper-dists
+    name: Gradle wrapper distributions
+    category: developer
+    explain: Gradle versions downloaded by projects' Gradle wrappers. A project's wrapper downloads its version again on the next build.
+    paths:
+      - "~/.gradle/wrapper/dists/*"
+    safety: regenerable
+  - id: gradle.daemon-logs
+    name: Gradle daemon logs
+    category: developer
+    explain: Logs of Gradle daemons older than a week. Nothing reads them unless you are troubleshooting a build.
+    paths:
+      - "~/.gradle/daemon/*/*.log"
+    safety: regenerable
+    conditions:
+      min_age_days: 7
+  - id: swiftpm.cache
+    name: Swift Package Manager cache
+    category: developer
+    explain: Package repositories, manifests and binary artifacts SwiftPM and Xcode cache. They are fetched again the next time a package is resolved.
+    paths:
+      - "~/Library/Caches/org.swift.swiftpm/*"
+    safety: regenerable
+    conditions:
+      app_not_running: com.apple.dt.Xcode
+  - id: dart.pub-cache
+    name: Dart and Flutter package cache
+    category: developer
+    explain: Packages pub downloaded for Dart and Flutter projects. Projects read them from here, so run dart pub get or flutter pub get in a project before building it again. Globally activated tools are left alone.
+    paths:
+      - "~/.pub-cache/hosted/*"
+      - "~/.pub-cache/git/*"
+    safety: review
+  - id: bundler.cache
+    name: Bundler cache
+    category: developer
+    explain: Gem index and download cache Bundler keeps. Installed gems are not affected; Bundler downloads what it needs again.
+    paths:
+      - "~/.bundle/cache/*"
+    safety: regenerable
+  - id: composer.cache
+    name: Composer cache
+    category: developer
+    explain: Composer's package download cache. Composer downloads packages again on the next install.
+    paths:
+      - "~/Library/Caches/composer/*"
+    safety: regenerable
+  - id: terraform.plugin-cache
+    name: Terraform plugin cache
+    category: developer
+    explain: Providers in Terraform's shared plugin cache. terraform init downloads them again.
+    paths:
+      - "~/.terraform.d/plugin-cache/*"
+    safety: regenerable
+  - id: jetbrains.indexes
+    name: JetBrains IDE indexes
+    category: developer
+    explain: Indexes and caches of JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm and others). The IDE rebuilds them when you next open a project, which can take a while for large projects. Local History is left alone.
+    paths:
+      - "~/Library/Caches/JetBrains/*/caches"
+      - "~/Library/Caches/JetBrains/*/index"
+    safety: review
+    conditions:
+      app_not_running:
+        - com.jetbrains.intellij
+        - com.jetbrains.intellij.ce
+        - com.jetbrains.pycharm
+        - com.jetbrains.pycharm.ce
+        - com.jetbrains.WebStorm
+        - com.jetbrains.goland
+        - com.jetbrains.CLion
+        - com.jetbrains.rider
+        - com.jetbrains.rubymine
+        - com.jetbrains.PhpStorm
+        - com.jetbrains.datagrip
+        - com.jetbrains.rustrover
+        - com.google.android.studio
+  - id: vscode.caches
+    name: VS Code caches
+    category: developer
+    explain: Compiled code, GPU and web caches and downloaded extension packages VS Code keeps. VS Code rebuilds them; your settings, extensions and open editors are not affected.
+    paths:
+      - "~/Library/Application Support/Code/Cache"
+      - "~/Library/Application Support/Code/CachedData"
+      - "~/Library/Application Support/Code/CachedExtensionVSIXs"
+      - "~/Library/Application Support/Code/Code Cache"
+      - "~/Library/Application Support/Code/GPUCache"
+    safety: regenerable
+    conditions:
+      app_not_running: com.microsoft.VSCode
+  - id: cursor.caches
+    name: Cursor caches
+    category: developer
+    explain: Compiled code, GPU and web caches and downloaded extension packages Cursor keeps. Cursor rebuilds them; your settings, extensions and chats are not affected.
+    paths:
+      - "~/Library/Application Support/Cursor/Cache"
+      - "~/Library/Application Support/Cursor/CachedData"
+      - "~/Library/Application Support/Cursor/CachedExtensionVSIXs"
+      - "~/Library/Application Support/Cursor/Code Cache"
+      - "~/Library/Application Support/Cursor/GPUCache"
+    safety: regenerable
+    conditions:
+      app_not_running: com.todesktop.230313mzl4w4u92
+  - id: unity.cache
+    name: Unity package cache
+    category: developer
+    explain: Packages the Unity Editor downloaded from the Unity registry. Unity downloads them again when a project needs them.
+    paths:
+      - "~/Library/Unity/cache/*"
+    safety: regenerable
+    conditions:
+      app_not_running: [com.unity3d.UnityEditor5.x, com.unity3d.unityhub]

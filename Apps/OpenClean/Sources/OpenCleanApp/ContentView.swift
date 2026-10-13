@@ -8,13 +8,13 @@ enum SidebarItem: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .smartScan: "Smart Scan"
-        case .cleanup: "Cleanup"
-        case .history: "History"
-        case .uninstaller: "Uninstaller"
-        case .spaceLens: "Space Lens"
-        case .performance: "Performance"
-        case .settings: "Settings"
+        case .smartScan: String(localized: "Smart Scan")
+        case .cleanup: String(localized: "Cleanup")
+        case .history: String(localized: "History")
+        case .uninstaller: String(localized: "Uninstaller")
+        case .spaceLens: String(localized: "Space Lens")
+        case .performance: String(localized: "Performance")
+        case .settings: String(localized: "Settings")
         }
     }
 
@@ -64,6 +64,7 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
+                .layoutProbe("sidebar.header")
 
                 VStack(spacing: 2) {
                     ForEach(SidebarItem.modules) { item in
@@ -79,6 +80,7 @@ struct ContentView: View {
 
                 VStack(spacing: 6) {
                     StorageCard(disk: model.disk, stats: model.stats)
+                        .layoutProbe("sidebar.storage")
                     SidebarRow(item: .settings, isSelected: navigation.selection == .settings) {
                         navigation.selection = .settings
                     }
@@ -108,6 +110,8 @@ struct ContentView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .layoutProbe("detail")
+                .layoutProbe("screen.\((navigation.selection ?? .smartScan).rawValue)")
             }
             // The hidden title bar still reserves a ~40 pt inset above the detail column; pull the content
             // up so the first element sits level with the window buttons instead of below an empty strip.
@@ -162,11 +166,12 @@ struct SidebarRow: View {
             .frame(height: 32)
             .background(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(.white.opacity(isSelected ? 0.16 : hovering ? 0.07 : 0))
+                    .fill(isSelected ? Theme.rowSelected : hovering ? Theme.rowHover : .clear)
             )
             .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
         .buttonStyle(.plain)
+        .layoutProbe("sidebar.\(item.rawValue)")
         .onHover { hovering = $0 }
         .animation(.easeOut(duration: 0.15), value: isSelected)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
@@ -178,12 +183,12 @@ struct Wordmark: View {
     var size: CGFloat
 
     var body: some View {
-        (Text("Open").fontWeight(.regular) + Text("Clean").fontWeight(.bold))
+        (Text(verbatim: "Open").fontWeight(.regular) + Text(verbatim: "Clean").fontWeight(.bold))
             .font(.system(size: size, design: .rounded))
             .kerning(-0.3)
             .lineLimit(1)
             .fixedSize()
             .foregroundStyle(.white)
-            .accessibilityLabel("OpenClean")
+            .accessibilityLabel(Text(verbatim: "OpenClean"))
     }
 }

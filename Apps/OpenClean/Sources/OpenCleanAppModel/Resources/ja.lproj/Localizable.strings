@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ is turned off and won't start again until you turn it on.</key>
+	<string>%@ はオフになり、オンにするまで起動しません。</string>
+	<key>%@ is turned on.</key>
+	<string>%@ をオンにしました。</string>
+	<key>%@ was running. Quit it, then scan again.</key>
+	<string>%@ が実行中でした。終了してから、もう一度スキャンしてください。</string>
+	<key>A background Smart Scan found it. Nothing was removed; open OpenClean to review and clean.</key>
+	<string>バックグラウンドの Smart Scan で見つかりました。何も削除されていません。OpenClean を開いて確認し、クリーンアップしてください。</string>
+	<key>A folder above it isn't protected by macOS, so it wasn't removed as administrator.</key>
+	<string>上位のフォルダが macOS で保護されていないため、管理者として削除しませんでした。</string>
+	<key>About %@ can be cleaned</key>
+	<string>約 %@ をクリーンアップできます</string>
+	<key>All set</key>
+	<string>準備完了</string>
+	<key>Already gone. Something else removed it after the scan.</key>
+	<string>すでにありません。スキャン後にほかのものが削除しました。</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU and memory</key>
+	<string>CPU とメモリ</string>
+	<key>Changed since the scan; an app may be using it.</key>
+	<string>スキャン後に変更されました。App が使用している可能性があります。</string>
+	<key>Could not save settings: %@</key>
+	<string>設定を保存できませんでした：%@</string>
+	<key>Couldn't be removed.</key>
+	<string>削除できませんでした。</string>
+	<key>Couldn't install the update: %@.</key>
+	<string>アップデートをインストールできませんでした：%@。</string>
+	<key>Duplicates</key>
+	<string>重複</string>
+	<key>For different reasons; see the details.</key>
+	<string>理由はさまざまです。詳細を確認してください。</string>
+	<key>Full Disk Access</key>
+	<string>フルディスクアクセス</string>
+	<key>Icon only</key>
+	<string>アイコンのみ</string>
+	<key>In a protected location. OpenClean never removes it.</key>
+	<string>保護された場所にあります。OpenClean が削除することはありません。</string>
+	<key>Its path can't be passed safely to the administrator prompt.</key>
+	<string>そのパスは管理者の確認画面に安全に渡せません。</string>
+	<key>Large &amp; old files</key>
+	<string>大きなファイルと古いファイル</string>
+	<key>Memory</key>
+	<string>メモリ</string>
+	<key>Monthly</key>
+	<string>毎月</string>
+	<key>Network</key>
+	<string>ネットワーク</string>
+	<key>Off</key>
+	<string>オフ</string>
+	<key>Open in another app. Quit the app, then scan again.</key>
+	<string>ほかの App で開かれています。App を終了してから、もう一度スキャンしてください。</string>
+	<key>OpenClean couldn't check whether another app had it open, so it left it alone.</key>
+	<string>OpenClean はほかの App が開いているかどうかを確認できなかったため、そのままにしました。</string>
+	<key>OpenClean couldn't reach GitHub (%@). Check your connection and try again.</key>
+	<string>OpenClean は GitHub に接続できませんでした（%@）。接続を確認して、もう一度お試しください。</string>
+	<key>Performance</key>
+	<string>パフォーマンス</string>
+	<key>Safe by design</key>
+	<string>安全な設計</string>
+	<key>Shown for information only. OpenClean never removes it.</key>
+	<string>情報として表示しているだけです。OpenClean が削除することはありません。</string>
+	<key>Skipped.</key>
+	<string>スキップしました。</string>
+	<key>Skipped: %@.</key>
+	<string>スキップしました：%@。</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space map</key>
+	<string>容量マップ</string>
+	<key>System items can only be deleted, not moved to quarantine.</key>
+	<string>システム項目は削除のみ可能で、隔離へは移動できません。</string>
+	<key>That folder can't be scanned. It may have been moved or deleted.</key>
+	<string>そのフォルダはスキャンできません。移動または削除された可能性があります。</string>
+	<key>The administrator password prompt was cancelled.</key>
+	<string>管理者パスワードの確認がキャンセルされました。</string>
+	<key>The app wasn't moved, so this was left in place.</key>
+	<string>App が移動されなかったため、これはそのまま残しました。</string>
+	<key>Too many system items for one password prompt. Clean again to remove the rest.</key>
+	<string>1 回のパスワード確認で扱えるシステム項目の数を超えています。残りを削除するには、もう一度クリーンアップしてください。</string>
+	<key>Uninstaller</key>
+	<string>アンインストーラ</string>
+	<key>Weekly</key>
+	<string>毎週</string>
+	<key>Welcome</key>
+	<string>ようこそ</string>
+	<key>unknown</key>
+	<string>不明</string>
+</dict>
+</plist>

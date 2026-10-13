@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ in quarantine for %lld days. Restore it from History.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$@ für %2$#@days@ in Quarantäne. Stelle es aus dem Verlauf wieder her.</string>
+		<key>days</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%2$lld Tag</string>
+			<key>other</key>
+			<string>%2$lld Tage</string>
+		</dict>
+	</dict>
+	<key>%lld apps</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld App</string>
+			<key>other</key>
+			<string>%lld Apps</string>
+		</dict>
+	</dict>
+	<key>%lld copies</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Kopie</string>
+			<key>other</key>
+			<string>%lld Kopien</string>
+		</dict>
+	</dict>
+	<key>%lld days</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Tag</string>
+			<key>other</key>
+			<string>%lld Tage</string>
+		</dict>
+	</dict>
+	<key>%lld days left</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>noch %lld Tag</string>
+			<key>other</key>
+			<string>noch %lld Tage</string>
+		</dict>
+	</dict>
+	<key>%lld duplicate groups</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Duplikatgruppe</string>
+			<key>other</key>
+			<string>%lld Duplikatgruppen</string>
+		</dict>
+	</dict>
+	<key>%lld files</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Datei</string>
+			<key>other</key>
+			<string>%lld Dateien</string>
+		</dict>
+	</dict>
+	<key>%lld folders couldn’t be read.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Ordner konnte nicht gelesen werden.</string>
+			<key>other</key>
+			<string>%lld Ordner konnten nicht gelesen werden.</string>
+		</dict>
+	</dict>
+	<key>%lld items</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt</string>
+			<key>other</key>
+			<string>%lld Objekte</string>
+		</dict>
+	</dict>
+	<key>%lld items moved to the Trash</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt in den Papierkorb bewegt</string>
+			<key>other</key>
+			<string>%lld Objekte in den Papierkorb bewegt</string>
+		</dict>
+	</dict>
+	<key>%lld items were left in place.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt ist an seinem Ort geblieben.</string>
+			<key>other</key>
+			<string>%lld Objekte sind an ihrem Ort geblieben.</string>
+		</dict>
+	</dict>
+	<key>%lld items were matched by name. Check that they belong to this app.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt wurde anhand des Namens gefunden. Prüfe, ob es zu dieser App gehört.</string>
+			<key>other</key>
+			<string>%lld Objekte wurden anhand des Namens gefunden. Prüfe, ob sie zu dieser App gehören.</string>
+		</dict>
+	</dict>
+	<key>%lld items were skipped and left in place</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt wurde übersprungen und blieb an seinem Ort</string>
+			<key>other</key>
+			<string>%lld Objekte wurden übersprungen und blieben an ihrem Ort</string>
+		</dict>
+	</dict>
+	<key>%lld items · goes to the Trash</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt · kommt in den Papierkorb</string>
+			<key>other</key>
+			<string>%lld Objekte · kommen in den Papierkorb</string>
+		</dict>
+	</dict>
+	<key>%lld leftovers</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Rest</string>
+			<key>other</key>
+			<string>%lld Reste</string>
+		</dict>
+	</dict>
+	<key>%lld need Full Disk Access</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld benötigt Festplattenvollzugriff</string>
+			<key>other</key>
+			<string>%lld benötigen Festplattenvollzugriff</string>
+		</dict>
+	</dict>
+	<key>%lld notes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Hinweis</string>
+			<key>other</key>
+			<string>%lld Hinweise</string>
+		</dict>
+	</dict>
+	<key>%lld of %lld rules checked</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$lld von %2$#@rules@ geprüft</string>
+		<key>rules</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%2$lld Regel</string>
+			<key>other</key>
+			<string>%2$lld Regeln</string>
+		</dict>
+	</dict>
+	<key>%lld processes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Prozess</string>
+			<key>other</key>
+			<string>%lld Prozesse</string>
+		</dict>
+	</dict>
+	<key>%lld smaller items</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld kleineres Objekt</string>
+			<key>other</key>
+			<string>%lld kleinere Objekte</string>
+		</dict>
+	</dict>
+	<key>%lld system items need your administrator password.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Systemobjekt benötigt dein Administratorpasswort.</string>
+			<key>other</key>
+			<string>%lld Systemobjekte benötigen dein Administratorpasswort.</string>
+		</dict>
+	</dict>
+	<key>Apps move to quarantine with their leftovers, so you can restore them for %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Apps kommen mit ihren Resten in die Quarantäne, sodass du sie %lld Tag lang wiederherstellen kannst.</string>
+			<key>other</key>
+			<string>Apps kommen mit ihren Resten in die Quarantäne, sodass du sie %lld Tage lang wiederherstellen kannst.</string>
+		</dict>
+	</dict>
+	<key>Caches that rebuild themselves are deleted. Everything else goes to quarantine first, and History restores it for %lld days. Your documents and system files are always protected.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Caches, die sich selbst neu aufbauen, werden gelöscht. Alles andere kommt zuerst in die Quarantäne, und der Verlauf stellt es %lld Tag lang wieder her. Deine Dokumente und Systemdateien sind immer geschützt.</string>
+			<key>other</key>
+			<string>Caches, die sich selbst neu aufbauen, werden gelöscht. Alles andere kommt zuerst in die Quarantäne, und der Verlauf stellt es %lld Tage lang wieder her. Deine Dokumente und Systemdateien sind immer geschützt.</string>
+		</dict>
+	</dict>
+	<key>Folder · %lld items</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Ordner · %lld Objekt</string>
+			<key>other</key>
+			<string>Ordner · %lld Objekte</string>
+		</dict>
+	</dict>
+	<key>Keep removed files for %lld days</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Entfernte Dateien %lld Tag behalten</string>
+			<key>other</key>
+			<string>Entfernte Dateien %lld Tage behalten</string>
+		</dict>
+	</dict>
+	<key>Move %lld items to the Trash?</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt in den Papierkorb bewegen?</string>
+			<key>other</key>
+			<string>%lld Objekte in den Papierkorb bewegen?</string>
+		</dict>
+	</dict>
+	<key>Moved to quarantine (restorable for %lld days)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>In die Quarantäne bewegt (%lld Tag wiederherstellbar)</string>
+			<key>other</key>
+			<string>In die Quarantäne bewegt (%lld Tage wiederherstellbar)</string>
+		</dict>
+	</dict>
+	<key>Nothing over %@ that hasn’t been opened in %lld days. Try a smaller size.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Nichts über %1$@, das seit %2$#@days@ nicht geöffnet wurde. Versuche eine kleinere Größe.</string>
+		<key>days</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%2$lld Tag</string>
+			<key>other</key>
+			<string>%2$lld Tagen</string>
+		</dict>
+	</dict>
+	<key>OpenClean stops the agent and moves its file to quarantine. You can restore it from History for %lld days; it starts again at your next login after restoring.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>OpenClean stoppt den Agent und bewegt seine Datei in die Quarantäne. Du kannst sie %lld Tag lang aus dem Verlauf wiederherstellen; nach dem Wiederherstellen startet er bei der nächsten Anmeldung wieder.</string>
+			<key>other</key>
+			<string>OpenClean stoppt den Agent und bewegt seine Datei in die Quarantäne. Du kannst sie %lld Tage lang aus dem Verlauf wiederherstellen; nach dem Wiederherstellen startet er bei der nächsten Anmeldung wieder.</string>
+		</dict>
+	</dict>
+	<key>Restorable from History for %lld days</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Tag aus dem Verlauf wiederherstellbar</string>
+			<key>other</key>
+			<string>%lld Tage aus dem Verlauf wiederherstellbar</string>
+		</dict>
+	</dict>
+	<key>Smart Scan looks for caches, logs and leftovers. Nothing is removed until you review it, and quarantined items can be restored for %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Smart Scan sucht nach Caches, Protokollen und Resten. Nichts wird entfernt, bevor du es geprüft hast, und Objekte in Quarantäne lassen sich %lld Tag lang wiederherstellen.</string>
+			<key>other</key>
+			<string>Smart Scan sucht nach Caches, Protokollen und Resten. Nichts wird entfernt, bevor du es geprüft hast, und Objekte in Quarantäne lassen sich %lld Tage lang wiederherstellen.</string>
+		</dict>
+	</dict>
+	<key>These items move to quarantine. You can restore them from History for %lld days; after that they are deleted.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Diese Objekte kommen in die Quarantäne. Du kannst sie %lld Tag lang aus dem Verlauf wiederherstellen; danach werden sie gelöscht.</string>
+			<key>other</key>
+			<string>Diese Objekte kommen in die Quarantäne. Du kannst sie %lld Tage lang aus dem Verlauf wiederherstellen; danach werden sie gelöscht.</string>
+		</dict>
+	</dict>
+	<key>undo for %lld days</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Tag rückgängig zu machen</string>
+			<key>other</key>
+			<string>%lld Tage rückgängig zu machen</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

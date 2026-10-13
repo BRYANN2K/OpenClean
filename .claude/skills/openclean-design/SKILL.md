@@ -51,7 +51,8 @@ New modules get their own backdrop case: a dark top-leading color moving to a mi
 - `ProgressRing(fraction:lineWidth:)`: around the orb while scanning and in small free-space indicators.
 - `StatPill(text:) { icon }`: small status at the top right (e.g. free space). One or two at most.
 - `CategoryIcon(category:size:)`: gradient tile + white SF Symbol per `RuleCategory`. A new category must add its symbol and gradient pair in `CategoryIcon.style(for:)` (bright top, darker bottom, same lightness as the others).
-- `SidebarRow`: sidebar destinations. Selected = white 16% fill, mint icon, semibold label; hover = white 7%. Never use `List(selection:)` for navigation — it paints the macOS accent colour (often blue).
+- `SidebarRow`: sidebar destinations. Selected = white 16% fill (`Theme.rowSelected`), mint icon, semibold label; hover = white 7% (`Theme.rowHover`). Never use `List(selection:)` for navigation — it paints the macOS accent colour (often blue).
+- `SelectableRow`: the same selection for other selectable lists (Cleanup's categories and rules): a leading control (checkbox) with its own clicks, the rest of the row a plain button that selects it; the caller makes the label semibold when selected.
 - `SafetyTag(safety:)`, `CheckboxButton` (unselected: solid white outline, no tick; selected: accent fill, deep-teal tick), `StorageCard`, `AccessBanner`, `ProblemsBanner`.
 - `AppIconView`, `LogoGlyph`, `LogoRing`, `Spark`: the brand marks.
 
@@ -82,6 +83,7 @@ An open ring (the "O" of Open) with a four-point spark in the top-right gap, whi
 - Say what happens to files: "freed now" vs "to quarantine", "undo for N days".
 - Use the product's own terms: Smart Scan, Cleanup, History, quarantine. No game words (raid, loot, quest, XP, level, streak, milestone, achievement).
 - Sentence case for headlines and buttons; verbs on buttons (Scan, Clean, Restore All…, Done). Use an ellipsis when the button opens a confirmation.
+- Every user-facing string is localized (de, es, fr, ja, zh-Hans; see AGENTS.md → Localization). Write English that translates cleanly: one sentence per idea, counts as plural keys ("\(n) items"), never "item(s)" or string concatenation of sentence fragments. Check new screens in German (longest) for truncation.
 
 ## Layout rules learned from testing the real app
 

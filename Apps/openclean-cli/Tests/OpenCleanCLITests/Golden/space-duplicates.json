@@ -1,0 +1,35 @@
+{
+  "complete" : true,
+  "groups" : [
+    {
+      "bytes" : 2000000,
+      "files" : [
+        {
+          "bytes" : 2002944,
+          "created" : "2027-01-15T08:00:00Z",
+          "modified" : "2027-01-15T08:00:00Z",
+          "path" : "/Users/t/Pictures/photo.jpg",
+          "userContent" : false
+        },
+        {
+          "bytes" : 2002944,
+          "created" : "2027-01-15T08:00:00Z",
+          "modified" : "2027-01-15T08:00:00Z",
+          "path" : "/Users/t/Downloads/photo.jpg",
+          "userContent" : false
+        }
+      ],
+      "reclaimableBytes" : 2002944,
+      "sha256" : "abababababababababababababababababababababababababababababababab",
+      "suggestedKeep" : "/Users/t/Pictures/photo.jpg"
+    }
+  ],
+  "reclaimableBytes" : 2002944,
+  "roots" : [
+    "/Users/t/Downloads",
+    "/Users/t/Pictures"
+  ],
+  "schema" : 1,
+  "unhashableCount" : 1,
+  "unreadableCount" : 0
+}

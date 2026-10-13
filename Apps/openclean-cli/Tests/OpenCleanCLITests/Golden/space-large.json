@@ -1,0 +1,30 @@
+{
+  "complete" : true,
+  "files" : [
+    {
+      "bytes" : 4000000000,
+      "kind" : "diskImage",
+      "lastOpened" : "2027-01-15T08:00:00Z",
+      "modified" : "2027-01-15T08:00:00Z",
+      "name" : "ubuntu.iso",
+      "path" : "/Users/t/Downloads/ubuntu.iso",
+      "userContent" : false
+    },
+    {
+      "bytes" : 900000000,
+      "kind" : "video",
+      "modified" : "2027-01-15T08:00:00Z",
+      "name" : "movie.mkv",
+      "path" : "/Users/t/Downloads/movie.mkv",
+      "userContent" : false
+    }
+  ],
+  "minimumBytes" : 500000000,
+  "notOpenedForDays" : 90,
+  "roots" : [
+    "/Users/t"
+  ],
+  "schema" : 1,
+  "totalBytes" : 4900000000,
+  "unreadableCount" : 1
+}

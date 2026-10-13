@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ + %@ to quarantine</key>
+	<string>%1$@ + %2$@ を隔離へ</string>
+	<key>%@ Scan again to pick them up.</key>
+	<string>%@ もう一度スキャンすると対象になります。</string>
+	<key>%@ can only be scanned with Full Disk Access.</key>
+	<string>%@ はフルディスクアクセスがある場合のみスキャンできます。</string>
+	<key>%@ can't be force quit from OpenClean.</key>
+	<string>%@ は OpenClean から強制終了できません。</string>
+	<key>%@ can't be quit from OpenClean.</key>
+	<string>%@ は OpenClean から終了できません。</string>
+	<key>%@ could not be force quit.</key>
+	<string>%@ を強制終了できませんでした。</string>
+	<key>%@ didn't accept the request to quit.</key>
+	<string>%@ は終了の要求を受け付けませんでした。</string>
+	<key>%@ didn't quit. Try again.</key>
+	<string>%@ は終了しませんでした。もう一度お試しください。</string>
+	<key>%@ didn’t finish</key>
+	<string>%@ は完了しませんでした</string>
+	<key>%@ each</key>
+	<string>各 %@</string>
+	<key>%@ extra</key>
+	<string>余分 %@</string>
+	<key>%@ free</key>
+	<string>空き %@</string>
+	<key>%@ freed by OpenClean</key>
+	<string>OpenClean が %@ を解放</string>
+	<key>%@ freed now</key>
+	<string>今すぐ %@ を解放</string>
+	<key>%@ had already quit or changed, so nothing was done.</key>
+	<string>%@ はすでに終了しているか変更されていたため、何もしませんでした。</string>
+	<key>%@ in /Library stay in place (needs administrator — not supported yet).</key>
+	<string>/Library 内の %@ はそのまま残ります（管理者権限が必要なため、まだ対応していません）。</string>
+	<key>%@ in quarantine</key>
+	<string>隔離中 %@</string>
+	<key>%@ in total. You can put items back from the Trash in Finder.</key>
+	<string>合計 %@。Finder でゴミ箱から元に戻せます。</string>
+	<key>%@ is owned by the system. macOS will ask for your administrator password to move it to quarantine.</key>
+	<string>%@ はシステムが所有しています。隔離へ移動するために、macOS が管理者パスワードを求めます。</string>
+	<key>%@ is running. Quit it to uninstall.</key>
+	<string>%@ は実行中です。アンインストールするには終了してください。</string>
+	<key>%@ of %@</key>
+	<string>%1$@ / %2$@</string>
+	<key>%@ of %@ checks</key>
+	<string>%2$@ 件中 %1$@ 件を確認</string>
+	<key>%@ selected</key>
+	<string>%@ を選択中</string>
+	<key>%@ to quarantine</key>
+	<string>%@ を隔離へ</string>
+	<key>%@ was force quit.</key>
+	<string>%@ を強制終了しました。</string>
+	<key>%@ was not uninstalled</key>
+	<string>%@ はアンインストールされませんでした</string>
+	<key>%@ was uninstalled</key>
+	<string>%@ をアンインストールしました</string>
+	<key>%@ · %@</key>
+	<string>%1$@ · %2$@</string>
+	<key>%@ · Modified %@</key>
+	<string>%1$@ · 変更日 %2$@</string>
+	<key>%@ — %@</key>
+	<string>%1$@ — %2$@</string>
+	<key>%@. The list beside it shows the same items.</key>
+	<string>%@。隣のリストに同じ項目が表示されます。</string>
+	<key>%@/s</key>
+	<string>%@/秒</string>
+	<key>%@: %@. %@</key>
+	<string>%1$@：%2$@。%3$@</string>
+	<key>%@: done</key>
+	<string>%@：完了</string>
+	<key>%lld</key>
+	<string>%lld</string>
+	<key>%lld of %lld measured</key>
+	<string>%2$lld 件中 %1$lld 件を計測済み</string>
+	<key>%lld percent</key>
+	<string>%lld パーセント</string>
+	<key>%lld restored, %lld skipped.</key>
+	<string>%1$lld 件を復元、%2$lld 件をスキップしました。</string>
+	<key>%lld skipped</key>
+	<string>%lld 件スキップ</string>
+	<key>%lld unreadable</key>
+	<string>%lld 件読み取り不可</string>
+	<key>%lld%%</key>
+	<string>%lld%%</string>
+	<key>1 year</key>
+	<string>1年</string>
+	<key>3 months</key>
+	<string>3か月</string>
+	<key>6 months</key>
+	<string>6か月</string>
+	<key>A new version of OpenClean is available</key>
+	<string>OpenClean の新しいバージョンがあります</string>
+	<key>A transparent, open-source cleaner for your Mac. Take a quick look at what it does, then set up the one permission it needs.</key>
+	<string>Mac のための、透明性の高いオープンソースのクリーナーです。できることをざっと確認してから、必要な権限をひとつだけ設定します。</string>
+	<key>AI Models &amp; Caches</key>
+	<string>AI モデルとキャッシュ</string>
+	<key>About</key>
+	<string>情報</string>
+	<key>Access granted</key>
+	<string>アクセスが許可されました</string>
+	<key>Add</key>
+	<string>追加</string>
+	<key>Add Folder…</key>
+	<string>フォルダを追加…</string>
+	<key>Add a folder or file</key>
+	<string>フォルダまたはファイルを追加</string>
+	<key>Add a project folder</key>
+	<string>プロジェクトフォルダを追加</string>
+	<key>Add your own YAML rules to this folder.</key>
+	<string>このフォルダに独自の YAML ルールを追加できます。</string>
+	<key>Adds rules that need a closer look before cleaning.</key>
+	<string>クリーンアップの前に慎重な確認が必要なルールを追加します。</string>
+	<key>Add…</key>
+	<string>追加…</string>
+	<key>After this, quarantined files are deleted for good.</key>
+	<string>この期間を過ぎると、隔離中のファイルは完全に削除されます。</string>
+	<key>Agents and daemons in /Library are installed by an administrator and run for everyone. OpenClean lists them so you know they’re there, but doesn’t change them.</key>
+	<string>/Library 内のエージェントとデーモンは管理者がインストールしたもので、すべてのユーザに対して実行されます。OpenClean は存在がわかるように一覧表示しますが、変更はしません。</string>
+	<key>Alias (not followed)</key>
+	<string>エイリアス（たどりません）</string>
+	<key>Allow Full Disk Access</key>
+	<string>フルディスクアクセスを許可</string>
+	<key>Allowed</key>
+	<string>許可済み</string>
+	<key>Also found in /Library</key>
+	<string>/Library にも見つかりました</string>
+	<key>An interactive map of your disk, plus large &amp; old files and duplicates. Nothing is pre-selected, and anything you remove goes to the Trash.</key>
+	<string>ディスクのインタラクティブなマップに加え、大きなファイル・古いファイル・重複ファイルを表示します。あらかじめ選択されるものはなく、削除したものはゴミ箱に入ります。</string>
+	<key>Any time</key>
+	<string>指定なし</string>
+	<key>Any unsaved changes in %@ will be lost.</key>
+	<string>%@ の保存されていない変更はすべて失われます。</string>
+	<key>App</key>
+	<string>App</string>
+	<key>App caches</key>
+	<string>App のキャッシュ</string>
+	<key>App running</key>
+	<string>App 実行中</string>
+	<key>Apple app</key>
+	<string>Apple の App</string>
+	<key>Apple app — part of macOS, never removed</key>
+	<string>Apple の App — macOS の一部のため、削除されることはありません</string>
+	<key>Application</key>
+	<string>アプリケーション</string>
+	<key>Apps and processes using the most CPU and memory right now.</key>
+	<string>現在、CPU とメモリを最も多く使っている App とプロセスです。</string>
+	<key>Apps that are running, changed since the list was loaded, or in use are skipped automatically.</key>
+	<string>実行中の App、一覧の読み込み後に変更された App、使用中の App は自動的にスキップされます。</string>
+	<key>Archives</key>
+	<string>アーカイブ</string>
+	<key>Asked %@ to quit.</key>
+	<string>%@ に終了を要求しました。</string>
+	<key>Asking GitHub for the latest release.</key>
+	<string>GitHub に最新リリースを問い合わせています。</string>
+	<key>Asks macOS to remove the local Time Machine snapshots it can drop to free space. Backups on your backup disk are not touched.</key>
+	<string>空き領域を増やすために、macOS が手放せるローカルの Time Machine スナップショットの削除を macOS に依頼します。バックアップディスク上のバックアップには触れません。</string>
+	<key>Back</key>
+	<string>戻る</string>
+	<key>Background Smart Scan</key>
+	<string>バックグラウンドの Smart Scan</string>
+	<key>Background Smart Scan, %@. Nothing was removed.</key>
+	<string>バックグラウンドの Smart Scan、%@。何も削除されていません。</string>
+	<key>Background items inside apps</key>
+	<string>App 内のバックグラウンド項目</string>
+	<key>Browser</key>
+	<string>ブラウザ</string>
+	<key>Browser Caches</key>
+	<string>ブラウザのキャッシュ</string>
+	<key>Busy across all cores</key>
+	<string>全コアの使用率</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU %@, memory %@</key>
+	<string>CPU %1$@、メモリ %2$@</string>
+	<key>CPU %lld percent</key>
+	<string>CPU %lld パーセント</string>
+	<key>CPU and memory in the menu bar</key>
+	<string>メニューバーに CPU とメモリ</string>
+	<key>Caches</key>
+	<string>キャッシュ</string>
+	<key>Caches, logs and leftovers look tidy. Scan again any time.</key>
+	<string>キャッシュ、ログ、残りファイルは片付いています。いつでも再スキャンできます。</string>
+	<key>Caches, logs, browser data and developer leftovers, found in seconds. Safe items are ticked for you, and nothing is removed until you press Clean.</key>
+	<string>キャッシュ、ログ、ブラウザデータ、開発ツールの残りファイルを数秒で見つけます。安全な項目にはあらかじめチェックが入り、「クリーンアップ」を押すまで何も削除されません。</string>
+	<key>Can be moved to quarantine</key>
+	<string>隔離へ移動できます</string>
+	<key>Cancel</key>
+	<string>キャンセル</string>
+	<key>Cancelled</key>
+	<string>キャンセルしました</string>
+	<key>Can’t be moved to the Trash: %@</key>
+	<string>ゴミ箱に入れられません：%@</string>
+	<key>Caution</key>
+	<string>注意</string>
+	<key>Check Again</key>
+	<string>再確認</string>
+	<key>Check Now</key>
+	<string>今すぐ確認</string>
+	<key>Check for Updates…</key>
+	<string>アップデートを確認…</string>
+	<key>Check for updates automatically</key>
+	<string>アップデートを自動的に確認</string>
+	<key>Checking for updates…</key>
+	<string>アップデートを確認中…</string>
+	<key>Checking…</key>
+	<string>確認中…</string>
+	<key>Choose</key>
+	<string>選択</string>
+	<key>Choose Folder…</key>
+	<string>フォルダを選択…</string>
+	<key>Choose a folder where you keep code projects.</key>
+	<string>コードのプロジェクトを保管しているフォルダを選択してください。</string>
+	<key>Clean</key>
+	<string>クリーンアップ</string>
+	<key>Cleaning</key>
+	<string>クリーンアップ</string>
+	<key>Cleaning…</key>
+	<string>クリーンアップ中…</string>
+	<key>Cleanup</key>
+	<string>クリーンアップ</string>
+	<key>Clear search</key>
+	<string>検索をクリア</string>
+	<key>Click **Open System Settings**.</key>
+	<string>**システム設定を開く**をクリックします。</string>
+	<key>Click to go up</key>
+	<string>クリックして上の階層へ</string>
+	<key>Close</key>
+	<string>閉じる</string>
+	<key>Come back here. OpenClean notices on its own.</key>
+	<string>ここに戻ってきてください。OpenClean が自動的に検知します。</string>
+	<key>Coming soon</key>
+	<string>近日公開</string>
+	<key>Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays.</key>
+	<string>下のフォルダ内のファイルを 1 バイトずつ比較します。自動で選択されるものはなく、各ファイルのコピーが必ずひとつ残ります。</string>
+	<key>Comparing files…</key>
+	<string>ファイルを比較中…</string>
+	<key>Containers</key>
+	<string>コンテナ</string>
+	<key>Continue</key>
+	<string>続ける</string>
+	<key>Continue…</key>
+	<string>続ける…</string>
+	<key>Copies made by APFS cloning share space on disk, so moving one may free less than shown.</key>
+	<string>APFS のクローンで作成されたコピーはディスク領域を共有するため、移動しても表示より少ない容量しか解放されない場合があります。</string>
+	<key>Couldn't check for updates</key>
+	<string>アップデートを確認できませんでした</string>
+	<key>Damaged session %@</key>
+	<string>破損したセッション %@</string>
+	<key>Deleted</key>
+	<string>削除済み</string>
+	<key>Deleted now</key>
+	<string>今すぐ削除</string>
+	<key>Details</key>
+	<string>詳細</string>
+	<key>Details are in History.</key>
+	<string>詳細は履歴にあります。</string>
+	<key>Developer Tools</key>
+	<string>開発ツール</string>
+	<key>Discard these results and go back. Nothing is removed.</key>
+	<string>この結果を破棄して戻ります。何も削除されません。</string>
+	<key>Disk</key>
+	<string>ディスク</string>
+	<key>Disk images</key>
+	<string>ディスクイメージ</string>
+	<key>Dismiss</key>
+	<string>閉じる</string>
+	<key>Done</key>
+	<string>完了</string>
+	<key>Don’t move to the Trash</key>
+	<string>ゴミ箱に入れない</string>
+	<key>Download &amp; Install</key>
+	<string>ダウンロードしてインストール</string>
+	<key>Download from GitHub</key>
+	<string>GitHub からダウンロード</string>
+	<key>Downloading</key>
+	<string>ダウンロード中</string>
+	<key>Drag OpenClean into the Full Disk Access list</key>
+	<string>OpenClean をフルディスクアクセスのリストにドラッグ</string>
+	<key>Drag this icon into the list if OpenClean isn't there.</key>
+	<string>OpenClean がリストにない場合は、このアイコンをリストにドラッグしてください。</string>
+	<key>Elevated</key>
+	<string>やや高い</string>
+	<key>Empty folder</key>
+	<string>空のフォルダ</string>
+	<key>Enter your administrator password when macOS asks. This can take a moment.</key>
+	<string>macOS に求められたら管理者パスワードを入力してください。少し時間がかかることがあります。</string>
+	<key>Erases and rebuilds the Spotlight index for your startup disk. Use it when search misses files. Rebuilding runs in the background and can take an hour or more.</key>
+	<string>起動ディスクの Spotlight インデックスを消去して作り直します。検索でファイルが見つからないときに使います。再構築はバックグラウンドで行われ、1 時間以上かかることがあります。</string>
+	<key>Every item is also listed in History.</key>
+	<string>すべての項目は履歴にも記録されています。</string>
+	<key>Every removal can be undone</key>
+	<string>すべての削除は元に戻せます</string>
+	<key>Excluded locations</key>
+	<string>除外する場所</string>
+	<key>Expired and deleted</key>
+	<string>期限切れで削除済み</string>
+	<key>Explored Smart Scan, Uninstaller, Space Lens and Performance</key>
+	<string>Smart Scan、アンインストーラ、Space Lens、パフォーマンスを確認しました</string>
+	<key>Failed</key>
+	<string>失敗</string>
+	<key>File</key>
+	<string>ファイル</string>
+	<key>Files from Documents or Desktop are moved only because you ticked each one.</key>
+	<string>書類またはデスクトップのファイルは、ひとつずつチェックを入れたものだけが移動されます。</string>
+	<key>Files that changed since the scan or are in use are skipped automatically.</key>
+	<string>スキャン後に変更されたファイルや使用中のファイルは自動的にスキップされます。</string>
+	<key>Files that changed since the scan, or are open in another app, are skipped automatically.</key>
+	<string>スキャン後に変更されたファイルや、ほかの App で開いているファイルは自動的にスキップされます。</string>
+	<key>Files that couldn’t be read</key>
+	<string>読み取れなかったファイル</string>
+	<key>Files there can be moved to the Trash only one at a time, by ticking each file.</key>
+	<string>そこにあるファイルは、ひとつずつチェックを入れた場合にのみゴミ箱に入れられます。</string>
+	<key>Files under 1 MB, apps and ~/Library are skipped.</key>
+	<string>1 MB 未満のファイル、App、~/Library はスキップされます。</string>
+	<key>Find duplicate files</key>
+	<string>重複ファイルを探す</string>
+	<key>Find large and old files</key>
+	<string>大きなファイルと古いファイルを探す</string>
+	<key>Flush DNS cache</key>
+	<string>DNS キャッシュをクリア</string>
+	<key>Folder</key>
+	<string>フォルダ</string>
+	<key>Folder · couldn’t be read</key>
+	<string>フォルダ · 読み取れませんでした</string>
+	<key>Folder: %@</key>
+	<string>フォルダ：%@</string>
+	<key>Force Quit</key>
+	<string>強制終了</string>
+	<key>Force Quit %@…</key>
+	<string>%@ を強制終了…</string>
+	<key>Force Quit…</key>
+	<string>強制終了…</string>
+	<key>Force quit %@</key>
+	<string>%@ を強制終了</string>
+	<key>Force quit %@?</key>
+	<string>%@ を強制終了しますか？</string>
+	<key>Force quitting stops the app immediately. Anything you haven’t saved in it will be lost. Try Quit first if the app is still responding.</key>
+	<string>強制終了すると App はただちに停止し、保存していない内容はすべて失われます。App がまだ応答する場合は、先に「終了」を試してください。</string>
+	<key>Forgets cached website addresses, so name lookups start fresh. Helps when a site moved or won't load after a network change.</key>
+	<string>キャッシュされた Web サイトのアドレスを消去し、名前解決をやり直します。サイトが移転したときや、ネットワークを変えた後にサイトが読み込めないときに役立ちます。</string>
+	<key>Freed %@</key>
+	<string>%@ を解放</string>
+	<key>Freed now</key>
+	<string>今すぐ解放</string>
+	<key>From %@</key>
+	<string>%@ から</string>
+	<key>From Desktop</key>
+	<string>デスクトップから</string>
+	<key>From Documents</key>
+	<string>書類から</string>
+	<key>Full Disk Access</key>
+	<string>フルディスクアクセス</string>
+	<key>Full Disk Access allowed</key>
+	<string>フルディスクアクセスを許可済み</string>
+	<key>Full Disk Access is off</key>
+	<string>フルディスクアクセスがオフです</string>
+	<key>Full Disk Access lets OpenClean include them.</key>
+	<string>フルディスクアクセスを許可すると、OpenClean が含められるようになります。</string>
+	<key>Full Disk Access needs to be granted again</key>
+	<string>フルディスクアクセスをもう一度許可する必要があります</string>
+	<key>Full Disk Access was turned off. Go back one step to allow it again.</key>
+	<string>フルディスクアクセスがオフになりました。1 つ前の手順に戻って、もう一度許可してください。</string>
+	<key>General</key>
+	<string>一般</string>
+	<key>Get started</key>
+	<string>はじめる</string>
+	<key>GitHub</key>
+	<string>GitHub</string>
+	<key>Go to Smart Scan</key>
+	<string>Smart Scan へ</string>
+	<key>Grant Full Disk Access to scan this.</key>
+	<string>これをスキャンするにはフルディスクアクセスを許可してください。</string>
+	<key>Grouped to keep the map light</key>
+	<string>マップを軽くするためにまとめています</string>
+	<key>Has no bundle identifier, so it can't be checked safely</key>
+	<string>バンドル ID がないため、安全に確認できません</string>
+	<key>Heavy apps</key>
+	<string>負荷の高い App</string>
+	<key>Heavy consumers</key>
+	<string>負荷の高いもの</string>
+	<key>Helpers apps installed for your account. Turning one off stops it and keeps it from starting; removing it moves its file to quarantine, which you can undo in History.</key>
+	<string>App があなたのアカウント用にインストールしたヘルパーです。オフにすると停止し、起動しなくなります。削除するとファイルが隔離へ移動し、履歴から元に戻せます。</string>
+	<key>Hide details</key>
+	<string>詳細を隠す</string>
+	<key>High</key>
+	<string>高い</string>
+	<key>History</key>
+	<string>履歴</string>
+	<key>Home</key>
+	<string>ホーム</string>
+	<key>If a file already exists at the original location:</key>
+	<string>元の場所にすでにファイルがある場合：</string>
+	<key>In Utilities — listed for information only</key>
+	<string>ユーティリティ内 — 情報として表示しているだけです</string>
+	<key>In quarantine</key>
+	<string>隔離中</string>
+	<key>Include Documents and Desktop</key>
+	<string>書類とデスクトップを含める</string>
+	<key>Install and Relaunch</key>
+	<string>インストールして再起動</string>
+	<key>Installed for all users</key>
+	<string>すべてのユーザ用にインストール済み</string>
+	<key>Installed for all users by an administrator. OpenClean doesn’t change these in this version.</key>
+	<string>管理者がすべてのユーザ用にインストールしたものです。このバージョンの OpenClean では変更しません。</string>
+	<key>Installers</key>
+	<string>インストーラ</string>
+	<key>Installing OpenClean %@…</key>
+	<string>OpenClean %@ をインストール中…</string>
+	<key>Installing…</key>
+	<string>インストール中…</string>
+	<key>Item</key>
+	<string>項目</string>
+	<key>Items that changed since the scan, are open in another app, or are protected are left in place.</key>
+	<string>スキャン後に変更された項目、ほかの App で開いている項目、保護されている項目はそのまま残ります。</string>
+	<key>Keep Both</key>
+	<string>両方を残す</string>
+	<key>Keep an eye on your Mac</key>
+	<string>Mac の状態を見守る</string>
+	<key>Keep at least one copy</key>
+	<string>少なくとも 1 つのコピーを残してください</string>
+	<key>Larger than</key>
+	<string>サイズの下限</string>
+	<key>Last attempt %@ didn’t finish</key>
+	<string>前回の試行（%@）は完了しませんでした</string>
+	<key>Last background scan</key>
+	<string>前回のバックグラウンドスキャン</string>
+	<key>Last checked %@</key>
+	<string>最終確認：%@</string>
+	<key>Last checked %@.</key>
+	<string>最終確認：%@。</string>
+	<key>Last cleanup %@</key>
+	<string>前回のクリーンアップ：%@</string>
+	<key>Last opened %@</key>
+	<string>最後に開いた日：%@</string>
+	<key>Last run %@</key>
+	<string>前回の実行：%@</string>
+	<key>Later</key>
+	<string>後で</string>
+	<key>Launch agent</key>
+	<string>起動エージェント</string>
+	<key>Let’s tidy up your Mac.</key>
+	<string>Mac をすっきりさせましょう。</string>
+	<key>List Apps</key>
+	<string>App を一覧表示</string>
+	<key>List apps again and re-measure their sizes</key>
+	<string>App を再度一覧表示してサイズを測り直します</string>
+	<key>Listing files…</key>
+	<string>ファイルを一覧表示中…</string>
+	<key>Live CPU and memory in the menu bar, heavy apps with Force Quit, login items, and one-click maintenance such as flushing the DNS cache.</key>
+	<string>メニューバーに CPU とメモリをリアルタイム表示。負荷の高い App の強制終了、ログイン項目、DNS キャッシュのクリアなどワンクリックのメンテナンスも。</string>
+	<key>Live figures from your Mac, updated every 2 seconds while you watch.</key>
+	<string>Mac のリアルタイムの数値です。表示中は 2 秒ごとに更新されます。</string>
+	<key>Loaded</key>
+	<string>読み込み済み</string>
+	<key>Login items</key>
+	<string>ログイン項目</string>
+	<key>Looking for large files…</key>
+	<string>大きなファイルを探しています…</string>
+	<key>Looking for leftovers…</key>
+	<string>残りファイルを探しています…</string>
+	<key>Looks through your home folder for big files, like videos, disk images and installers. ~/Library and apps are left out.</key>
+	<string>ホームフォルダから、ビデオ、ディスクイメージ、インストーラなどの大きなファイルを探します。~/Library と App は対象外です。</string>
+	<key>Mail Attachments</key>
+	<string>メールの添付ファイル</string>
+	<key>Mail downloads</key>
+	<string>メールのダウンロード</string>
+	<key>Maintenance</key>
+	<string>メンテナンス</string>
+	<key>Managed by macOS</key>
+	<string>macOS が管理</string>
+	<key>Matches bundle ID</key>
+	<string>バンドル ID に一致</string>
+	<key>Matches name</key>
+	<string>名前に一致</string>
+	<key>Measuring apps</key>
+	<string>App を計測中</string>
+	<key>Measuring apps…</key>
+	<string>App を計測中…</string>
+	<key>Measuring…</key>
+	<string>計測中…</string>
+	<key>Memory</key>
+	<string>メモリ</string>
+	<key>Memory %@</key>
+	<string>メモリ %@</string>
+	<key>Menu bar</key>
+	<string>メニューバー</string>
+	<key>Menu bar shows</key>
+	<string>メニューバーの表示</string>
+	<key>Move to Quarantine</key>
+	<string>隔離へ移動</string>
+	<key>Move to Trash</key>
+	<string>ゴミ箱に入れる</string>
+	<key>Move to the Trash</key>
+	<string>ゴミ箱に入れる</string>
+	<key>Moved to Trash</key>
+	<string>ゴミ箱に入れました</string>
+	<key>Moving %@ to quarantine…</key>
+	<string>%@ を隔離へ移動中…</string>
+	<key>Moving…</key>
+	<string>移動中…</string>
+	<key>Needed to scan Trash, Mail, Safari and iOS backups.</key>
+	<string>ゴミ箱、メール、Safari、iOS バックアップのスキャンに必要です。</string>
+	<key>Needs access</key>
+	<string>アクセスが必要</string>
+	<key>Needs admin</key>
+	<string>管理者権限が必要</string>
+	<key>Needs administrator — not supported yet. These stay in place and are shown for information.</key>
+	<string>管理者権限が必要なため、まだ対応していません。これらはそのまま残り、情報として表示されます。</string>
+	<key>Needs password</key>
+	<string>パスワードが必要</string>
+	<key>Needs your administrator password to uninstall</key>
+	<string>アンインストールには管理者パスワードが必要です</string>
+	<key>Network</key>
+	<string>ネットワーク</string>
+	<key>Next scan %@ or later, while OpenClean is running.</key>
+	<string>次回のスキャンは %@ 以降、OpenClean の実行中に行われます。</string>
+	<key>No apps match “%@”</key>
+	<string>“%@”に一致する App はありません</string>
+	<key>No apps to uninstall</key>
+	<string>アンインストールできる App はありません</string>
+	<key>No bundle ID</key>
+	<string>バンドル ID なし</string>
+	<key>No cleanups yet</key>
+	<string>まだクリーンアップしていません</string>
+	<key>No duplicates</key>
+	<string>重複はありません</string>
+	<key>No duplicates found</key>
+	<string>重複は見つかりませんでした</string>
+	<key>No identical files over 1 MB in these folders.</key>
+	<string>これらのフォルダに 1 MB を超える同一ファイルはありません。</string>
+	<key>No large files found</key>
+	<string>大きなファイルは見つかりませんでした</string>
+	<key>No launch agents in your Library.</key>
+	<string>あなたのライブラリに起動エージェントはありません。</string>
+	<key>No leftovers found in your Library.</key>
+	<string>あなたのライブラリに残りファイルは見つかりませんでした。</string>
+	<key>No matching files</key>
+	<string>一致するファイルはありません</string>
+	<key>No release notes were published for this version.</key>
+	<string>このバージョンのリリースノートは公開されていません。</string>
+	<key>No scan yet</key>
+	<string>まだスキャンしていません</string>
+	<key>None installed.</key>
+	<string>インストールされていません。</string>
+	<key>Normal</key>
+	<string>正常</string>
+	<key>Not allowed</key>
+	<string>許可されていません</string>
+	<key>Not allowed yet</key>
+	<string>まだ許可されていません</string>
+	<key>Not loaded</key>
+	<string>未読み込み</string>
+	<key>Not opened for</key>
+	<string>開いていない期間</string>
+	<key>Not run from OpenClean yet</key>
+	<string>まだ OpenClean から実行していません</string>
+	<key>Nothing</key>
+	<string>なし</string>
+	<key>Nothing cleaned yet</key>
+	<string>まだ何もクリーンアップしていません</string>
+	<key>Nothing inside takes up space.</key>
+	<string>中身は容量を使っていません。</string>
+	<key>Nothing is excluded. Excluded folders and files are never scanned or cleaned.</key>
+	<string>除外しているものはありません。除外したフォルダとファイルはスキャンもクリーンアップもされません。</string>
+	<key>Nothing over %@. Try a smaller size.</key>
+	<string>%@ を超えるものはありません。サイズを小さくしてみてください。</string>
+	<key>Nothing selected</key>
+	<string>何も選択されていません</string>
+	<key>Nothing to clean right now</key>
+	<string>今はクリーンアップするものはありません</string>
+	<key>Nothing was moved to the Trash</key>
+	<string>ゴミ箱に入れたものはありません</string>
+	<key>Nothing was moved.</key>
+	<string>何も移動していません。</string>
+	<key>Nothing was moved. %@ is still in your Applications folder.</key>
+	<string>何も移動していません。%@ はまだアプリケーションフォルダにあります。</string>
+	<key>Nothing was run.</key>
+	<string>何も実行していません。</string>
+	<key>Notifications are off</key>
+	<string>通知はオフです</string>
+	<key>OK</key>
+	<string>OK</string>
+	<key>Off</key>
+	<string>オフ</string>
+	<key>Off. Nothing runs in the background.</key>
+	<string>オフ。バックグラウンドでは何も実行されません。</string>
+	<key>Old simulators</key>
+	<string>古いシミュレータ</string>
+	<key>One click finds the junk</key>
+	<string>ワンクリックで不要なものを発見</string>
+	<key>One permission</key>
+	<string>必要な権限はひとつ</string>
+	<key>One-click macOS housekeeping. Each task says exactly what it runs.</key>
+	<string>ワンクリックで macOS のメンテナンス。各タスクは何を実行するかを正確に示します。</string>
+	<key>Only exact matches are listed: folders and files named after %@, or exactly “%@” in Application Support, Caches and Logs.</key>
+	<string>完全に一致するものだけを表示します：%1$@ という名前のフォルダとファイル、または Application Support、Caches、Logs 内の“%2$@”という名前のもの。</string>
+	<key>Only node_modules, virtual environments and build output go to quarantine. Nothing else in it is touched.</key>
+	<string>隔離へ移動するのは node_modules、仮想環境、ビルド出力だけです。それ以外には一切触れません。</string>
+	<key>Only your own processes can be measured without administrator rights. System processes are never offered Quit.</key>
+	<string>管理者権限なしで計測できるのは自分のプロセスだけです。システムプロセスに「終了」が表示されることはありません。</string>
+	<key>Open %@</key>
+	<string>%@ を開く</string>
+	<key>Open Installer</key>
+	<string>インストーラを開く</string>
+	<key>Open Login Items Settings</key>
+	<string>ログイン項目の設定を開く</string>
+	<key>Open Notification Settings</key>
+	<string>通知の設定を開く</string>
+	<key>Open OpenClean</key>
+	<string>OpenClean を開く</string>
+	<key>Open Privacy Settings</key>
+	<string>プライバシー設定を開く</string>
+	<key>Open Settings</key>
+	<string>設定を開く</string>
+	<key>Open System Settings</key>
+	<string>システム設定を開く</string>
+	<key>Open source under GPL-3.0.</key>
+	<string>GPL-3.0 のオープンソースです。</string>
+	<key>OpenClean</key>
+	<string>OpenClean</string>
+	<key>OpenClean %@</key>
+	<string>OpenClean %@</string>
+	<key>OpenClean %@ is available</key>
+	<string>OpenClean %@ が利用可能です</string>
+	<key>OpenClean %@ is available — you have %@.</key>
+	<string>OpenClean %1$@ が利用可能です（現在のバージョンは %2$@）。</string>
+	<key>OpenClean %@ is the newest version.</key>
+	<string>OpenClean %@ は最新バージョンです。</string>
+	<key>OpenClean asks api.github.com once a day whether a newer release exists, and downloads updates only from GitHub. Nothing about you is sent.</key>
+	<string>OpenClean は 1 日に 1 回 api.github.com に新しいリリースがあるかを問い合わせ、アップデートは GitHub からのみダウンロードします。あなたに関する情報は一切送信しません。</string>
+	<key>OpenClean couldn’t read this folder.</key>
+	<string>OpenClean はこのフォルダを読み取れませんでした。</string>
+	<key>OpenClean finds an app's caches, preferences, containers and launch agents by its exact bundle ID. The whole uninstall goes to quarantine, so it can be restored.</key>
+	<string>OpenClean は App のキャッシュ、環境設定、コンテナ、起動エージェントを正確なバンドル ID で見つけます。アンインストールしたものはすべて隔離へ移動するため、復元できます。</string>
+	<key>OpenClean lists your apps with their sizes. Nothing is removed until you confirm, and uninstalled apps can be restored from History.</key>
+	<string>OpenClean は App をサイズとともに一覧表示します。確認するまで何も削除されず、アンインストールした App は履歴から復元できます。</string>
+	<key>OpenClean looks for old projects in your home folder, but never in Documents or Desktop. Add a folder where you keep code, such as Documents/Code, to search it too.</key>
+	<string>OpenClean はホームフォルダで古いプロジェクトを探しますが、書類とデスクトップは対象にしません。コードを保管しているフォルダ（書類/Code など）を追加すると、そこも検索します。</string>
+	<key>OpenClean only offers Quit for apps, never for macOS components or itself.</key>
+	<string>OpenClean が「終了」を表示するのは App だけで、macOS のコンポーネントや OpenClean 自身には表示しません。</string>
+	<key>OpenClean was updated. Allow Full Disk Access again</key>
+	<string>OpenClean がアップデートされました。フルディスクアクセスをもう一度許可してください</string>
+	<key>OpenClean was updated: remove it from the list and add it again.</key>
+	<string>OpenClean がアップデートされました。リストから削除して、もう一度追加してください。</string>
+	<key>OpenClean was updated: select it, remove it with **−**, then add it again.</key>
+	<string>OpenClean がアップデートされました。選択して **−** で削除し、もう一度追加してください。</string>
+	<key>OpenClean, %@</key>
+	<string>OpenClean、%@</string>
+	<key>OpenClean, CPU %@, memory %@</key>
+	<string>OpenClean、CPU %1$@、メモリ %2$@</string>
+	<key>Other files</key>
+	<string>その他のファイル</string>
+	<key>Overview</key>
+	<string>概要</string>
+	<key>Part of macOS, another user's, or OpenClean itself — it can't be quit from here.</key>
+	<string>macOS の一部、ほかのユーザのもの、または OpenClean 自身のため、ここからは終了できません。</string>
+	<key>Pending</key>
+	<string>未完了</string>
+	<key>Performance</key>
+	<string>パフォーマンス</string>
+	<key>Permissions</key>
+	<string>権限</string>
+	<key>Pick an app to see what it left behind</key>
+	<string>App を選ぶと、残したものが表示されます</string>
+	<key>Preferences</key>
+	<string>環境設定</string>
+	<key>Preferences for every part of OpenClean.</key>
+	<string>OpenClean のすべての部分の設定です。</string>
+	<key>Press Return to start</key>
+	<string>Return キーを押して開始</string>
+	<key>Pressure: %@</key>
+	<string>負荷：%@</string>
+	<key>Privacy &amp; Security › Full Disk Access</key>
+	<string>プライバシーとセキュリティ › フルディスクアクセス</string>
+	<key>Probably from %@</key>
+	<string>おそらく %@ から</string>
+	<key>Process</key>
+	<string>プロセス</string>
+	<key>Project folders</key>
+	<string>プロジェクトフォルダ</string>
+	<key>Protected</key>
+	<string>保護</string>
+	<key>Quarantine</key>
+	<string>隔離</string>
+	<key>Quarantined</key>
+	<string>隔離済み</string>
+	<key>Quarantined items can be restored until they expire.</key>
+	<string>隔離された項目は、期限が切れるまで復元できます。</string>
+	<key>Quick Look</key>
+	<string>クイックルック</string>
+	<key>Quick Look %@</key>
+	<string>%@ をクイックルック</string>
+	<key>Quit</key>
+	<string>終了</string>
+	<key>Quit %@ to uninstall it</key>
+	<string>アンインストールするには %@ を終了してください</string>
+	<key>Quitting %@…</key>
+	<string>%@ を終了しています…</string>
+	<key>Reading launch agents…</key>
+	<string>起動エージェントを読み込み中…</string>
+	<key>Reads your Applications folders only</key>
+	<string>アプリケーションフォルダだけを読み取ります</string>
+	<key>Ready to install OpenClean %@</key>
+	<string>OpenClean %@ をインストールする準備ができました</string>
+	<key>Rebuild Launch Services database</key>
+	<string>Launch Services データベースを再構築</string>
+	<key>Rebuilds the list that decides which app opens which file and what appears in “Open With”. Fixes duplicate or missing entries. Default apps you chose may need choosing again.</key>
+	<string>どの App でどのファイルを開くか、「このアプリケーションで開く」に何が表示されるかを決めるリストを再構築します。重複や欠落した項目を修正します。選んでいたデフォルトの App を選び直す必要がある場合があります。</string>
+	<key>Refresh</key>
+	<string>更新</string>
+	<key>Reindex Spotlight</key>
+	<string>Spotlight のインデックスを再作成</string>
+	<key>Remind Me Later</key>
+	<string>後で通知</string>
+	<key>Remove</key>
+	<string>削除</string>
+	<key>Remove %@</key>
+	<string>%@ を削除</string>
+	<key>Remove %@?</key>
+	<string>%@ を削除しますか？</string>
+	<key>Remove apps and what they leave behind</key>
+	<string>App と、その残りファイルを削除</string>
+	<key>Remove apps and what they left behind</key>
+	<string>App と、その残りファイルを削除</string>
+	<key>Remove…</key>
+	<string>削除…</string>
+	<key>Replace It (old one goes to Trash)</key>
+	<string>置き換える（古いものはゴミ箱へ）</string>
+	<key>Report only</key>
+	<string>表示のみ</string>
+	<key>Reset</key>
+	<string>リセット</string>
+	<key>Restore</key>
+	<string>復元</string>
+	<key>Restore All…</key>
+	<string>すべて復元…</string>
+	<key>Restored</key>
+	<string>復元済み</string>
+	<key>Restored from History</key>
+	<string>履歴から復元しました</string>
+	<key>Retry</key>
+	<string>再試行</string>
+	<key>Reveal %@ in Finder</key>
+	<string>%@ を Finder に表示</string>
+	<key>Reveal in Finder</key>
+	<string>Finder に表示</string>
+	<key>Review</key>
+	<string>要確認</string>
+	<key>Review cleanup</key>
+	<string>クリーンアップの確認</string>
+	<key>Review what moves to quarantine before anything happens</key>
+	<string>実行前に、隔離へ移動するものを確認します</string>
+	<key>Run</key>
+	<string>実行</string>
+	<key>Run %@</key>
+	<string>%@ を実行</string>
+	<key>Run Smart Scan to see what can be cleaned.</key>
+	<string>Smart Scan を実行すると、クリーンアップできるものが表示されます。</string>
+	<key>Run maintenance scripts</key>
+	<string>メンテナンススクリプトを実行</string>
+	<key>Run “%@”?</key>
+	<string>“%@”を実行しますか？</string>
+	<key>Running</key>
+	<string>実行中</string>
+	<key>Running %@</key>
+	<string>%@ を実行中</string>
+	<key>Runs the daily, weekly and monthly housekeeping scripts macOS ships with (log rotation, temporary file cleanup). macOS normally runs them on its own.</key>
+	<string>macOS に付属する日次・週次・月次のメンテナンススクリプト（ログのローテーション、一時ファイルの削除）を実行します。通常は macOS が自動で実行します。</string>
+	<key>Runs: %@</key>
+	<string>実行内容：%@</string>
+	<key>Run…</key>
+	<string>実行…</string>
+	<key>Safe</key>
+	<string>安全</string>
+	<key>Safe by design</key>
+	<string>安全な設計</string>
+	<key>Safe items are picked for you. Review items go to quarantine first, so you can undo.</key>
+	<string>安全な項目はあらかじめ選択されています。要確認の項目はまず隔離へ移動するので、元に戻せます。</string>
+	<key>Safety: %@</key>
+	<string>安全性：%@</string>
+	<key>Same content</key>
+	<string>同じ内容</string>
+	<key>Sample</key>
+	<string>サンプル</string>
+	<key>Scan</key>
+	<string>スキャン</string>
+	<key>Scan Again</key>
+	<string>再スキャン</string>
+	<key>Scan This Folder</key>
+	<string>このフォルダをスキャン</string>
+	<key>Scan reminder</key>
+	<string>スキャンのリマインダー</string>
+	<key>Scanning</key>
+	<string>スキャン中</string>
+	<key>Scanning %@…</key>
+	<string>%@ をスキャン中…</string>
+	<key>Search apps</key>
+	<string>App を検索</string>
+	<key>Section</key>
+	<string>セクション</string>
+	<key>See exactly where your space went</key>
+	<string>容量の使い道を正確に把握</string>
+	<key>See the feature tour and permission setup again.</key>
+	<string>機能紹介と権限の設定をもう一度表示します。</string>
+	<key>See what takes up space</key>
+	<string>容量を使っているものを確認</string>
+	<key>Select a rule</key>
+	<string>ルールを選択</string>
+	<key>Select an app</key>
+	<string>App を選択</string>
+	<key>Settings</key>
+	<string>設定</string>
+	<key>Settings…</key>
+	<string>設定…</string>
+	<key>Show CPU and memory in the menu bar</key>
+	<string>メニューバーに CPU とメモリを表示</string>
+	<key>Show OpenClean in the menu bar</key>
+	<string>メニューバーに OpenClean を表示</string>
+	<key>Show Tour</key>
+	<string>紹介を表示</string>
+	<key>Show advanced (caution) rules</key>
+	<string>詳細ルール（注意）を表示</string>
+	<key>Show next to the icon</key>
+	<string>アイコンの横に表示</string>
+	<key>Size</key>
+	<string>サイズ</string>
+	<key>Sizes are space on disk. Copies made by APFS cloning may share space.</key>
+	<string>サイズはディスク上の使用量です。APFS のクローンで作成されたコピーは領域を共有している場合があります。</string>
+	<key>Skip It</key>
+	<string>スキップ</string>
+	<key>Skip This Version</key>
+	<string>このバージョンをスキップ</string>
+	<key>Skipped</key>
+	<string>スキップ</string>
+	<key>Skipped while %@ is running. Quit it and scan again.</key>
+	<string>%@ の実行中はスキップします。終了してからもう一度スキャンしてください。</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Some rule packs were skipped</key>
+	<string>一部のルールパックはスキップされました</string>
+	<key>Something went wrong</key>
+	<string>問題が発生しました</string>
+	<key>Sort by</key>
+	<string>並べ替え</string>
+	<key>Sorted by size. Tick the ones you no longer need; they go to the Trash.</key>
+	<string>サイズ順に並んでいます。不要になったものにチェックを入れると、ゴミ箱に入ります。</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space Lens maps a folder by size so you can find what to remove. Nothing is removed until you tick it and confirm; items go to the Trash.</key>
+	<string>Space Lens はフォルダをサイズ別にマップ表示し、削除するものを見つけやすくします。チェックを入れて確認するまで何も削除されず、項目はゴミ箱に入ります。</string>
+	<key>Space Lens view</key>
+	<string>Space Lens の表示</string>
+	<key>Space map of %@</key>
+	<string>%@ の容量マップ</string>
+	<key>Spotlight is rebuilding its index in the background. Search results fill in as it goes.</key>
+	<string>Spotlight はバックグラウンドでインデックスを再構築しています。検索結果は順次表示されるようになります。</string>
+	<key>Start over</key>
+	<string>最初からやり直す</string>
+	<key>Starting scan…</key>
+	<string>スキャンを開始しています…</string>
+	<key>Step %lld of %lld</key>
+	<string>ステップ %1$lld / %2$lld</string>
+	<key>Step %lld: %@</key>
+	<string>ステップ %1$lld：%2$@</string>
+	<key>Stop</key>
+	<string>停止</string>
+	<key>Stop Excluding</key>
+	<string>除外をやめる</string>
+	<key>Suggested to keep</key>
+	<string>残すことをおすすめ</string>
+	<key>System (read-only)</key>
+	<string>システム（読み出し専用）</string>
+	<key>System (root)</key>
+	<string>システム（root）</string>
+	<key>System Junk</key>
+	<string>システムの不要ファイル</string>
+	<key>Tasks marked “Needs admin” ask for your password once per run. OpenClean can only run these exact commands as administrator.</key>
+	<string>「管理者権限が必要」と表示されたタスクは、実行のたびにパスワードを 1 回求めます。OpenClean が管理者として実行できるのは、これらの決まったコマンドだけです。</string>
+	<key>The app</key>
+	<string>App</string>
+	<key>The app could not be moved.</key>
+	<string>App を移動できませんでした。</string>
+	<key>The app itself is always included</key>
+	<string>App 本体は常に含まれます</string>
+	<key>The command finished without errors.</key>
+	<string>コマンドはエラーなく完了しました。</string>
+	<key>The menu bar monitor only samples while it shows a figure or its window is open.</key>
+	<string>メニューバーのモニタは、数値を表示しているときかウインドウが開いているときだけ計測します。</string>
+	<key>The result shows only in the menu bar.</key>
+	<string>結果はメニューバーにだけ表示されます。</string>
+	<key>The scan was stopped early. Results are partial.</key>
+	<string>スキャンは途中で停止しました。結果は一部のみです。</string>
+	<key>The scan was stopped early. Sizes are partial.</key>
+	<string>スキャンは途中で停止しました。サイズは一部のみです。</string>
+	<key>The update didn't finish</key>
+	<string>アップデートは完了しませんでした</string>
+	<key>These apps carry their own login items. macOS decides whether they run; turn them on or off in System Settings → General → Login Items.</key>
+	<string>これらの App は独自のログイン項目を持っています。実行するかどうかは macOS が決めます。オン・オフはシステム設定 → 一般 → ログイン項目で切り替えてください。</string>
+	<key>Thin Time Machine local snapshots</key>
+	<string>Time Machine のローカルスナップショットを削減</string>
+	<key>This build of OpenClean has a new signature, so macOS no longer recognises the earlier permission. Remove OpenClean from the list in Settings, add it again, then click Check Again.</key>
+	<string>このビルドの OpenClean は署名が新しいため、macOS は以前の許可を認識しなくなりました。設定のリストから OpenClean を削除してもう一度追加し、「再確認」をクリックしてください。</string>
+	<key>This can take a minute.</key>
+	<string>1 分ほどかかる場合があります。</string>
+	<key>This folder is deep in the map, so its contents were summarized.</key>
+	<string>このフォルダはマップの深い階層にあるため、中身はまとめて表示しています。</string>
+	<key>This is OpenClean itself</key>
+	<string>これは OpenClean 自身です</string>
+	<key>This module is planned for a later OpenClean release.</key>
+	<string>このモジュールは今後の OpenClean のリリースで予定しています。</string>
+	<key>This release can't be installed from inside OpenClean. Download it from GitHub instead.</key>
+	<string>このリリースは OpenClean 内からはインストールできません。代わりに GitHub からダウンロードしてください。</string>
+	<key>Tick a category to clean it</key>
+	<string>クリーンアップするカテゴリにチェックを入れてください</string>
+	<key>Tick items to move them</key>
+	<string>移動する項目にチェックを入れてください</string>
+	<key>Tick the copies you don’t need; they go to the Trash. One copy of each file always stays, and nothing is picked for you.</key>
+	<string>不要なコピーにチェックを入れると、ゴミ箱に入ります。各ファイルのコピーは必ずひとつ残り、自動で選択されるものはありません。</string>
+	<key>Today, %@</key>
+	<string>今日 %@</string>
+	<key>Trash</key>
+	<string>ゴミ箱</string>
+	<key>Trash, Mail, Safari and iOS backups can be scanned.</key>
+	<string>ゴミ箱、メール、Safari、iOS バックアップをスキャンできます。</string>
+	<key>Trash, Mail, Safari and iOS backups can only be scanned with Full Disk Access.</key>
+	<string>ゴミ箱、メール、Safari、iOS バックアップは、フルディスクアクセスがある場合のみスキャンできます。</string>
+	<key>Trash, Mail, Safari and iOS backups live in folders macOS protects. OpenClean only reads what its cleaning rules list, and never sends anything off your Mac.</key>
+	<string>ゴミ箱、メール、Safari、iOS バックアップは macOS が保護するフォルダにあります。OpenClean はクリーンアップルールに記載されたものだけを読み取り、Mac の外に何かを送信することはありません。</string>
+	<key>Trash…</key>
+	<string>ゴミ箱へ…</string>
+	<key>Turn Off</key>
+	<string>オフにする</string>
+	<key>Turn On</key>
+	<string>オンにする</string>
+	<key>Turn on **OpenClean** in the list, or drag its icon below into the list.</key>
+	<string>リストで **OpenClean** をオンにするか、下のアイコンをリストにドラッグします。</string>
+	<key>Undo for 7 days</key>
+	<string>7 日間元に戻せます</string>
+	<key>Uninstall</key>
+	<string>アンインストール</string>
+	<key>Uninstall %@?</key>
+	<string>%@ をアンインストールしますか？</string>
+	<key>Uninstall cancelled</key>
+	<string>アンインストールをキャンセルしました</string>
+	<key>Uninstaller</key>
+	<string>アンインストーラ</string>
+	<key>Uninstalling</key>
+	<string>アンインストール中</string>
+	<key>Unknown</key>
+	<string>不明</string>
+	<key>Unknown app</key>
+	<string>不明な App</string>
+	<key>Update</key>
+	<string>アップデート</string>
+	<key>Updates</key>
+	<string>アップデート</string>
+	<key>User Caches &amp; Logs</key>
+	<string>ユーザのキャッシュとログ</string>
+	<key>Utilities</key>
+	<string>ユーティリティ</string>
+	<key>Value</key>
+	<string>値</string>
+	<key>Verifying…</key>
+	<string>検証中…</string>
+	<key>Version %@</key>
+	<string>バージョン %@</string>
+	<key>Videos</key>
+	<string>ビデオ</string>
+	<key>View on GitHub</key>
+	<string>GitHub で表示</string>
+	<key>Waiting for access…</key>
+	<string>アクセスを待っています…</string>
+	<key>Waiting for your password, then moving %@ to quarantine…</key>
+	<string>パスワードの入力を待っています。その後 %@ を隔離へ移動します…</string>
+	<key>We found %@ to clean</key>
+	<string>クリーンアップできるものが %@ 見つかりました</string>
+	<key>Welcome Tour…</key>
+	<string>ようこそツアー…</string>
+	<key>Welcome back. Ready for another sweep?</key>
+	<string>おかえりなさい。もう一度スキャンしますか？</string>
+	<key>Welcome to OpenClean</key>
+	<string>OpenClean へようこそ</string>
+	<key>Welcome tour</key>
+	<string>ようこそツアー</string>
+	<key>What moves to quarantine</key>
+	<string>隔離へ移動するもの</string>
+	<key>What starts when you log in, and who installed it.</key>
+	<string>ログイン時に起動するものと、それをインストールしたもの。</string>
+	<key>What's New</key>
+	<string>新機能</string>
+	<key>While OpenClean or its menu bar item is running, it scans in the background and tells you how much can be cleaned: in the menu bar, and with a notification when it's 1 GB or more. It never cleans by itself.</key>
+	<string>OpenClean またはそのメニューバー項目の実行中は、バックグラウンドでスキャンし、クリーンアップできる量を知らせます。メニューバーに表示し、1 GB 以上なら通知もします。自動でクリーンアップすることはありません。</string>
+	<key>Yesterday, %@</key>
+	<string>昨日 %@</string>
+	<key>You</key>
+	<string>あなた</string>
+	<key>You can put items back from the Trash in Finder.</key>
+	<string>Finder でゴミ箱から元に戻せます。</string>
+	<key>You can switch to other screens while this runs.</key>
+	<string>実行中もほかの画面に切り替えられます。</string>
+	<key>You have %@. Your current version stays in History after updating.</key>
+	<string>現在のバージョンは %@ です。アップデート後も現在のバージョンは履歴に残ります。</string>
+	<key>You're all set</key>
+	<string>準備が完了しました</string>
+	<key>You're up to date</key>
+	<string>最新の状態です</string>
+	<key>Your Mac is %@ lighter</key>
+	<string>Mac が %@ 軽くなりました</string>
+	<key>Your current version is kept in History, so you can go back to it. After OpenClean restarts, macOS will ask you to allow Full Disk Access again.</key>
+	<string>現在のバージョンは履歴に保存されるので、元に戻せます。OpenClean の再起動後、macOS がフルディスクアクセスをもう一度許可するよう求めます。</string>
+	<key>Your launch agents</key>
+	<string>あなたの起動エージェント</string>
+	<key>Your rule packs</key>
+	<string>あなたのルールパック</string>
+	<key>You’ll see its size, its leftovers in your Library, and what would move to quarantine.</key>
+	<string>サイズ、ライブラリ内の残りファイル、隔離へ移動するものが表示されます。</string>
+	<key>and %lld more</key>
+	<string>ほか %lld 件</string>
+	<key>cleanup</key>
+	<string>回のクリーンアップ</string>
+	<key>cleanups</key>
+	<string>回のクリーンアップ</string>
+	<key>collapsed</key>
+	<string>折りたたみ</string>
+	<key>current</key>
+	<string>現在</string>
+	<key>expanded</key>
+	<string>展開</string>
+	<key>files looked at · %@</key>
+	<string>確認したファイル · %@</string>
+	<key>found</key>
+	<string>検出</string>
+	<key>freed in total</key>
+	<string>合計解放量</string>
+	<key>iOS Backups</key>
+	<string>iOS バックアップ</string>
+	<key>kept running</key>
+	<string>常に実行</string>
+	<key>last opened</key>
+	<string>最後に開いた日</string>
+	<key>launchctl couldn’t be asked for the current state, so “running” isn’t shown.</key>
+	<string>launchctl に現在の状態を問い合わせられなかったため、「実行中」は表示されません。</string>
+	<key>macOS treats each new version of OpenClean as a new app. In Settings, remove OpenClean from the Full Disk Access list, add it again, then click Check Again.</key>
+	<string>macOS は OpenClean の新しいバージョンをそれぞれ別の App として扱います。設定でフルディスクアクセスのリストから OpenClean を削除してもう一度追加し、「再確認」をクリックしてください。</string>
+	<key>macOS will ask for your administrator password to move %@ to quarantine. If you restore it later, it comes back owned by you.</key>
+	<string>%@ を隔離へ移動するために、macOS が管理者パスワードを求めます。後で復元すると、所有者はあなたになります。</string>
+	<key>macOS will ask for your administrator password.</key>
+	<string>macOS が管理者パスワードを求めます。</string>
+	<key>moved</key>
+	<string>移動済み</string>
+	<key>needs your password</key>
+	<string>パスワードが必要</string>
+	<key>never</key>
+	<string>なし</string>
+	<key>not selected</key>
+	<string>未選択</string>
+	<key>not visited yet</key>
+	<string>未表示</string>
+	<key>of %@</key>
+	<string>/ %@</string>
+	<key>of %@ on your startup disk</key>
+	<string>起動ディスク %@ 中</string>
+	<key>on disk</key>
+	<string>ディスク使用量</string>
+	<key>owner</key>
+	<string>所有者</string>
+	<key>partially selected</key>
+	<string>一部選択</string>
+	<key>restarted when needed</key>
+	<string>必要に応じて再起動</string>
+	<key>runs as root</key>
+	<string>root として実行</string>
+	<key>selected</key>
+	<string>選択済み</string>
+	<key>starts at login</key>
+	<string>ログイン時に起動</string>
+	<key>the app</key>
+	<string>App</string>
+	<key>the bundle ID</key>
+	<string>バンドル ID</string>
+	<key>used of %@</key>
+	<string>使用中 / %@</string>
+	<key>visited</key>
+	<string>表示済み</string>
+	<key>•</key>
+	<string>•</string>
+	<key>↑ %@ sent</key>
+	<string>↑ %@ 送信</string>
+	<key>↓ %@  ↑ %@</key>
+	<string>↓ %1$@  ↑ %2$@</string>
+</dict>
+</plist>

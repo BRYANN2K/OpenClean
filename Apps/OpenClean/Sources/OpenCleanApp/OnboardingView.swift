@@ -130,7 +130,7 @@ struct OnboardingView: View {
                     .buttonStyle(.plain)
                     .disabled(!seen)
                     .accessibilityLabel("Step \(step.rawValue + 1): \(step.title)")
-                    .accessibilityValue(current ? "current" : seen ? "visited" : "not visited yet")
+                    .accessibilityValue(current ? Text("current") : seen ? Text("visited") : Text("not visited yet"))
                 }
             }
             .animation(.snappy(duration: 0.3), value: onboarding.step)
@@ -145,7 +145,9 @@ struct OnboardingView: View {
                     .disabled(!onboarding.canFinish(accessGranted: granted))
                     .keyboardShortcut(.defaultAction)
                 } else {
-                    Button(onboarding.step == .welcome ? "Get started" : "Continue") {
+                    Button(
+                        onboarding.step == .welcome ? String(localized: "Get started") : String(localized: "Continue")
+                    ) {
                         onboarding.next(accessGranted: granted)
                     }
                     .buttonStyle(CapsuleButtonStyle(prominent: true))
@@ -173,9 +175,9 @@ struct OnboardingView: View {
 
 /// Visual on top, eyebrow + title + one paragraph below, each fading up in turn.
 struct OnboardingPage<Visual: View>: View {
-    let eyebrow: (String, Color)?
-    let title: String
-    let text: String
+    let eyebrow: (LocalizedStringKey, Color)?
+    let title: LocalizedStringKey
+    let text: LocalizedStringKey
     @ViewBuilder var visual: Visual
     @State private var shown = false
 
@@ -395,7 +397,7 @@ struct DonePage: View {
         .onAppear { shown = true }
     }
 
-    private func check(_ label: String, ok: Bool, delay: Double) -> some View {
+    private func check(_ label: LocalizedStringKey, ok: Bool, delay: Double) -> some View {
         HStack(spacing: 12) {
             Image(systemName: ok ? "checkmark" : "minus")
                 .font(.system(size: 11, weight: .heavy))
@@ -406,7 +408,8 @@ struct DonePage: View {
                 .animation(.spring(duration: 0.45, bounce: 0.4).delay(delay), value: shown)
             Text(label).font(.system(size: 14))
             Spacer()
-            Text(ok ? "Done" : "Pending").font(.system(size: 12)).foregroundStyle(Theme.textSecondary)
+            Text(ok ? String(localized: "Done") : String(localized: "Pending")).font(.system(size: 12)).foregroundStyle(
+                Theme.textSecondary)
         }
         .padding(.horizontal, 16)
         .frame(minHeight: 48)

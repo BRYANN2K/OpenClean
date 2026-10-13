@@ -92,10 +92,11 @@ struct ProbesTests {
         #expect(findings.allSatisfy { $0.reportOnly })
     }
 
-    @Test func standardRegistryHasAllV1Probes() {
+    @Test func standardRegistryHasAllProbes() {
         #expect(
             ProbeRegistry.standard.ids == [
                 "xcode.simulators", "homebrew.cache", "docker.disk-image", "timemachine.local-snapshots",
+                "node.project-modules", "python.project-venvs", "rust.project-targets", "dev.project-build-outputs",
             ])
     }
 }

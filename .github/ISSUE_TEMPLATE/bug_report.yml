@@ -1,7 +1,32 @@
 name: Bug report
 description: Something OpenClean did that it should not have, or did not do.
+title: "bug: "
 labels: [bug]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        If OpenClean removed something it should never touch (outside a rule's folder, a deny-listed place,
+        through a symlink), please report it privately as a
+        [security issue](https://github.com/leoAnimesh/OpenClean/security/advisories/new) instead.
+        Anything that went to quarantine can be restored from History (`openclean history`).
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where?
+      options:
+        - Smart Scan / cleanup
+        - Uninstaller
+        - Space Lens
+        - Performance / menu bar
+        - History / restore
+        - Software Update
+        - Settings / onboarding
+        - CLI
+        - Homebrew install
+        - Other
+    validations:
+      required: true
   - type: textarea
     id: what
     attributes:
@@ -9,6 +34,13 @@ body:
       description: Include the rule id if it is about a specific item (see `openclean rules list`).
     validations:
       required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Smart Scan
+        2. ...
   - type: textarea
     id: expected
     attributes:
@@ -19,7 +51,15 @@ body:
     id: versions
     attributes:
       label: OpenClean version and macOS version
-      placeholder: "0.1.0 on macOS 15.4 (Apple Silicon)"
+      description: OpenClean → About OpenClean, or `openclean --version`.
+      placeholder: "0.2.1 on macOS 15.4 (Apple Silicon)"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install it?
+      options: [DMG from GitHub Releases, Homebrew cask, Homebrew formula (CLI), Built from source]
     validations:
       required: true
   - type: textarea

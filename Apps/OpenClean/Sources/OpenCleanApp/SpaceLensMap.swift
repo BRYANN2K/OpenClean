@@ -191,7 +191,7 @@ struct SunburstView: View {
     }
 
     private func title(for node: SpaceNode) -> String {
-        if case .other(let count) = node.kind { return "\(count) smaller items" }
+        if case .other(let count) = node.kind { return String(localized: "\(count) smaller items") }
         return node.name
     }
 }
@@ -210,9 +210,12 @@ struct SpaceMapTab: View {
         switch model.mapPhase {
         case .idle:
             SpaceLensHomeView(
-                symbol: "chart.pie.fill", headline: "See what takes up space",
+                symbol: "chart.pie.fill", headline: String(localized: "See what takes up space"),
                 message:
-                    "Space Lens maps a folder by size so you can find what to remove. Nothing is removed until you tick it and confirm; items go to the Trash.",
+                    String(
+                        localized:
+                            "Space Lens maps a folder by size so you can find what to remove. Nothing is removed until you tick it and confirm; items go to the Trash."
+                    ),
                 scan: { model.startMapScan() },
                 options: {
                     VStack(spacing: 8) {
@@ -232,10 +235,11 @@ struct SpaceMapTab: View {
         case .scanning:
             let progress = model.mapProgress
             SpaceLensScanningView(
-                status: "Scanning \(folderLabel(model.mapRoot))…", bigNumber: formatBytes(progress.bytes),
-                detail: "\(progress.items.formatted()) items"
+                status: String(localized: "Scanning \(folderLabel(model.mapRoot))…"),
+                bigNumber: formatBytes(progress.bytes),
+                detail: String(localized: "\(progress.items) items")
                     + (progress.unreadable > 0
-                        ? " · \(progress.unreadable) unreadable" : ""),
+                        ? " · " + String(localized: "\(progress.unreadable) unreadable") : ""),
                 stop: { model.stopScan(.map) })
         case .results:
             SpaceMapResultsView()
@@ -243,12 +247,12 @@ struct SpaceMapTab: View {
     }
 
     private func folderLabel(_ path: String) -> String {
-        path == model.home ? "Home" : (path as NSString).lastPathComponent
+        path == model.home ? String(localized: "Home") : (path as NSString).lastPathComponent
     }
 }
 
 @MainActor
-func chooseFolder(startingAt path: String, prompt: String = "Choose") -> String? {
+func chooseFolder(startingAt path: String, prompt: String = String(localized: "Choose")) -> String? {
     let panel = NSOpenPanel()
     panel.canChooseDirectories = true
     panel.canChooseFiles = false
@@ -310,7 +314,8 @@ struct SpaceMapResultsView: View {
                 if index > 0 {
                     Image(systemName: "chevron.right").font(.system(size: 11)).foregroundStyle(Theme.textTertiary)
                 }
-                let title = index == 0 && model.mapResult?.rootPath == model.home ? "Home" : node.name
+                let title =
+                    index == 0 && model.mapResult?.rootPath == model.home ? String(localized: "Home") : node.name
                 if index == trail.count - 1 {
                     Text(title).font(.system(size: 22, weight: .bold)).lineLimit(1)
                 } else {
@@ -352,7 +357,8 @@ struct SpaceMapResultsView: View {
                     }
                 } else if !focus.isTruncated {
                     SpaceLensEmptyState(
-                        symbol: "folder", title: "Empty folder", message: "Nothing inside takes up space.")
+                        symbol: "folder", title: String(localized: "Empty folder"),
+                        message: String(localized: "Nothing inside takes up space."))
                 }
             }
             .padding(.bottom, 8)
@@ -384,7 +390,7 @@ struct SpaceMapResultsView: View {
                 path: candidate.path, title: node.name, subtitle: subtitle(node), size: node.size,
                 isSelected: model.isSelected(candidate.path),
                 disabledReason: model.protection(for: candidate.path, isDirectory: candidate.isDirectory)
-                    .map { "Can’t be moved to the Trash: \($0)" },
+                    .map { String(localized: "Can’t be moved to the Trash: \($0)") },
                 onToggle: { model.toggle(candidate) },
                 accessory: {
                     if node.canOpen {
@@ -408,11 +414,11 @@ struct SpaceMapResultsView: View {
     private func subtitle(_ node: SpaceNode) -> String {
         switch node.kind {
         case .directory:
-            if node.isUnreadable { return "Folder · couldn’t be read" }
+            if node.isUnreadable { return String(localized: "Folder · couldn’t be read") }
             let items = max(0, node.itemCount - 1)
-            return "Folder · \(items.formatted()) item\(items == 1 ? "" : "s")"
-        case .symlink: return "Alias (not followed)"
-        case .file, .other: return "File"
+            return String(localized: "Folder · \(items) items")
+        case .symlink: return String(localized: "Alias (not followed)")
+        case .file, .other: return String(localized: "File")
         }
     }
 
@@ -422,8 +428,8 @@ struct SpaceMapResultsView: View {
                 .foregroundStyle(Theme.gold)
             Text(
                 focus.isUnreadable
-                    ? "OpenClean couldn’t read this folder."
-                    : "This folder is deep in the map, so its contents were summarized."
+                    ? String(localized: "OpenClean couldn’t read this folder.")
+                    : String(localized: "This folder is deep in the map, so its contents were summarized.")
             )
             .font(.system(size: 13))
             .foregroundStyle(Theme.textSecondary)

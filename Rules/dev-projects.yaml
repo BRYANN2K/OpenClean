@@ -1,0 +1,29 @@
+pack: dev-projects
+version: 1
+rules:
+  - id: node.project-modules
+    name: node_modules in old projects
+    category: developer
+    explain: Installed packages in JavaScript projects you haven't changed for 30 days. Your package manager's install command puts them back. Moved to quarantine, so you can restore them. OpenClean searches your home folder for projects, but never Documents, Desktop, Downloads, Library or hidden folders, unless you add a folder under Settings → Project folders.
+    probe: node.project-modules
+    safety: review
+  - id: python.project-venvs
+    name: Python virtual environments in old projects
+    category: developer
+    explain: Virtual environments (folders with a pyvenv.cfg, such as .venv, that aren't themselves a project) in projects you haven't changed for 30 days. Recreate one with python -m venv, uv sync or poetry install; any package you installed by hand and never wrote down must be installed again. Moved to quarantine, so you can restore them.
+    probe: python.project-venvs
+    safety: review
+  - id: rust.project-targets
+    name: Rust target folders in old projects
+    category: developer
+    explain: Cargo build output in projects you haven't changed for 30 days. cargo build recreates it, which takes as long as a clean build. Moved to quarantine, so you can restore them.
+    probe: rust.project-targets
+    safety: review
+  - id: dev.project-build-outputs
+    name: Build output in old projects
+    category: developer
+    explain: Build folders and tool caches in projects you haven't changed for 30 days, each next to the file that proves which tool made it (SwiftPM .build, Maven target, Gradle build and .gradle, Dart .dart_tool, Next.js .next, Nuxt, SvelteKit, Turborepo, Parcel, Angular, and pytest, mypy and Ruff caches). The tool recreates them on the next build. Moved to quarantine, so you can restore them.
+    probe: dev.project-build-outputs
+    safety: review
+    conditions:
+      min_size: 1MB

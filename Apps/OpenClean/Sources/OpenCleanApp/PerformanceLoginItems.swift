@@ -100,7 +100,9 @@ struct LoginItemsView: View {
     }
 
     @ViewBuilder
-    private func section(title: String, caption: String, items: [LaunchItem], empty: String) -> some View {
+    private func section(
+        title: LocalizedStringKey, caption: LocalizedStringKey, items: [LaunchItem], empty: LocalizedStringKey
+    ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title).font(.system(size: 18, weight: .bold))
             Text(caption)
@@ -158,7 +160,7 @@ struct LoginItemsView: View {
                                     .truncationMode(.tail)
                             }
                             Spacer()
-                            StatusTag(text: "Managed by macOS")
+                            StatusTag(text: String(localized: "Managed by macOS"))
                         }
                         .padding(.horizontal, 18)
                         .frame(minHeight: 52)
@@ -211,7 +213,7 @@ struct LaunchItemRow: View {
                         .fixedSize()
                 }
             } else {
-                StatusTag(text: "System (read-only)", color: Theme.gold)
+                StatusTag(text: String(localized: "System (read-only)"), color: Theme.gold)
                     .help(
                         "Installed for all users by an administrator. OpenClean doesn’t change these in this version.")
             }
@@ -224,26 +226,28 @@ struct LaunchItemRow: View {
     private var ownerText: String {
         var parts: [String] = []
         if let owner = item.owner {
-            parts.append(owner.confidence == .exact ? "From \(owner.appName)" : "Probably from \(owner.appName)")
+            parts.append(
+                owner.confidence == .exact
+                    ? String(localized: "From \(owner.appName)") : String(localized: "Probably from \(owner.appName)"))
         } else {
-            parts.append("Unknown app")
+            parts.append(String(localized: "Unknown app"))
         }
-        if item.definition.runAtLoad { parts.append("starts at login") }
+        if item.definition.runAtLoad { parts.append(String(localized: "starts at login")) }
         switch item.definition.keepAlive {
-        case .always: parts.append("kept running")
-        case .conditional: parts.append("restarted when needed")
+        case .always: parts.append(String(localized: "kept running"))
+        case .conditional: parts.append(String(localized: "restarted when needed"))
         case .no: break
         }
-        if item.scope == .systemDaemon { parts.append("runs as root") }
+        if item.scope == .systemDaemon { parts.append(String(localized: "runs as root")) }
         return parts.joined(separator: " · ")
     }
 
     private var stateText: String {
-        if item.isDisabled { return "Off" }
+        if item.isDisabled { return String(localized: "Off") }
         switch item.loadState {
-        case .loaded(let pid): return pid == nil ? "Loaded" : "Running"
-        case .notLoaded: return "Not loaded"
-        case .unknown: return "Unknown"
+        case .loaded(let pid): return pid == nil ? String(localized: "Loaded") : String(localized: "Running")
+        case .notLoaded: return String(localized: "Not loaded")
+        case .unknown: return String(localized: "Unknown")
         }
     }
 }

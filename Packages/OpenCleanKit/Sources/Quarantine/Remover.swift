@@ -175,6 +175,10 @@ public struct Remover: Sendable {
         do {
             switch request.rule.effectiveDeleteMode {
             case .immediate:
+                // The linter allows make_writable only on regenerable, non-admin rules; checked again here.
+                if request.rule.makeWritable && request.rule.safety == .regenerable && !request.rule.needs(.admin) {
+                    try WritableTree.prepare(path, device: request.item.device, inode: request.item.inode)
+                }
                 try fileManager.removeItem(atPath: path)
                 mark(&manifest, index, .deleted, nil)
             case .quarantine:

@@ -20,6 +20,26 @@ developer-tool and AI-tool leftovers you can safely remove, shows you exactly wh
 keeps anything that is not trivially regenerable in a quarantine you can restore from for 7 days.
 No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/demo.gif" width="720" alt="Smart Scan in action: scanning, the results by category, and the review sheet before anything is removed">
+</p>
+
+| | |
+|---|---|
+| ![Smart Scan results: 19.39 GB found, safe items picked, review items left for you](docs/screenshots/smart-scan-results.png) | ![Cleanup: every rule with its safety level and a plain-language explanation of why it can go](docs/screenshots/cleanup.png) |
+| **Smart Scan** — safe items are picked for you; anything else waits for your review. | **Cleanup** — every rule shows its safety level and why it is safe to remove. |
+| ![Review sheet: what is deleted now and what goes to quarantine for 7 days](docs/screenshots/review.png) | ![History: a cleanup with 2.31 GB in quarantine and 7 days left to restore it](docs/screenshots/history.png) |
+| **Review** — see what is deleted now and what is quarantined before you confirm. | **History** — restore quarantined items until they expire. |
+| ![Uninstaller: an app with its Application Support folder and preferences, all moved to quarantine together](docs/screenshots/uninstaller.png) | ![Space Lens: a sunburst map of the home folder with the largest folders listed](docs/screenshots/space-lens.png) |
+| **Uninstaller** — an app and its exact-match leftovers, restorable for 7 days. | **Space Lens** — see what takes up space, plus large, old and duplicate files. |
+| ![Performance: live CPU, memory, disk and network figures](docs/screenshots/performance.png) | |
+| **Performance** — live figures, heavy consumers, login items and maintenance. | |
+
+<sub>Captured on a demo home folder filled with sample caches and apps; no real user files are shown. The Cleanup
+screenshot is rendered by the UI test harness (`OPENCLEAN_RECORD_SCREENSHOTS`), so it has no window title bar.</sub>
+
 ## Features
 
 - **Smart Scan** — one click to find System Junk, user caches and logs, browser caches, Trash, Mail
@@ -31,16 +51,43 @@ No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 - **Performance & menu bar monitor** — live CPU, memory, disk and network in the menu bar, heavy apps with
   Quit/Force Quit, login items and launch agents, and one-click maintenance (flush DNS, reindex Spotlight,
   rebuild Launch Services, thin Time Machine snapshots).
-- **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; npm, Yarn, pnpm,
-  pip, Cargo, Gradle, CocoaPods and Homebrew caches; Docker disk image reporting.
-- **AI model cleanup** — Ollama, LM Studio and Hugging Face caches.
+- **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; package caches for
+  npm/npx, Yarn, pnpm, Bun, Deno, Corepack, pip, uv, Poetry, conda, Cargo, Go (build and module caches),
+  Gradle, Maven, Coursier, Ivy,
+  SwiftPM, CocoaPods, pub, Bundler, Composer, Terraform and Homebrew; Playwright, Puppeteer, Cypress and
+  Electron downloads; JetBrains indexes and VS Code / Cursor caches; Docker disk image reporting.
+- **Old project cleanup** — finds `node_modules`, Python virtual environments, Rust `target` folders and
+  build output (SwiftPM, Maven, Gradle, Flutter, Next.js and more) in projects you haven't touched for 30
+  days; they go to quarantine, so a project can be restored as it was. Projects in Documents or Desktop are
+  searched only if you add their folder under Settings → Project folders.
+- **AI model cleanup** — Ollama, LM Studio, Hugging Face (models, datasets, Xet), PyTorch Hub, Whisper,
+  Keras, TensorFlow Datasets and Kaggle downloads.
 - **Safe by design** — Safe / Review / Caution levels, a hard deny-list, pre-delete checks, and a
   quarantine with **History and Restore** (undo for 1–90 days).
 - **Transparent rules** — every rule explains itself in the app; write and lint your own YAML packs.
 - **CLI with JSON output** — script `openclean scan` / `clean` in CI or dotfiles.
 - **Software Update** — OpenClean checks GitHub once a day for a new release (you can turn this off),
   downloads and verifies it, installs it in place and relaunches; the previous version stays in History.
+- **Scan reminder (optional, off by default)** — weekly or monthly, a read-only Smart Scan runs in the
+  background while OpenClean or its menu bar item is running and tells you how much can be cleaned. It
+  never cleans by itself.
 - **Native and private** — Swift 6 + SwiftUI, no telemetry, GPL-3.0.
+- **In your language** — the app is translated into German, Spanish, French, Japanese and Simplified
+  Chinese (see Languages below).
+
+## Languages
+
+The app follows your macOS language: English, Deutsch, Español, Français, 日本語 and 简体中文. To use
+a different language for OpenClean only, pick it under System Settings → General → Language & Region →
+Applications.
+
+The translations are **machine-assisted** and have not yet been reviewed by native speakers. If something
+reads oddly, or a safety message (quarantine, restore, "deleted immediately", administrator password)
+could be misread, please open an issue or a pull request — see [CONTRIBUTING.md](CONTRIBUTING.md#translations).
+
+Rule names and explanations come from the YAML rule packs and stay in English, as do a few detailed error
+messages from the shared core. The `openclean` CLI is English-only on purpose: its text output and
+`--json` are a stable contract for scripts.
 
 ## Why OpenClean
 
@@ -52,7 +99,7 @@ No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 | Rules come only from the vendor | Community rule packs, linted in CI; add your own |
 | Analytics, accounts, upsell | No analytics or accounts; the only network use is the daily update check |
 | GUI only | App and a scriptable CLI with JSON output |
-| General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face cleanup |
+| General junk focus | First-class Xcode, npm, Cargo, Gradle, Docker, Ollama, Hugging Face and old-project cleanup |
 
 ## Install
 
@@ -68,6 +115,21 @@ Releases are signed with a Developer ID and notarized by Apple, so they open lik
 
 Releases are published automatically when changes are merged to `main` (see
 [CONTRIBUTING.md](CONTRIBUTING.md#releases--versioning)).
+
+### Homebrew
+
+This repository is also a Homebrew tap:
+
+```sh
+brew install --cask leoanimesh/openclean/openclean   # the app (same signed, notarized DMG)
+brew install leoanimesh/openclean/openclean          # the openclean CLI (release build)
+brew install --HEAD leoanimesh/openclean/openclean   # the CLI built from the latest main (needs Xcode 16+)
+```
+
+The app keeps itself up to date (Settings → Updates), so `brew upgrade` leaves the cask alone unless you
+pass `--greedy`; `brew upgrade openclean` updates the CLI. The tap follows a new release shortly after it
+is published. `brew uninstall --zap --cask openclean` removes the app's preferences and caches but keeps
+`~/Library/Application Support/OpenClean`, which holds your quarantine (files you can still restore).
 
 ### Updates and privacy
 
@@ -86,13 +148,6 @@ Requires macOS 14+ and Xcode 16+.
 git clone https://github.com/leoAnimesh/OpenClean.git
 cd OpenClean
 make install          # app → /Applications, CLI → /usr/local/bin (may need sudo)
-```
-
-CLI only, via Homebrew (builds from the latest source):
-
-```sh
-brew tap leoanimesh/openclean https://github.com/leoAnimesh/OpenClean
-brew install --HEAD openclean
 ```
 
 ### Full Disk Access
@@ -114,6 +169,13 @@ openclean history
 openclean restore <session-id>
 openclean rules list | explain xcode.derived-data | lint my-pack.yaml
 openclean schedule purge --daily        # optional daily purge of expired quarantine
+
+openclean apps list [--json]            # installed apps, their leftovers and sizes (read-only)
+openclean apps uninstall com.example.app --dry-run
+openclean apps uninstall com.example.app --yes   # app + bundle-id leftovers to quarantine
+openclean space large --min-size 500MB --older-than 180 [--json]   # read-only
+openclean space duplicates [--json]     # identical files in Downloads, Desktop, Documents, Pictures, Movies, Music
+openclean performance [--json]          # CPU/memory snapshot and the heaviest apps (read-only)
 ```
 
 Exit codes: `0` success, `1` error or aborted, `2` finished but some items were skipped.
@@ -122,10 +184,21 @@ Exit codes: `0` success, `1` error or aborted, `2` finished but some items were 
 When `openclean clean` is not run from a terminal, system items that need the administrator password are
 skipped (with a note on stderr) unless you pass `--allow-admin`.
 
+`openclean apps uninstall` follows the same rules: it asks before moving anything (or needs `--yes`; it
+refuses on a non-terminal without it), `--json` needs `--yes` or `--dry-run`, and an app owned by the system
+(which needs your administrator password) is refused when not run from a terminal unless you pass
+`--allow-admin`. Leftovers named after the bundle identifier are moved with the app; ones matched only by
+the app's name stay unless you add `--include-name-matches`, and items in `/Library` always stay. The
+whole uninstall is one quarantine session, so `openclean restore <session-id>` brings it back. If several
+apps share a bundle identifier, pick one with `--path`. `space` and `performance` never remove or quit
+anything; use the app to move files to the Trash or quit processes.
+
 ## How it stays safe
 
 - A built-in deny-list (System, your Documents/Desktop, Keychains, Mail, iCloud Drive, app bundles,
-  Photos libraries) can never be removed, whatever a rule says. Deny-list checks are byte-level and
+  Photos libraries) can never be removed, whatever a rule says. The one exception is opt-in: folders such
+  as `node_modules` that the old-project search finds inside a project folder you chose in Settings may
+  go to quarantine even under Documents or Desktop; nothing else there is touched. Deny-list checks are byte-level and
   aware of Unicode normalization and letter case, so look-alike spellings of a protected path do not
   slip through.
 - Symlinks are never followed; a match that resolves outside its rule's folder is dropped.

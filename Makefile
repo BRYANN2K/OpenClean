@@ -41,6 +41,21 @@ app: build
 	cp Apps/OpenClean/Info.plist "$(APP)/Contents/Info.plist"
 	cp Rules/*.yaml "$(APP)/Contents/Resources/Rules/"
 	cp Apps/OpenClean/Resources/AppIcon.icns "$(APP)/Contents/Resources/AppIcon.icns"
+	@# Translations (Apps/OpenClean/Sources/*/Resources/Localizable.xcstrings, compiled by SwiftPM into
+	@# resource bundles). The app target's .lproj folders go straight into Contents/Resources: SwiftUI looks
+	@# up Text("…") literals in the main bundle, and that also tells macOS which languages the app has.
+	@# The model library's bundle is copied whole; `Bundle.appModel` finds it there. Neither bundle holds
+	@# code, and their build-time signatures are dropped (the app's signature seals them as resources).
+	@for target in OpenCleanApp OpenCleanAppModel; do \
+		[ -d "$(BIN)/OpenClean_$$target.bundle" ] || { echo "missing $(BIN)/OpenClean_$$target.bundle" >&2; exit 1; }; \
+	done
+	find "$(BIN)/OpenClean_OpenCleanApp.bundle" -maxdepth 3 -type d -name '*.lproj' -exec cp -R {} "$(APP)/Contents/Resources/" \;
+	ditto "$(BIN)/OpenClean_OpenCleanAppModel.bundle" "$(APP)/Contents/Resources/OpenClean_OpenCleanAppModel.bundle"
+	rm -rf "$(APP)/Contents/Resources/OpenClean_OpenCleanAppModel.bundle/Contents/_CodeSignature" \
+		"$(APP)/Contents/Resources/OpenClean_OpenCleanAppModel.bundle/_CodeSignature"
+	@for lang in de es fr ja zh-Hans; do \
+		[ -d "$(APP)/Contents/Resources/$$lang.lproj" ] || { echo "no $$lang.lproj in $(APP)" >&2; exit 1; }; \
+	done
 	plutil -replace CFBundleShortVersionString -string "$(VERSION)" "$(APP)/Contents/Info.plist"
 	plutil -replace CFBundleVersion -string "$(BUILD_NUMBER)" "$(APP)/Contents/Info.plist"
 	@# The bundle has no nested code (no frameworks, helpers or plug-ins), so signing the bundle signs its

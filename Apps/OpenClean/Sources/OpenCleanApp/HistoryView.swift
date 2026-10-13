@@ -27,14 +27,16 @@ struct HistoryView: View {
                     }
                     Spacer()
                     HStack(spacing: 28) {
-                        stat(formatBytes(stats.totalFreedBytes), "freed in total")
-                        stat("\(stats.cleanups)", stats.cleanups == 1 ? "cleanup" : "cleanups")
+                        stat(formatBytes(stats.totalFreedBytes), String(localized: "freed in total"))
+                        stat(
+                            "\(stats.cleanups)",
+                            stats.cleanups == 1 ? String(localized: "cleanup") : String(localized: "cleanups"))
                     }
                 }
 
                 if let lastRestore {
                     Label(
-                        "Restored \(lastRestore.restored.count) item(s), skipped \(lastRestore.skipped.count).",
+                        "\(lastRestore.restored.count) restored, \(lastRestore.skipped.count) skipped.",
                         systemImage: "arrow.uturn.backward.circle.fill"
                     )
                     .foregroundStyle(Theme.accent)
@@ -139,7 +141,7 @@ struct SessionRow: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityValue(isExpanded ? "expanded" : "collapsed")
+                .accessibilityValue(isExpanded ? Text("expanded") : Text("collapsed"))
                 Spacer()
                 quarantineStatus(hasRestorable: !restorable.isEmpty)
                 if manifest.purgedAt == nil && !restorable.isEmpty {
@@ -154,12 +156,9 @@ struct SessionRow: View {
                             Text((entry.originalPath as NSString).abbreviatingWithTildeInPath)
                                 .lineLimit(1)
                                 .truncationMode(.middle)
-                            Text(
-                                [entry.outcome.rawValue.capitalized, entry.reason].compactMap { $0 }.joined(
-                                    separator: " — ")
-                            )
-                            .font(.caption)
-                            .foregroundStyle(Theme.textSecondary)
+                            Text(entryStatus(entry))
+                                .font(.caption)
+                                .foregroundStyle(Theme.textSecondary)
                         }
                         Spacer()
                         Text(formatBytes(entry.size)).monospacedDigit().foregroundStyle(Theme.textSecondary)
@@ -182,7 +181,7 @@ struct SessionRow: View {
             let left = daysLeft
             VStack(alignment: .leading, spacing: 5) {
                 Text(
-                    "\(formatBytes(manifest.quarantinedBytes)) in quarantine · \(left) day\(left == 1 ? "" : "s") left"
+                    "\(Text("\(formatBytes(manifest.quarantinedBytes)) in quarantine")) · \(Text("\(left) days left"))"
                 )
                 .font(.caption)
                 .foregroundStyle(Theme.textSecondary)
@@ -202,16 +201,24 @@ struct SessionRow: View {
     private var title: String {
         let time = manifest.createdAt.formatted(date: .omitted, time: .shortened)
         let calendar = Calendar.current
-        if calendar.isDateInToday(manifest.createdAt) { return "Today, \(time)" }
-        if calendar.isDateInYesterday(manifest.createdAt) { return "Yesterday, \(time)" }
+        if calendar.isDateInToday(manifest.createdAt) { return String(localized: "Today, \(time)") }
+        if calendar.isDateInYesterday(manifest.createdAt) { return String(localized: "Yesterday, \(time)") }
         return manifest.createdAt.formatted(.dateTime.month(.abbreviated).day().hour().minute())
     }
 
     private var summary: String {
-        var parts = ["Freed \(formatBytes(CleanupStats.freedBytes(manifest)))"]
+        var parts = [String(localized: "Freed \(formatBytes(CleanupStats.freedBytes(manifest)))")]
         let count = manifest.entries.count
-        parts.append("\(count) item\(count == 1 ? "" : "s")")
-        if !manifest.skippedEntries.isEmpty { parts.append("\(manifest.skippedEntries.count) skipped") }
+        parts.append(String(localized: "\(count) items"))
+        if !manifest.skippedEntries.isEmpty {
+            parts.append(String(localized: "\(manifest.skippedEntries.count) skipped"))
+        }
         return parts.joined(separator: " · ")
+    }
+
+    /// "Quarantined", or "Skipped — Changed since the scan; an app may be using it."
+    private func entryStatus(_ entry: ManifestEntry) -> String {
+        let detail = SkippedItems.explanation(for: entry) ?? entry.reason
+        return [entry.outcome.localizedName, detail].compactMap { $0 }.joined(separator: " — ")
     }
 }

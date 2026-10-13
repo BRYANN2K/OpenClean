@@ -78,7 +78,7 @@ public final class UpdateModel {
         self.settings = settings
         self.client = client
         self.installer = installer
-        currentVersionText = currentVersion ?? "unknown"
+        currentVersionText = currentVersion ?? String(localized: "unknown", bundle: .appModel)
         self.currentVersion = currentVersion.flatMap(SemanticVersion.init)
         self.currentAppPath = currentAppPath
         self.checkInterval = checkInterval
@@ -313,9 +313,13 @@ public final class UpdateModel {
     static func describe(_ error: any Error) -> String {
         switch error {
         case let error as UpdateError: error.description
-        case let error as SelfUpdateError: "Couldn't install the update: \(error.description)."
+        case let error as SelfUpdateError:
+            String(localized: "Couldn't install the update: \(error.description).", bundle: .appModel)
         case let error as URLError:
-            "OpenClean couldn't reach GitHub (\(error.localizedDescription)). Check your connection and try again."
+            String(
+                localized:
+                    "OpenClean couldn't reach GitHub (\(error.localizedDescription)). Check your connection and try again.",
+                bundle: .appModel)
         default: error.localizedDescription
         }
     }

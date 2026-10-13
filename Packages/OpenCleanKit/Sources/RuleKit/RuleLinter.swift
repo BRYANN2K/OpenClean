@@ -88,6 +88,17 @@ public struct RuleLinter: Sendable {
                 problems.append("requires: admin rules must delete immediately")
             }
         }
+        if rule.makeWritable {
+            if rule.safety != .regenerable {
+                problems.append("make_writable is only allowed for regenerable rules")
+            }
+            if rule.effectiveDeleteMode != .immediate {
+                problems.append("make_writable is only allowed for rules that delete immediately")
+            }
+            if rule.needs(.admin) {
+                problems.append("make_writable can't be combined with requires: admin")
+            }
+        }
         if let days = rule.conditions.minAgeDays, days < 0 {
             problems.append("min_age_days must be >= 0")
         }

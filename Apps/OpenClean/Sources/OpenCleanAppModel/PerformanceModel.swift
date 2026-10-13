@@ -24,11 +24,11 @@ public enum MenuBarMetric: String, CaseIterable, Identifiable, Sendable {
 
     public var title: String {
         switch self {
-        case .none: "Icon only"
-        case .cpu: "CPU"
-        case .memory: "Memory"
-        case .cpuAndMemory: "CPU and memory"
-        case .network: "Network"
+        case .none: String(localized: "Icon only", bundle: .appModel)
+        case .cpu: String(localized: "CPU", bundle: .appModel)
+        case .memory: String(localized: "Memory", bundle: .appModel)
+        case .cpuAndMemory: String(localized: "CPU and memory", bundle: .appModel)
+        case .network: String(localized: "Network", bundle: .appModel)
         }
     }
 }
@@ -193,13 +193,19 @@ public final class PerformanceModel {
     }
 
     public func disable(_ item: LaunchItem) async {
-        await perform(item, success: "\(item.label) is turned off and won't start again until you turn it on.") {
+        await perform(
+            item,
+            success: String(
+                localized: "\(item.label) is turned off and won't start again until you turn it on.", bundle: .appModel)
+        ) {
             try $0.disable(item)
         }
     }
 
     public func enable(_ item: LaunchItem) async {
-        await perform(item, success: "\(item.label) is turned on.") { try $0.enable(item) }
+        await perform(item, success: String(localized: "\(item.label) is turned on.", bundle: .appModel)) {
+            try $0.enable(item)
+        }
     }
 
     public func remove(_ item: LaunchItem) async {
@@ -207,7 +213,10 @@ public final class PerformanceModel {
         await perform(
             item,
             success:
-                "\(item.label) was moved to quarantine. You can restore it from History for \(days) days; it loads again at your next login."
+                String(
+                    localized:
+                        "\(item.label) was moved to quarantine. You can restore it from History for \(days) days; it loads again at your next login.",
+                    bundle: .appModel)
         ) { service in
             try service.remove(item)
             return .done

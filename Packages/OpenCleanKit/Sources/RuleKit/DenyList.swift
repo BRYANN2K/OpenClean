@@ -29,7 +29,23 @@ public struct DenyList: Sendable {
 
     public func isDenied(_ path: String) -> Bool { denialReason(for: path) != nil }
 
+    /// The reason given for a path equal to or inside the protected subtree `root`.
+    static func insideReason(_ root: String) -> String { "inside protected location \(root)" }
+
+    /// The exact reasons given for paths in (or equal to) `~/Documents` and `~/Desktop`, the only deny-list
+    /// reasons `ProjectFolderExemption` can ever look past.
+    public var documentsAndDesktopReasons: Set<String> {
+        [Self.insideReason("\(home)/Documents"), Self.insideReason("\(home)/Desktop")]
+    }
+
     public func denialReason(for rawPath: String) -> String? {
+        denialReason(for: rawPath, ignoringDocumentsAndDesktop: false)
+    }
+
+    /// `ignoringDocumentsAndDesktop` skips only the "inside ~/Documents" and "inside ~/Desktop" rules, so
+    /// `ProjectFolderExemption` can confirm nothing else protects a path. Every other rule, including
+    /// "contains protected location" for Documents and Desktop themselves, still applies.
+    public func denialReason(for rawPath: String, ignoringDocumentsAndDesktop: Bool) -> String? {
         // Fail closed: a path we cannot reason about lexically is never deletable.
         guard rawPath.utf8.first == 0x2F else { return "non-canonical path (not absolute)" }
         if hasNonCanonicalComponent(rawPath) {
@@ -45,9 +61,11 @@ public struct DenyList: Sendable {
         for location in exact where key == pathKey(location) {
             return "protected location \(location)"
         }
+        let documentsAndDesktop = ["\(home)/Documents", "\(home)/Desktop"]
         for root in subtrees where within(root) {
             if allowedInside.contains(where: within) { continue }
-            return "inside protected location \(root)"
+            if ignoringDocumentsAndDesktop && documentsAndDesktop.contains(root) { continue }
+            return Self.insideReason(root)
         }
         let components = pathComponents(path)
         let keyComponents = key.split(separator: 0x2F, omittingEmptySubsequences: true)

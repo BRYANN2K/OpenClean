@@ -11,8 +11,18 @@ func formatBytes(_ bytes: Int64) -> String {
 /// Disk capacities without false precision: "160 GB" rather than "160.17 GB".
 func formatCapacity(_ bytes: Int64) -> String {
     let gigabytes = Double(bytes) / 1_000_000_000
-    if gigabytes >= 1_000 { return String(format: "%.1f TB", gigabytes / 1_000) }
-    if gigabytes >= 10 { return "\(Int(gigabytes.rounded())) GB" }
+    // Rounded first, so ByteCountFormatter (which writes the unit in the user's language, "Go" in French)
+    // has no decimals to show.
+    let formatter = ByteCountFormatter()
+    formatter.countStyle = .file
+    if gigabytes >= 1_000 {
+        formatter.allowedUnits = .useTB
+        return formatter.string(fromByteCount: Int64((gigabytes / 100).rounded()) * 100_000_000_000)
+    }
+    if gigabytes >= 10 {
+        formatter.allowedUnits = .useGB
+        return formatter.string(fromByteCount: Int64(gigabytes.rounded()) * 1_000_000_000)
+    }
     return formatBytes(bytes)
 }
 
@@ -42,7 +52,41 @@ struct CheckboxButton: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)
-        .accessibilityValue(state == .on ? "selected" : state == .mixed ? "partially selected" : "not selected")
+        .accessibilityValue(
+            state == .on
+                ? Text("selected") : state == .mixed ? Text("partially selected") : Text("not selected"))
+    }
+}
+
+/// A row in one of Cleanup's lists, selected like `SidebarRow`: soft white fill (the caller sets the
+/// semibold label), white 7% on hover. Not `List(selection:)`, which paints the macOS accent colour.
+/// `leading` (the checkbox) keeps its own clicks; the rest of the row is one plain button that selects it.
+struct SelectableRow<Leading: View, Content: View>: View {
+    let isSelected: Bool
+    let select: () -> Void
+    @ViewBuilder let leading: () -> Leading
+    @ViewBuilder let content: () -> Content
+    @State private var hovering = false
+
+    var body: some View {
+        HStack(spacing: 10) {
+            leading()
+            Button(action: select) {
+                content()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(isSelected ? Theme.rowSelected : hovering ? Theme.rowHover : .clear)
+        )
+        .onHover { hovering = $0 }
+        .animation(.easeOut(duration: 0.15), value: isSelected)
     }
 }
 
@@ -85,7 +129,8 @@ struct StorageCard: View {
 
     private var caption: String {
         stats.cleanups == 0
-            ? "Nothing cleaned yet" : "\(formatBytes(stats.totalFreedBytes)) freed by OpenClean"
+            ? String(localized: "Nothing cleaned yet")
+            : String(localized: "\(formatBytes(stats.totalFreedBytes)) freed by OpenClean")
     }
 }
 
@@ -119,20 +164,27 @@ struct AccessBanner: View {
 
     private var title: String {
         if updates.updatedFrom != nil {
-            return "OpenClean was updated. Allow Full Disk Access again"
+            return String(localized: "OpenClean was updated. Allow Full Disk Access again")
         }
         return model.accessAdvice == .regrantAfterRebuild
-            ? "Full Disk Access needs to be granted again" : "Full Disk Access is off"
+            ? String(localized: "Full Disk Access needs to be granted again")
+            : String(localized: "Full Disk Access is off")
     }
 
     private var message: String {
         if updates.updatedFrom != nil {
             return
-                "macOS treats each new version of OpenClean as a new app. In Settings, remove OpenClean from the Full Disk Access list, add it again, then click Check Again."
+                String(
+                    localized:
+                        "macOS treats each new version of OpenClean as a new app. In Settings, remove OpenClean from the Full Disk Access list, add it again, then click Check Again."
+                )
         }
         return model.accessAdvice == .regrantAfterRebuild
-            ? "This build of OpenClean has a new signature, so macOS no longer recognises the earlier permission. Remove OpenClean from the list in Settings, add it again, then click Check Again."
-            : "Trash, Mail, Safari and iOS backups can only be scanned with Full Disk Access."
+            ? String(
+                localized:
+                    "This build of OpenClean has a new signature, so macOS no longer recognises the earlier permission. Remove OpenClean from the list in Settings, add it again, then click Check Again."
+            )
+            : String(localized: "Trash, Mail, Safari and iOS backups can only be scanned with Full Disk Access.")
     }
 }
 

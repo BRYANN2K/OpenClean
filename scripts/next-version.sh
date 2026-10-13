@@ -234,5 +234,9 @@ sudo cp openclean-cli/bin/openclean /usr/local/bin/
 sudo cp -R openclean-cli/share/openclean/rules /usr/local/share/openclean/
 \`\`\`
 
+**Homebrew:** \`brew install --cask leoanimesh/openclean/openclean\` (app) or
+\`brew install leoanimesh/openclean/openclean\` (CLI). The tap moves to a new version shortly after its
+release, once its bump pull request is merged.
+
 **Verify downloads:** \`shasum -a 256 -c SHA256SUMS.txt\` in the folder holding the assets.
 EOF

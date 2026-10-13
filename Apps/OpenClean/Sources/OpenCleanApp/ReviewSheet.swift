@@ -11,13 +11,17 @@ struct ReviewSheet: View {
             if let plan = model.plan {
                 LabeledContent(
                     "Deleted now",
-                    value: "\(formatBytes(plan.immediateBytes)) · \(plan.immediateRequests.count) item(s)")
+                    value:
+                        "\(formatBytes(plan.immediateBytes)) · \(String(localized: "\(plan.immediateRequests.count) items"))"
+                )
                 LabeledContent(
                     "Moved to quarantine (restorable for \(model.settings.clampedRetentionDays) days)",
-                    value: "\(formatBytes(plan.quarantineBytes)) · \(plan.quarantineRequests.count) item(s)")
+                    value:
+                        "\(formatBytes(plan.quarantineBytes)) · \(String(localized: "\(plan.quarantineRequests.count) items"))"
+                )
                 if !plan.adminRequests.isEmpty {
                     Label(
-                        "\(plan.adminRequests.count) system item(s) need your administrator password.",
+                        "\(plan.adminRequests.count) system items need your administrator password.",
                         systemImage: "lock.shield")
                     ScrollView {
                         VStack(alignment: .leading, spacing: 2) {

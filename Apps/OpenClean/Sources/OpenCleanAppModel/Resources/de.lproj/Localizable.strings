@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ is turned off and won't start again until you turn it on.</key>
+	<string>%@ ist ausgeschaltet und startet erst wieder, wenn du es einschaltest.</string>
+	<key>%@ is turned on.</key>
+	<string>%@ ist eingeschaltet.</string>
+	<key>%@ was running. Quit it, then scan again.</key>
+	<string>%@ war geöffnet. Beende die App und scanne dann erneut.</string>
+	<key>A background Smart Scan found it. Nothing was removed; open OpenClean to review and clean.</key>
+	<string>Ein Smart Scan im Hintergrund hat das gefunden. Es wurde nichts entfernt; öffne OpenClean, um zu prüfen und zu bereinigen.</string>
+	<key>A folder above it isn't protected by macOS, so it wasn't removed as administrator.</key>
+	<string>Ein übergeordneter Ordner ist nicht von macOS geschützt, daher wurde es nicht als Administrator entfernt.</string>
+	<key>About %@ can be cleaned</key>
+	<string>Etwa %@ können bereinigt werden</string>
+	<key>All set</key>
+	<string>Fertig</string>
+	<key>Already gone. Something else removed it after the scan.</key>
+	<string>Bereits weg. Etwas anderes hat es nach dem Scan entfernt.</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU and memory</key>
+	<string>CPU und Speicher</string>
+	<key>Changed since the scan; an app may be using it.</key>
+	<string>Seit dem Scan geändert; möglicherweise nutzt es eine App.</string>
+	<key>Could not save settings: %@</key>
+	<string>Einstellungen konnten nicht gesichert werden: %@</string>
+	<key>Couldn't be removed.</key>
+	<string>Konnte nicht entfernt werden.</string>
+	<key>Couldn't install the update: %@.</key>
+	<string>Das Update konnte nicht installiert werden: %@.</string>
+	<key>Duplicates</key>
+	<string>Duplikate</string>
+	<key>For different reasons; see the details.</key>
+	<string>Aus verschiedenen Gründen; siehe Details.</string>
+	<key>Full Disk Access</key>
+	<string>Festplattenvollzugriff</string>
+	<key>Icon only</key>
+	<string>Nur Symbol</string>
+	<key>In a protected location. OpenClean never removes it.</key>
+	<string>An einem geschützten Ort. OpenClean entfernt es nie.</string>
+	<key>Its path can't be passed safely to the administrator prompt.</key>
+	<string>Sein Pfad kann nicht sicher an die Administratorabfrage übergeben werden.</string>
+	<key>Large &amp; old files</key>
+	<string>Große &amp; alte Dateien</string>
+	<key>Memory</key>
+	<string>Speicher</string>
+	<key>Monthly</key>
+	<string>Monatlich</string>
+	<key>Network</key>
+	<string>Netzwerk</string>
+	<key>Off</key>
+	<string>Aus</string>
+	<key>Open in another app. Quit the app, then scan again.</key>
+	<string>In einer anderen App geöffnet. Beende die App und scanne dann erneut.</string>
+	<key>OpenClean couldn't check whether another app had it open, so it left it alone.</key>
+	<string>OpenClean konnte nicht prüfen, ob eine andere App es geöffnet hatte, und hat es daher in Ruhe gelassen.</string>
+	<key>OpenClean couldn't reach GitHub (%@). Check your connection and try again.</key>
+	<string>OpenClean konnte GitHub nicht erreichen (%@). Prüfe deine Verbindung und versuche es erneut.</string>
+	<key>Performance</key>
+	<string>Leistung</string>
+	<key>Safe by design</key>
+	<string>Sicher von Grund auf</string>
+	<key>Shown for information only. OpenClean never removes it.</key>
+	<string>Nur zur Information angezeigt. OpenClean entfernt es nie.</string>
+	<key>Skipped.</key>
+	<string>Übersprungen.</string>
+	<key>Skipped: %@.</key>
+	<string>Übersprungen: %@.</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space map</key>
+	<string>Speicherkarte</string>
+	<key>System items can only be deleted, not moved to quarantine.</key>
+	<string>Systemobjekte können nur gelöscht, nicht in die Quarantäne bewegt werden.</string>
+	<key>That folder can't be scanned. It may have been moved or deleted.</key>
+	<string>Dieser Ordner kann nicht gescannt werden. Möglicherweise wurde er bewegt oder gelöscht.</string>
+	<key>The administrator password prompt was cancelled.</key>
+	<string>Die Abfrage des Administratorpassworts wurde abgebrochen.</string>
+	<key>The app wasn't moved, so this was left in place.</key>
+	<string>Die App wurde nicht bewegt, daher blieb dies an seinem Ort.</string>
+	<key>Too many system items for one password prompt. Clean again to remove the rest.</key>
+	<string>Zu viele Systemobjekte für eine Passwortabfrage. Bereinige erneut, um den Rest zu entfernen.</string>
+	<key>Uninstaller</key>
+	<string>Deinstallation</string>
+	<key>Weekly</key>
+	<string>Wöchentlich</string>
+	<key>Welcome</key>
+	<string>Willkommen</string>
+	<key>unknown</key>
+	<string>unbekannt</string>
+</dict>
+</plist>

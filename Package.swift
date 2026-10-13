@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "OpenClean",
+    defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     dependencies: [
         .package(url: "https://github.com/jpsim/Yams.git", from: "5.1.0"),
@@ -50,7 +51,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ProbesTests",
-            dependencies: ["Probes", "ScanEngine", "ProcessKit", "TestSupport"],
+            dependencies: ["Probes", "ScanEngine", "ProcessKit", "RuleKit", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/ProbesTests"
         ),
         .target(
@@ -150,8 +151,8 @@ let package = Package(
         .target(
             name: "OpenCleanCLI",
             dependencies: [
-                "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions",
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "AppInventory", "SpaceKit",
+                "SystemMonitor", .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ],
             path: "Apps/openclean-cli/Sources/OpenCleanCLI"
         ),
@@ -162,7 +163,10 @@ let package = Package(
         ),
         .testTarget(
             name: "OpenCleanCLITests",
-            dependencies: ["OpenCleanCLI", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "TestSupport"],
+            dependencies: [
+                "OpenCleanCLI", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "AppInventory", "SpaceKit",
+                "SystemMonitor", "TestSupport",
+            ],
             path: "Apps/openclean-cli/Tests/OpenCleanCLITests",
             exclude: ["Golden"]
         ),
@@ -172,7 +176,11 @@ let package = Package(
                 "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "AppInventory", "SystemMonitor",
                 "Maintenance", "SpaceKit", "Updater",
             ],
-            path: "Apps/OpenClean/Sources/OpenCleanAppModel"
+            path: "Apps/OpenClean/Sources/OpenCleanAppModel",
+            // Localizable.xcstrings is the source; scripts/compile-strings.sh compiles it into the .lproj
+            // folders shipped here (SwiftPM's native build system copies a catalog without compiling it).
+            exclude: ["Resources/Localizable.xcstrings"],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "OpenCleanAppModelTests",
@@ -182,13 +190,25 @@ let package = Package(
             ],
             path: "Apps/OpenClean/Tests/OpenCleanAppModelTests"
         ),
+        .testTarget(
+            name: "OpenCleanAppUITests",
+            dependencies: [
+                "OpenCleanApp", "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine",
+                "Permissions", "TestSupport", "Updater", "AppInventory", "Maintenance", "SpaceKit",
+            ],
+            path: "Apps/OpenClean/Tests/OpenCleanAppUITests"
+        ),
         .executableTarget(
             name: "OpenCleanApp",
             dependencies: [
                 "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions",
                 "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit", "Updater",
             ],
-            path: "Apps/OpenClean/Sources/OpenCleanApp"
+            path: "Apps/OpenClean/Sources/OpenCleanApp",
+            // Localizable.xcstrings is the source; scripts/compile-strings.sh compiles it into the .lproj
+            // folders shipped here (SwiftPM's native build system copies a catalog without compiling it).
+            exclude: ["Resources/Localizable.xcstrings"],
+            resources: [.process("Resources")]
         ),
     ]
 )

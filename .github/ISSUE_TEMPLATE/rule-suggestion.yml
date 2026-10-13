@@ -1,0 +1,72 @@
+name: Rule suggestion
+description: Suggest a cache, log or leftover OpenClean should know about.
+title: "rule: "
+labels: [rule]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! A good rule names exact folders and says what rebuilds them and what, if anything, the user
+        loses. Want to write it yourself? See "Add a rule in 5 minutes" in
+        [CONTRIBUTING.md](https://github.com/leoAnimesh/OpenClean/blob/main/CONTRIBUTING.md#add-a-rule-in-5-minutes)
+        and `Rules/TEMPLATE.yaml.example`.
+  - type: input
+    id: app
+    attributes:
+      label: App or tool
+      description: Name and, if you know it, the bundle id (`osascript -e 'id of app "Name"'`).
+      placeholder: "e.g. JetBrains IDEs (com.jetbrains.intellij)"
+    validations:
+      required: true
+  - type: textarea
+    id: paths
+    attributes:
+      label: Paths
+      description: Exact folders or globs. `*` matches one level, `**` any depth. A typical size helps too.
+      placeholder: |
+        ~/Library/Caches/JetBrains/*
+        (usually 1–5 GB)
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: regenerates
+    attributes:
+      label: What regenerates it?
+      description: >-
+        Does the app rebuild it automatically, and when? Is anything lost: settings, history, logins,
+        downloads, files the user made? Does it cost a long re-download?
+    validations:
+      required: true
+  - type: dropdown
+    id: level
+    attributes:
+      label: Suggested safety level
+      description: >-
+        regenerable = rebuilt silently, nothing the user made is lost (selected by default, deleted).
+        review = the user decides; quarantined and restorable (long re-downloads, user data, anything inside
+        a project). caution = hidden unless Advanced.
+      options: [regenerable, review, caution, "Not sure"]
+    validations:
+      required: true
+  - type: input
+    id: running
+    attributes:
+      label: Should it be skipped while the app is running?
+      placeholder: "e.g. yes, com.jetbrains.intellij"
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or docs
+      description: A link to the tool's docs or an issue, or your own testing (you removed it and the app rebuilt it).
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: The paths are not inside Documents, Desktop, iCloud Drive, Mail, Photos or an app bundle.
+          required: true
+        - label: I checked the existing rules (`openclean rules list`) and this isn't covered yet.
+          required: true

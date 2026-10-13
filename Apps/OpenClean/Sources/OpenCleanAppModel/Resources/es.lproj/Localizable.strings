@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ is turned off and won't start again until you turn it on.</key>
+	<string>%@ está desactivado y no volverá a iniciarse hasta que lo actives.</string>
+	<key>%@ is turned on.</key>
+	<string>%@ está activado.</string>
+	<key>%@ was running. Quit it, then scan again.</key>
+	<string>%@ estaba en ejecución. Ciérrala y vuelve a analizar.</string>
+	<key>A background Smart Scan found it. Nothing was removed; open OpenClean to review and clean.</key>
+	<string>Lo encontró un Smart Scan en segundo plano. No se eliminó nada; abre OpenClean para revisar y limpiar.</string>
+	<key>A folder above it isn't protected by macOS, so it wasn't removed as administrator.</key>
+	<string>Una carpeta superior no está protegida por macOS, así que no se eliminó como administrador.</string>
+	<key>About %@ can be cleaned</key>
+	<string>Se pueden limpiar unos %@</string>
+	<key>All set</key>
+	<string>Todo listo</string>
+	<key>Already gone. Something else removed it after the scan.</key>
+	<string>Ya no está. Otra cosa lo eliminó después del análisis.</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU and memory</key>
+	<string>CPU y memoria</string>
+	<key>Changed since the scan; an app may be using it.</key>
+	<string>Ha cambiado desde el análisis; puede que una app lo esté usando.</string>
+	<key>Could not save settings: %@</key>
+	<string>No se pudieron guardar los ajustes: %@</string>
+	<key>Couldn't be removed.</key>
+	<string>No se pudo eliminar.</string>
+	<key>Couldn't install the update: %@.</key>
+	<string>No se pudo instalar la actualización: %@.</string>
+	<key>Duplicates</key>
+	<string>Duplicados</string>
+	<key>For different reasons; see the details.</key>
+	<string>Por distintos motivos; consulta los detalles.</string>
+	<key>Full Disk Access</key>
+	<string>Acceso total al disco</string>
+	<key>Icon only</key>
+	<string>Solo el icono</string>
+	<key>In a protected location. OpenClean never removes it.</key>
+	<string>Está en una ubicación protegida. OpenClean nunca lo elimina.</string>
+	<key>Its path can't be passed safely to the administrator prompt.</key>
+	<string>Su ruta no se puede pasar de forma segura a la solicitud de administrador.</string>
+	<key>Large &amp; old files</key>
+	<string>Archivos grandes y antiguos</string>
+	<key>Memory</key>
+	<string>Memoria</string>
+	<key>Monthly</key>
+	<string>Mensualmente</string>
+	<key>Network</key>
+	<string>Red</string>
+	<key>Off</key>
+	<string>Desactivado</string>
+	<key>Open in another app. Quit the app, then scan again.</key>
+	<string>Está abierto en otra app. Cierra la app y vuelve a analizar.</string>
+	<key>OpenClean couldn't check whether another app had it open, so it left it alone.</key>
+	<string>OpenClean no pudo comprobar si otra app lo tenía abierto, así que no lo tocó.</string>
+	<key>OpenClean couldn't reach GitHub (%@). Check your connection and try again.</key>
+	<string>OpenClean no pudo conectar con GitHub (%@). Comprueba tu conexión e inténtalo de nuevo.</string>
+	<key>Performance</key>
+	<string>Rendimiento</string>
+	<key>Safe by design</key>
+	<string>Seguro por diseño</string>
+	<key>Shown for information only. OpenClean never removes it.</key>
+	<string>Solo se muestra como información. OpenClean nunca lo elimina.</string>
+	<key>Skipped.</key>
+	<string>Omitido.</string>
+	<key>Skipped: %@.</key>
+	<string>Omitido: %@.</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space map</key>
+	<string>Mapa de espacio</string>
+	<key>System items can only be deleted, not moved to quarantine.</key>
+	<string>Los ítems del sistema solo se pueden eliminar, no mover a cuarentena.</string>
+	<key>That folder can't be scanned. It may have been moved or deleted.</key>
+	<string>Esa carpeta no se puede analizar. Puede que se haya movido o eliminado.</string>
+	<key>The administrator password prompt was cancelled.</key>
+	<string>Se canceló la solicitud de la contraseña de administrador.</string>
+	<key>The app wasn't moved, so this was left in place.</key>
+	<string>La app no se movió, así que esto se quedó donde estaba.</string>
+	<key>Too many system items for one password prompt. Clean again to remove the rest.</key>
+	<string>Demasiados ítems del sistema para una sola solicitud de contraseña. Vuelve a limpiar para eliminar el resto.</string>
+	<key>Uninstaller</key>
+	<string>Desinstalador</string>
+	<key>Weekly</key>
+	<string>Semanalmente</string>
+	<key>Welcome</key>
+	<string>Bienvenida</string>
+	<key>unknown</key>
+	<string>desconocida</string>
+</dict>
+</plist>

@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ + %@ to quarantine</key>
+	<string>%1$@ + %2$@ 移入隔离区</string>
+	<key>%@ Scan again to pick them up.</key>
+	<string>%@ 重新扫描即可将它们纳入。</string>
+	<key>%@ can only be scanned with Full Disk Access.</key>
+	<string>%@ 只有在获得“完全磁盘访问权限”后才能扫描。</string>
+	<key>%@ can't be force quit from OpenClean.</key>
+	<string>无法从 OpenClean 强制退出 %@。</string>
+	<key>%@ can't be quit from OpenClean.</key>
+	<string>无法从 OpenClean 退出 %@。</string>
+	<key>%@ could not be force quit.</key>
+	<string>无法强制退出 %@。</string>
+	<key>%@ didn't accept the request to quit.</key>
+	<string>%@ 未接受退出请求。</string>
+	<key>%@ didn't quit. Try again.</key>
+	<string>%@ 未退出。请重试。</string>
+	<key>%@ didn’t finish</key>
+	<string>%@ 未完成</string>
+	<key>%@ each</key>
+	<string>每个 %@</string>
+	<key>%@ extra</key>
+	<string>多余 %@</string>
+	<key>%@ free</key>
+	<string>可用 %@</string>
+	<key>%@ freed by OpenClean</key>
+	<string>OpenClean 已释放 %@</string>
+	<key>%@ freed now</key>
+	<string>立即释放 %@</string>
+	<key>%@ had already quit or changed, so nothing was done.</key>
+	<string>%@ 已退出或已变化，因此未执行任何操作。</string>
+	<key>%@ in /Library stay in place (needs administrator — not supported yet).</key>
+	<string>/Library 中的 %@ 保留原处（需要管理员权限，尚不支持）。</string>
+	<key>%@ in quarantine</key>
+	<string>隔离区中 %@</string>
+	<key>%@ in total. You can put items back from the Trash in Finder.</key>
+	<string>共 %@。你可以在访达中从废纸篓放回项目。</string>
+	<key>%@ is owned by the system. macOS will ask for your administrator password to move it to quarantine.</key>
+	<string>%@ 归系统所有。macOS 会要求输入管理员密码，才能将它移入隔离区。</string>
+	<key>%@ is running. Quit it to uninstall.</key>
+	<string>%@ 正在运行。请先退出再卸载。</string>
+	<key>%@ of %@</key>
+	<string>%1$@ / %2$@</string>
+	<key>%@ of %@ checks</key>
+	<string>已检查 %1$@ / %2$@</string>
+	<key>%@ selected</key>
+	<string>已选择 %@</string>
+	<key>%@ to quarantine</key>
+	<string>%@ 移入隔离区</string>
+	<key>%@ was force quit.</key>
+	<string>已强制退出 %@。</string>
+	<key>%@ was not uninstalled</key>
+	<string>%@ 未被卸载</string>
+	<key>%@ was uninstalled</key>
+	<string>已卸载 %@</string>
+	<key>%@ · %@</key>
+	<string>%1$@ · %2$@</string>
+	<key>%@ · Modified %@</key>
+	<string>%1$@ · 修改于 %2$@</string>
+	<key>%@ — %@</key>
+	<string>%1$@ — %2$@</string>
+	<key>%@. The list beside it shows the same items.</key>
+	<string>%@。旁边的列表显示相同的项目。</string>
+	<key>%@/s</key>
+	<string>%@/秒</string>
+	<key>%@: %@. %@</key>
+	<string>%1$@：%2$@。%3$@</string>
+	<key>%@: done</key>
+	<string>%@：已完成</string>
+	<key>%lld</key>
+	<string>%lld</string>
+	<key>%lld of %lld measured</key>
+	<string>已测量 %1$lld / %2$lld</string>
+	<key>%lld percent</key>
+	<string>百分之 %lld</string>
+	<key>%lld restored, %lld skipped.</key>
+	<string>已恢复 %1$lld 项，跳过 %2$lld 项。</string>
+	<key>%lld skipped</key>
+	<string>跳过 %lld 项</string>
+	<key>%lld unreadable</key>
+	<string>%lld 项无法读取</string>
+	<key>%lld%%</key>
+	<string>%lld%%</string>
+	<key>1 year</key>
+	<string>1 年</string>
+	<key>3 months</key>
+	<string>3 个月</string>
+	<key>6 months</key>
+	<string>6 个月</string>
+	<key>A new version of OpenClean is available</key>
+	<string>OpenClean 有新版本可用</string>
+	<key>A transparent, open-source cleaner for your Mac. Take a quick look at what it does, then set up the one permission it needs.</key>
+	<string>一款透明、开源的 Mac 清理工具。先快速了解它的功能，然后设置它唯一需要的权限。</string>
+	<key>AI Models &amp; Caches</key>
+	<string>AI 模型与缓存</string>
+	<key>About</key>
+	<string>关于</string>
+	<key>Access granted</key>
+	<string>已授予访问权限</string>
+	<key>Add</key>
+	<string>添加</string>
+	<key>Add Folder…</key>
+	<string>添加文件夹…</string>
+	<key>Add a folder or file</key>
+	<string>添加文件夹或文件</string>
+	<key>Add a project folder</key>
+	<string>添加项目文件夹</string>
+	<key>Add your own YAML rules to this folder.</key>
+	<string>将你自己的 YAML 规则添加到此文件夹。</string>
+	<key>Adds rules that need a closer look before cleaning.</key>
+	<string>添加需要在清理前仔细检查的规则。</string>
+	<key>Add…</key>
+	<string>添加…</string>
+	<key>After this, quarantined files are deleted for good.</key>
+	<string>此后，隔离区中的文件将被永久删除。</string>
+	<key>Agents and daemons in /Library are installed by an administrator and run for everyone. OpenClean lists them so you know they’re there, but doesn’t change them.</key>
+	<string>/Library 中的代理和守护进程由管理员安装，对所有用户运行。OpenClean 会列出它们以便你知晓，但不会更改它们。</string>
+	<key>Alias (not followed)</key>
+	<string>替身（不跟随）</string>
+	<key>Allow Full Disk Access</key>
+	<string>允许“完全磁盘访问权限”</string>
+	<key>Allowed</key>
+	<string>已允许</string>
+	<key>Also found in /Library</key>
+	<string>在 /Library 中也找到</string>
+	<key>An interactive map of your disk, plus large &amp; old files and duplicates. Nothing is pre-selected, and anything you remove goes to the Trash.</key>
+	<string>磁盘的交互式地图，以及大文件、旧文件和重复文件。不会预先选择任何内容，你移除的所有项目都会进入废纸篓。</string>
+	<key>Any time</key>
+	<string>任意时间</string>
+	<key>Any unsaved changes in %@ will be lost.</key>
+	<string>%@ 中所有未存储的更改都将丢失。</string>
+	<key>App</key>
+	<string>App</string>
+	<key>App caches</key>
+	<string>App 缓存</string>
+	<key>App running</key>
+	<string>App 正在运行</string>
+	<key>Apple app</key>
+	<string>Apple App</string>
+	<key>Apple app — part of macOS, never removed</key>
+	<string>Apple App — macOS 的一部分，绝不会被移除</string>
+	<key>Application</key>
+	<string>应用程序</string>
+	<key>Apps and processes using the most CPU and memory right now.</key>
+	<string>当前占用 CPU 和内存最多的 App 和进程。</string>
+	<key>Apps that are running, changed since the list was loaded, or in use are skipped automatically.</key>
+	<string>正在运行、自列表载入后已更改或正在使用的 App 会被自动跳过。</string>
+	<key>Archives</key>
+	<string>归档</string>
+	<key>Asked %@ to quit.</key>
+	<string>已请求 %@ 退出。</string>
+	<key>Asking GitHub for the latest release.</key>
+	<string>正在向 GitHub 查询最新版本。</string>
+	<key>Asks macOS to remove the local Time Machine snapshots it can drop to free space. Backups on your backup disk are not touched.</key>
+	<string>请 macOS 移除它可以舍弃的本地 Time Machine 快照以释放空间。备份磁盘上的备份不受影响。</string>
+	<key>Back</key>
+	<string>返回</string>
+	<key>Background Smart Scan</key>
+	<string>后台 Smart Scan</string>
+	<key>Background Smart Scan, %@. Nothing was removed.</key>
+	<string>后台 Smart Scan，%@。未移除任何内容。</string>
+	<key>Background items inside apps</key>
+	<string>App 内的后台项目</string>
+	<key>Browser</key>
+	<string>浏览器</string>
+	<key>Browser Caches</key>
+	<string>浏览器缓存</string>
+	<key>Busy across all cores</key>
+	<string>所有核心的占用</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU %@, memory %@</key>
+	<string>CPU %1$@，内存 %2$@</string>
+	<key>CPU %lld percent</key>
+	<string>CPU 百分之 %lld</string>
+	<key>CPU and memory in the menu bar</key>
+	<string>菜单栏中的 CPU 和内存</string>
+	<key>Caches</key>
+	<string>缓存</string>
+	<key>Caches, logs and leftovers look tidy. Scan again any time.</key>
+	<string>缓存、日志和残留文件都很整洁。随时可以再次扫描。</string>
+	<key>Caches, logs, browser data and developer leftovers, found in seconds. Safe items are ticked for you, and nothing is removed until you press Clean.</key>
+	<string>几秒钟内找到缓存、日志、浏览器数据和开发残留文件。安全项目已为你勾选，在你按下“清理”之前不会移除任何内容。</string>
+	<key>Can be moved to quarantine</key>
+	<string>可以移入隔离区</string>
+	<key>Cancel</key>
+	<string>取消</string>
+	<key>Cancelled</key>
+	<string>已取消</string>
+	<key>Can’t be moved to the Trash: %@</key>
+	<string>无法移到废纸篓：%@</string>
+	<key>Caution</key>
+	<string>谨慎</string>
+	<key>Check Again</key>
+	<string>再次检查</string>
+	<key>Check Now</key>
+	<string>立即检查</string>
+	<key>Check for Updates…</key>
+	<string>检查更新…</string>
+	<key>Check for updates automatically</key>
+	<string>自动检查更新</string>
+	<key>Checking for updates…</key>
+	<string>正在检查更新…</string>
+	<key>Checking…</key>
+	<string>正在检查…</string>
+	<key>Choose</key>
+	<string>选取</string>
+	<key>Choose Folder…</key>
+	<string>选取文件夹…</string>
+	<key>Choose a folder where you keep code projects.</key>
+	<string>选取你存放代码项目的文件夹。</string>
+	<key>Clean</key>
+	<string>清理</string>
+	<key>Cleaning</key>
+	<string>清理</string>
+	<key>Cleaning…</key>
+	<string>正在清理…</string>
+	<key>Cleanup</key>
+	<string>清理</string>
+	<key>Clear search</key>
+	<string>清除搜索</string>
+	<key>Click **Open System Settings**.</key>
+	<string>点按**打开系统设置**。</string>
+	<key>Click to go up</key>
+	<string>点按返回上一级</string>
+	<key>Close</key>
+	<string>关闭</string>
+	<key>Come back here. OpenClean notices on its own.</key>
+	<string>回到这里。OpenClean 会自动察觉。</string>
+	<key>Coming soon</key>
+	<string>即将推出</string>
+	<key>Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays.</key>
+	<string>逐字节比较下方文件夹中的文件。不会替你选择任何项目，每个文件总会保留一份副本。</string>
+	<key>Comparing files…</key>
+	<string>正在比较文件…</string>
+	<key>Containers</key>
+	<string>容器</string>
+	<key>Continue</key>
+	<string>继续</string>
+	<key>Continue…</key>
+	<string>继续…</string>
+	<key>Copies made by APFS cloning share space on disk, so moving one may free less than shown.</key>
+	<string>通过 APFS 克隆生成的副本共享磁盘空间，因此移走其中一个释放的空间可能少于显示的大小。</string>
+	<key>Couldn't check for updates</key>
+	<string>无法检查更新</string>
+	<key>Damaged session %@</key>
+	<string>已损坏的会话 %@</string>
+	<key>Deleted</key>
+	<string>已删除</string>
+	<key>Deleted now</key>
+	<string>立即删除</string>
+	<key>Details</key>
+	<string>详细信息</string>
+	<key>Details are in History.</key>
+	<string>详细信息见“历史记录”。</string>
+	<key>Developer Tools</key>
+	<string>开发工具</string>
+	<key>Discard these results and go back. Nothing is removed.</key>
+	<string>放弃这些结果并返回。不会移除任何内容。</string>
+	<key>Disk</key>
+	<string>磁盘</string>
+	<key>Disk images</key>
+	<string>磁盘映像</string>
+	<key>Dismiss</key>
+	<string>关闭</string>
+	<key>Done</key>
+	<string>完成</string>
+	<key>Don’t move to the Trash</key>
+	<string>不移到废纸篓</string>
+	<key>Download &amp; Install</key>
+	<string>下载并安装</string>
+	<key>Download from GitHub</key>
+	<string>从 GitHub 下载</string>
+	<key>Downloading</key>
+	<string>正在下载</string>
+	<key>Drag OpenClean into the Full Disk Access list</key>
+	<string>将 OpenClean 拖到“完全磁盘访问权限”列表中</string>
+	<key>Drag this icon into the list if OpenClean isn't there.</key>
+	<string>如果列表中没有 OpenClean，请将此图标拖入列表。</string>
+	<key>Elevated</key>
+	<string>偏高</string>
+	<key>Empty folder</key>
+	<string>空文件夹</string>
+	<key>Enter your administrator password when macOS asks. This can take a moment.</key>
+	<string>macOS 询问时请输入管理员密码。这可能需要一点时间。</string>
+	<key>Erases and rebuilds the Spotlight index for your startup disk. Use it when search misses files. Rebuilding runs in the background and can take an hour or more.</key>
+	<string>抹掉并重建启动磁盘的 Spotlight 索引。在搜索找不到文件时使用。重建在后台进行，可能需要一小时或更久。</string>
+	<key>Every item is also listed in History.</key>
+	<string>每个项目也都列在“历史记录”中。</string>
+	<key>Every removal can be undone</key>
+	<string>每次移除都可以撤销</string>
+	<key>Excluded locations</key>
+	<string>排除的位置</string>
+	<key>Expired and deleted</key>
+	<string>已过期并删除</string>
+	<key>Explored Smart Scan, Uninstaller, Space Lens and Performance</key>
+	<string>已了解 Smart Scan、卸载器、Space Lens 和性能</string>
+	<key>Failed</key>
+	<string>失败</string>
+	<key>File</key>
+	<string>文件</string>
+	<key>Files from Documents or Desktop are moved only because you ticked each one.</key>
+	<string>“文稿”或“桌面”中的文件只有在你逐个勾选后才会被移走。</string>
+	<key>Files that changed since the scan or are in use are skipped automatically.</key>
+	<string>自扫描后已更改或正在使用的文件会被自动跳过。</string>
+	<key>Files that changed since the scan, or are open in another app, are skipped automatically.</key>
+	<string>自扫描后已更改或在其他 App 中打开的文件会被自动跳过。</string>
+	<key>Files that couldn’t be read</key>
+	<string>无法读取的文件</string>
+	<key>Files there can be moved to the Trash only one at a time, by ticking each file.</key>
+	<string>那里的文件只能逐个勾选后移到废纸篓。</string>
+	<key>Files under 1 MB, apps and ~/Library are skipped.</key>
+	<string>小于 1 MB 的文件、App 和 ~/Library 会被跳过。</string>
+	<key>Find duplicate files</key>
+	<string>查找重复文件</string>
+	<key>Find large and old files</key>
+	<string>查找大文件和旧文件</string>
+	<key>Flush DNS cache</key>
+	<string>清除 DNS 缓存</string>
+	<key>Folder</key>
+	<string>文件夹</string>
+	<key>Folder · couldn’t be read</key>
+	<string>文件夹 · 无法读取</string>
+	<key>Folder: %@</key>
+	<string>文件夹：%@</string>
+	<key>Force Quit</key>
+	<string>强制退出</string>
+	<key>Force Quit %@…</key>
+	<string>强制退出 %@…</string>
+	<key>Force Quit…</key>
+	<string>强制退出…</string>
+	<key>Force quit %@</key>
+	<string>强制退出 %@</string>
+	<key>Force quit %@?</key>
+	<string>要强制退出 %@ 吗？</string>
+	<key>Force quitting stops the app immediately. Anything you haven’t saved in it will be lost. Try Quit first if the app is still responding.</key>
+	<string>强制退出会立即停止 App，其中所有未存储的内容都将丢失。如果 App 仍有响应，请先尝试“退出”。</string>
+	<key>Forgets cached website addresses, so name lookups start fresh. Helps when a site moved or won't load after a network change.</key>
+	<string>清除缓存的网站地址，让域名解析重新开始。适用于网站迁移或网络更改后无法载入的情况。</string>
+	<key>Freed %@</key>
+	<string>已释放 %@</string>
+	<key>Freed now</key>
+	<string>立即释放</string>
+	<key>From %@</key>
+	<string>来自 %@</string>
+	<key>From Desktop</key>
+	<string>来自桌面</string>
+	<key>From Documents</key>
+	<string>来自文稿</string>
+	<key>Full Disk Access</key>
+	<string>完全磁盘访问权限</string>
+	<key>Full Disk Access allowed</key>
+	<string>已允许完全磁盘访问权限</string>
+	<key>Full Disk Access is off</key>
+	<string>完全磁盘访问权限已关闭</string>
+	<key>Full Disk Access lets OpenClean include them.</key>
+	<string>授予完全磁盘访问权限后，OpenClean 便可包含它们。</string>
+	<key>Full Disk Access needs to be granted again</key>
+	<string>需要再次授予完全磁盘访问权限</string>
+	<key>Full Disk Access was turned off. Go back one step to allow it again.</key>
+	<string>完全磁盘访问权限已关闭。返回上一步重新允许。</string>
+	<key>General</key>
+	<string>通用</string>
+	<key>Get started</key>
+	<string>开始使用</string>
+	<key>GitHub</key>
+	<string>GitHub</string>
+	<key>Go to Smart Scan</key>
+	<string>前往 Smart Scan</string>
+	<key>Grant Full Disk Access to scan this.</key>
+	<string>授予完全磁盘访问权限以扫描此项。</string>
+	<key>Grouped to keep the map light</key>
+	<string>已分组以保持地图简洁</string>
+	<key>Has no bundle identifier, so it can't be checked safely</key>
+	<string>没有包标识符，因此无法安全检查</string>
+	<key>Heavy apps</key>
+	<string>占用较高的 App</string>
+	<key>Heavy consumers</key>
+	<string>占用大户</string>
+	<key>Helpers apps installed for your account. Turning one off stops it and keeps it from starting; removing it moves its file to quarantine, which you can undo in History.</key>
+	<string>App 为你的账户安装的辅助程序。关闭会停止它并阻止其启动；移除会将其文件移入隔离区，你可以在“历史记录”中撤销。</string>
+	<key>Hide details</key>
+	<string>隐藏详细信息</string>
+	<key>High</key>
+	<string>高</string>
+	<key>History</key>
+	<string>历史记录</string>
+	<key>Home</key>
+	<string>个人</string>
+	<key>If a file already exists at the original location:</key>
+	<string>如果原位置已存在文件：</string>
+	<key>In Utilities — listed for information only</key>
+	<string>位于“实用工具”中 — 仅供参考</string>
+	<key>In quarantine</key>
+	<string>在隔离区</string>
+	<key>Include Documents and Desktop</key>
+	<string>包括文稿和桌面</string>
+	<key>Install and Relaunch</key>
+	<string>安装并重新启动</string>
+	<key>Installed for all users</key>
+	<string>为所有用户安装</string>
+	<key>Installed for all users by an administrator. OpenClean doesn’t change these in this version.</key>
+	<string>由管理员为所有用户安装。此版本的 OpenClean 不会更改这些项目。</string>
+	<key>Installers</key>
+	<string>安装器</string>
+	<key>Installing OpenClean %@…</key>
+	<string>正在安装 OpenClean %@…</string>
+	<key>Installing…</key>
+	<string>正在安装…</string>
+	<key>Item</key>
+	<string>项目</string>
+	<key>Items that changed since the scan, are open in another app, or are protected are left in place.</key>
+	<string>自扫描后已更改、在其他 App 中打开或受保护的项目会保留原处。</string>
+	<key>Keep Both</key>
+	<string>两者都保留</string>
+	<key>Keep an eye on your Mac</key>
+	<string>随时掌握 Mac 状态</string>
+	<key>Keep at least one copy</key>
+	<string>至少保留一份副本</string>
+	<key>Larger than</key>
+	<string>大于</string>
+	<key>Last attempt %@ didn’t finish</key>
+	<string>上次尝试（%@）未完成</string>
+	<key>Last background scan</key>
+	<string>上次后台扫描</string>
+	<key>Last checked %@</key>
+	<string>上次检查：%@</string>
+	<key>Last checked %@.</key>
+	<string>上次检查：%@。</string>
+	<key>Last cleanup %@</key>
+	<string>上次清理：%@</string>
+	<key>Last opened %@</key>
+	<string>上次打开：%@</string>
+	<key>Last run %@</key>
+	<string>上次运行：%@</string>
+	<key>Later</key>
+	<string>以后</string>
+	<key>Launch agent</key>
+	<string>启动代理</string>
+	<key>Let’s tidy up your Mac.</key>
+	<string>来整理一下你的 Mac 吧。</string>
+	<key>List Apps</key>
+	<string>列出 App</string>
+	<key>List apps again and re-measure their sizes</key>
+	<string>重新列出 App 并重新测量其大小</string>
+	<key>Listing files…</key>
+	<string>正在列出文件…</string>
+	<key>Live CPU and memory in the menu bar, heavy apps with Force Quit, login items, and one-click maintenance such as flushing the DNS cache.</key>
+	<string>菜单栏实时显示 CPU 和内存，可强制退出占用较高的 App，管理登录项，并一键维护（如清除 DNS 缓存）。</string>
+	<key>Live figures from your Mac, updated every 2 seconds while you watch.</key>
+	<string>来自 Mac 的实时数据，查看时每 2 秒更新一次。</string>
+	<key>Loaded</key>
+	<string>已载入</string>
+	<key>Login items</key>
+	<string>登录项</string>
+	<key>Looking for large files…</key>
+	<string>正在查找大文件…</string>
+	<key>Looking for leftovers…</key>
+	<string>正在查找残留文件…</string>
+	<key>Looks through your home folder for big files, like videos, disk images and installers. ~/Library and apps are left out.</key>
+	<string>在你的个人文件夹中查找大文件，例如视频、磁盘映像和安装器。不包括 ~/Library 和 App。</string>
+	<key>Mail Attachments</key>
+	<string>邮件附件</string>
+	<key>Mail downloads</key>
+	<string>邮件下载</string>
+	<key>Maintenance</key>
+	<string>维护</string>
+	<key>Managed by macOS</key>
+	<string>由 macOS 管理</string>
+	<key>Matches bundle ID</key>
+	<string>与包 ID 匹配</string>
+	<key>Matches name</key>
+	<string>与名称匹配</string>
+	<key>Measuring apps</key>
+	<string>正在测量 App</string>
+	<key>Measuring apps…</key>
+	<string>正在测量 App…</string>
+	<key>Measuring…</key>
+	<string>正在测量…</string>
+	<key>Memory</key>
+	<string>内存</string>
+	<key>Memory %@</key>
+	<string>内存 %@</string>
+	<key>Menu bar</key>
+	<string>菜单栏</string>
+	<key>Menu bar shows</key>
+	<string>菜单栏显示</string>
+	<key>Move to Quarantine</key>
+	<string>移入隔离区</string>
+	<key>Move to Trash</key>
+	<string>移到废纸篓</string>
+	<key>Move to the Trash</key>
+	<string>移到废纸篓</string>
+	<key>Moved to Trash</key>
+	<string>已移到废纸篓</string>
+	<key>Moving %@ to quarantine…</key>
+	<string>正在将 %@ 移入隔离区…</string>
+	<key>Moving…</key>
+	<string>正在移动…</string>
+	<key>Needed to scan Trash, Mail, Safari and iOS backups.</key>
+	<string>扫描废纸篓、邮件、Safari 和 iOS 备份时需要。</string>
+	<key>Needs access</key>
+	<string>需要访问权限</string>
+	<key>Needs admin</key>
+	<string>需要管理员</string>
+	<key>Needs administrator — not supported yet. These stay in place and are shown for information.</key>
+	<string>需要管理员权限，尚不支持。这些项目保留原处，仅供参考。</string>
+	<key>Needs password</key>
+	<string>需要密码</string>
+	<key>Needs your administrator password to uninstall</key>
+	<string>卸载需要你的管理员密码</string>
+	<key>Network</key>
+	<string>网络</string>
+	<key>Next scan %@ or later, while OpenClean is running.</key>
+	<string>下次扫描在 %@ 或之后，OpenClean 运行期间进行。</string>
+	<key>No apps match “%@”</key>
+	<string>没有与“%@”匹配的 App</string>
+	<key>No apps to uninstall</key>
+	<string>没有可卸载的 App</string>
+	<key>No bundle ID</key>
+	<string>无包 ID</string>
+	<key>No cleanups yet</key>
+	<string>尚无清理记录</string>
+	<key>No duplicates</key>
+	<string>没有重复项</string>
+	<key>No duplicates found</key>
+	<string>未找到重复项</string>
+	<key>No identical files over 1 MB in these folders.</key>
+	<string>这些文件夹中没有大于 1 MB 的相同文件。</string>
+	<key>No large files found</key>
+	<string>未找到大文件</string>
+	<key>No launch agents in your Library.</key>
+	<string>你的资源库中没有启动代理。</string>
+	<key>No leftovers found in your Library.</key>
+	<string>未在你的资源库中找到残留文件。</string>
+	<key>No matching files</key>
+	<string>没有匹配的文件</string>
+	<key>No release notes were published for this version.</key>
+	<string>此版本未发布发行说明。</string>
+	<key>No scan yet</key>
+	<string>尚未扫描</string>
+	<key>None installed.</key>
+	<string>未安装任何项目。</string>
+	<key>Normal</key>
+	<string>正常</string>
+	<key>Not allowed</key>
+	<string>未允许</string>
+	<key>Not allowed yet</key>
+	<string>尚未允许</string>
+	<key>Not loaded</key>
+	<string>未载入</string>
+	<key>Not opened for</key>
+	<string>未打开时长</string>
+	<key>Not run from OpenClean yet</key>
+	<string>尚未从 OpenClean 运行</string>
+	<key>Nothing</key>
+	<string>无</string>
+	<key>Nothing cleaned yet</key>
+	<string>尚未清理任何内容</string>
+	<key>Nothing inside takes up space.</key>
+	<string>其中没有占用空间的内容。</string>
+	<key>Nothing is excluded. Excluded folders and files are never scanned or cleaned.</key>
+	<string>未排除任何内容。被排除的文件夹和文件永远不会被扫描或清理。</string>
+	<key>Nothing over %@. Try a smaller size.</key>
+	<string>没有超过 %@ 的文件。请尝试更小的大小。</string>
+	<key>Nothing selected</key>
+	<string>未选择任何内容</string>
+	<key>Nothing to clean right now</key>
+	<string>目前没有需要清理的内容</string>
+	<key>Nothing was moved to the Trash</key>
+	<string>没有移到废纸篓的项目</string>
+	<key>Nothing was moved.</key>
+	<string>未移动任何内容。</string>
+	<key>Nothing was moved. %@ is still in your Applications folder.</key>
+	<string>未移动任何内容。%@ 仍在你的“应用程序”文件夹中。</string>
+	<key>Nothing was run.</key>
+	<string>未运行任何内容。</string>
+	<key>Notifications are off</key>
+	<string>通知已关闭</string>
+	<key>OK</key>
+	<string>好</string>
+	<key>Off</key>
+	<string>关闭</string>
+	<key>Off. Nothing runs in the background.</key>
+	<string>已关闭。后台不运行任何内容。</string>
+	<key>Old simulators</key>
+	<string>旧模拟器</string>
+	<key>One click finds the junk</key>
+	<string>一键找出垃圾</string>
+	<key>One permission</key>
+	<string>一项权限</string>
+	<key>One-click macOS housekeeping. Each task says exactly what it runs.</key>
+	<string>一键维护 macOS。每项任务都会准确说明它运行的内容。</string>
+	<key>Only exact matches are listed: folders and files named after %@, or exactly “%@” in Application Support, Caches and Logs.</key>
+	<string>仅列出完全匹配的项目：以 %1$@ 命名的文件夹和文件，或 Application Support、Caches 和 Logs 中名称恰好为“%2$@”的项目。</string>
+	<key>Only node_modules, virtual environments and build output go to quarantine. Nothing else in it is touched.</key>
+	<string>只有 node_modules、虚拟环境和构建输出会移入隔离区。其中其他内容都不会被触及。</string>
+	<key>Only your own processes can be measured without administrator rights. System processes are never offered Quit.</key>
+	<string>没有管理员权限时只能测量你自己的进程。系统进程绝不会提供“退出”选项。</string>
+	<key>Open %@</key>
+	<string>打开 %@</string>
+	<key>Open Installer</key>
+	<string>打开安装器</string>
+	<key>Open Login Items Settings</key>
+	<string>打开登录项设置</string>
+	<key>Open Notification Settings</key>
+	<string>打开通知设置</string>
+	<key>Open OpenClean</key>
+	<string>打开 OpenClean</string>
+	<key>Open Privacy Settings</key>
+	<string>打开隐私设置</string>
+	<key>Open Settings</key>
+	<string>打开设置</string>
+	<key>Open System Settings</key>
+	<string>打开系统设置</string>
+	<key>Open source under GPL-3.0.</key>
+	<string>基于 GPL-3.0 开源。</string>
+	<key>OpenClean</key>
+	<string>OpenClean</string>
+	<key>OpenClean %@</key>
+	<string>OpenClean %@</string>
+	<key>OpenClean %@ is available</key>
+	<string>OpenClean %@ 现已推出</string>
+	<key>OpenClean %@ is available — you have %@.</key>
+	<string>OpenClean %1$@ 现已推出 — 你当前使用的是 %2$@。</string>
+	<key>OpenClean %@ is the newest version.</key>
+	<string>OpenClean %@ 是最新版本。</string>
+	<key>OpenClean asks api.github.com once a day whether a newer release exists, and downloads updates only from GitHub. Nothing about you is sent.</key>
+	<string>OpenClean 每天向 api.github.com 查询一次是否有新版本，并且只从 GitHub 下载更新。不会发送任何关于你的信息。</string>
+	<key>OpenClean couldn’t read this folder.</key>
+	<string>OpenClean 无法读取此文件夹。</string>
+	<key>OpenClean finds an app's caches, preferences, containers and launch agents by its exact bundle ID. The whole uninstall goes to quarantine, so it can be restored.</key>
+	<string>OpenClean 根据 App 的确切包 ID 找到其缓存、偏好设置、容器和启动代理。整个卸载内容都会移入隔离区，因此可以恢复。</string>
+	<key>OpenClean lists your apps with their sizes. Nothing is removed until you confirm, and uninstalled apps can be restored from History.</key>
+	<string>OpenClean 会列出你的 App 及其大小。在你确认之前不会移除任何内容，已卸载的 App 可以从“历史记录”中恢复。</string>
+	<key>OpenClean looks for old projects in your home folder, but never in Documents or Desktop. Add a folder where you keep code, such as Documents/Code, to search it too.</key>
+	<string>OpenClean 会在你的个人文件夹中查找旧项目，但绝不会查找“文稿”或“桌面”。添加你存放代码的文件夹（例如 文稿/Code）即可一并搜索。</string>
+	<key>OpenClean only offers Quit for apps, never for macOS components or itself.</key>
+	<string>OpenClean 只为 App 提供“退出”，绝不会为 macOS 组件或它自身提供。</string>
+	<key>OpenClean was updated. Allow Full Disk Access again</key>
+	<string>OpenClean 已更新。请再次允许完全磁盘访问权限</string>
+	<key>OpenClean was updated: remove it from the list and add it again.</key>
+	<string>OpenClean 已更新：请将它从列表中移除，然后重新添加。</string>
+	<key>OpenClean was updated: select it, remove it with **−**, then add it again.</key>
+	<string>OpenClean 已更新：选中它，用 **−** 移除，然后重新添加。</string>
+	<key>OpenClean, %@</key>
+	<string>OpenClean，%@</string>
+	<key>OpenClean, CPU %@, memory %@</key>
+	<string>OpenClean，CPU %1$@，内存 %2$@</string>
+	<key>Other files</key>
+	<string>其他文件</string>
+	<key>Overview</key>
+	<string>概览</string>
+	<key>Part of macOS, another user's, or OpenClean itself — it can't be quit from here.</key>
+	<string>属于 macOS、其他用户或 OpenClean 本身 — 无法在此退出。</string>
+	<key>Pending</key>
+	<string>待完成</string>
+	<key>Performance</key>
+	<string>性能</string>
+	<key>Permissions</key>
+	<string>权限</string>
+	<key>Pick an app to see what it left behind</key>
+	<string>选择一个 App 查看它留下的内容</string>
+	<key>Preferences</key>
+	<string>偏好设置</string>
+	<key>Preferences for every part of OpenClean.</key>
+	<string>OpenClean 各部分的偏好设置。</string>
+	<key>Press Return to start</key>
+	<string>按下 Return 键开始</string>
+	<key>Pressure: %@</key>
+	<string>压力：%@</string>
+	<key>Privacy &amp; Security › Full Disk Access</key>
+	<string>隐私与安全性 › 完全磁盘访问权限</string>
+	<key>Probably from %@</key>
+	<string>可能来自 %@</string>
+	<key>Process</key>
+	<string>进程</string>
+	<key>Project folders</key>
+	<string>项目文件夹</string>
+	<key>Protected</key>
+	<string>受保护</string>
+	<key>Quarantine</key>
+	<string>隔离区</string>
+	<key>Quarantined</key>
+	<string>已隔离</string>
+	<key>Quarantined items can be restored until they expire.</key>
+	<string>隔离区中的项目在到期前都可以恢复。</string>
+	<key>Quick Look</key>
+	<string>快速查看</string>
+	<key>Quick Look %@</key>
+	<string>快速查看 %@</string>
+	<key>Quit</key>
+	<string>退出</string>
+	<key>Quit %@ to uninstall it</key>
+	<string>退出 %@ 后即可卸载</string>
+	<key>Quitting %@…</key>
+	<string>正在退出 %@…</string>
+	<key>Reading launch agents…</key>
+	<string>正在读取启动代理…</string>
+	<key>Reads your Applications folders only</key>
+	<string>仅读取你的“应用程序”文件夹</string>
+	<key>Ready to install OpenClean %@</key>
+	<string>已准备好安装 OpenClean %@</string>
+	<key>Rebuild Launch Services database</key>
+	<string>重建 Launch Services 数据库</string>
+	<key>Rebuilds the list that decides which app opens which file and what appears in “Open With”. Fixes duplicate or missing entries. Default apps you chose may need choosing again.</key>
+	<string>重建决定由哪个 App 打开哪种文件以及“打开方式”中显示内容的列表。可修复重复或缺失的条目。你选择的默认 App 可能需要重新选择。</string>
+	<key>Refresh</key>
+	<string>刷新</string>
+	<key>Reindex Spotlight</key>
+	<string>重建 Spotlight 索引</string>
+	<key>Remind Me Later</key>
+	<string>稍后提醒我</string>
+	<key>Remove</key>
+	<string>移除</string>
+	<key>Remove %@</key>
+	<string>移除 %@</string>
+	<key>Remove %@?</key>
+	<string>要移除 %@ 吗？</string>
+	<key>Remove apps and what they leave behind</key>
+	<string>移除 App 及其残留内容</string>
+	<key>Remove apps and what they left behind</key>
+	<string>移除 App 及其遗留内容</string>
+	<key>Remove…</key>
+	<string>移除…</string>
+	<key>Replace It (old one goes to Trash)</key>
+	<string>替换（旧文件移到废纸篓）</string>
+	<key>Report only</key>
+	<string>仅报告</string>
+	<key>Reset</key>
+	<string>重置</string>
+	<key>Restore</key>
+	<string>恢复</string>
+	<key>Restore All…</key>
+	<string>全部恢复…</string>
+	<key>Restored</key>
+	<string>已恢复</string>
+	<key>Restored from History</key>
+	<string>已从历史记录恢复</string>
+	<key>Retry</key>
+	<string>重试</string>
+	<key>Reveal %@ in Finder</key>
+	<string>在访达中显示 %@</string>
+	<key>Reveal in Finder</key>
+	<string>在访达中显示</string>
+	<key>Review</key>
+	<string>需检查</string>
+	<key>Review cleanup</key>
+	<string>检查清理内容</string>
+	<key>Review what moves to quarantine before anything happens</key>
+	<string>在执行任何操作前检查要移入隔离区的内容</string>
+	<key>Run</key>
+	<string>运行</string>
+	<key>Run %@</key>
+	<string>运行 %@</string>
+	<key>Run Smart Scan to see what can be cleaned.</key>
+	<string>运行 Smart Scan 查看可清理的内容。</string>
+	<key>Run maintenance scripts</key>
+	<string>运行维护脚本</string>
+	<key>Run “%@”?</key>
+	<string>要运行“%@”吗？</string>
+	<key>Running</key>
+	<string>正在运行</string>
+	<key>Running %@</key>
+	<string>正在运行 %@</string>
+	<key>Runs the daily, weekly and monthly housekeeping scripts macOS ships with (log rotation, temporary file cleanup). macOS normally runs them on its own.</key>
+	<string>运行 macOS 自带的每日、每周和每月维护脚本（日志轮换、临时文件清理）。macOS 通常会自行运行它们。</string>
+	<key>Runs: %@</key>
+	<string>运行：%@</string>
+	<key>Run…</key>
+	<string>运行…</string>
+	<key>Safe</key>
+	<string>安全</string>
+	<key>Safe by design</key>
+	<string>安全设计</string>
+	<key>Safe items are picked for you. Review items go to quarantine first, so you can undo.</key>
+	<string>安全项目已为你选择。需检查的项目会先移入隔离区，因此可以撤销。</string>
+	<key>Safety: %@</key>
+	<string>安全性：%@</string>
+	<key>Same content</key>
+	<string>内容相同</string>
+	<key>Sample</key>
+	<string>样本</string>
+	<key>Scan</key>
+	<string>扫描</string>
+	<key>Scan Again</key>
+	<string>再次扫描</string>
+	<key>Scan This Folder</key>
+	<string>扫描此文件夹</string>
+	<key>Scan reminder</key>
+	<string>扫描提醒</string>
+	<key>Scanning</key>
+	<string>正在扫描</string>
+	<key>Scanning %@…</key>
+	<string>正在扫描 %@…</string>
+	<key>Search apps</key>
+	<string>搜索 App</string>
+	<key>Section</key>
+	<string>部分</string>
+	<key>See exactly where your space went</key>
+	<string>清楚了解空间的去向</string>
+	<key>See the feature tour and permission setup again.</key>
+	<string>再次查看功能导览和权限设置。</string>
+	<key>See what takes up space</key>
+	<string>查看占用空间的内容</string>
+	<key>Select a rule</key>
+	<string>选择一条规则</string>
+	<key>Select an app</key>
+	<string>选择一个 App</string>
+	<key>Settings</key>
+	<string>设置</string>
+	<key>Settings…</key>
+	<string>设置…</string>
+	<key>Show CPU and memory in the menu bar</key>
+	<string>在菜单栏中显示 CPU 和内存</string>
+	<key>Show OpenClean in the menu bar</key>
+	<string>在菜单栏中显示 OpenClean</string>
+	<key>Show Tour</key>
+	<string>显示导览</string>
+	<key>Show advanced (caution) rules</key>
+	<string>显示高级（谨慎）规则</string>
+	<key>Show next to the icon</key>
+	<string>在图标旁显示</string>
+	<key>Size</key>
+	<string>大小</string>
+	<key>Sizes are space on disk. Copies made by APFS cloning may share space.</key>
+	<string>大小指磁盘占用空间。通过 APFS 克隆生成的副本可能共享空间。</string>
+	<key>Skip It</key>
+	<string>跳过</string>
+	<key>Skip This Version</key>
+	<string>跳过此版本</string>
+	<key>Skipped</key>
+	<string>已跳过</string>
+	<key>Skipped while %@ is running. Quit it and scan again.</key>
+	<string>%@ 运行时会跳过。请退出它后再次扫描。</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Some rule packs were skipped</key>
+	<string>部分规则包已被跳过</string>
+	<key>Something went wrong</key>
+	<string>出现问题</string>
+	<key>Sort by</key>
+	<string>排序方式</string>
+	<key>Sorted by size. Tick the ones you no longer need; they go to the Trash.</key>
+	<string>按大小排序。勾选你不再需要的项目，它们会进入废纸篓。</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space Lens maps a folder by size so you can find what to remove. Nothing is removed until you tick it and confirm; items go to the Trash.</key>
+	<string>Space Lens 按大小绘制文件夹地图，帮你找到可以移除的内容。在你勾选并确认之前不会移除任何内容；项目会进入废纸篓。</string>
+	<key>Space Lens view</key>
+	<string>Space Lens 视图</string>
+	<key>Space map of %@</key>
+	<string>%@ 的空间地图</string>
+	<key>Spotlight is rebuilding its index in the background. Search results fill in as it goes.</key>
+	<string>Spotlight 正在后台重建索引。搜索结果会逐步补全。</string>
+	<key>Start over</key>
+	<string>重新开始</string>
+	<key>Starting scan…</key>
+	<string>正在开始扫描…</string>
+	<key>Step %lld of %lld</key>
+	<string>第 %1$lld 步，共 %2$lld 步</string>
+	<key>Step %lld: %@</key>
+	<string>第 %1$lld 步：%2$@</string>
+	<key>Stop</key>
+	<string>停止</string>
+	<key>Stop Excluding</key>
+	<string>停止排除</string>
+	<key>Suggested to keep</key>
+	<string>建议保留</string>
+	<key>System (read-only)</key>
+	<string>系统（只读）</string>
+	<key>System (root)</key>
+	<string>系统（root）</string>
+	<key>System Junk</key>
+	<string>系统垃圾</string>
+	<key>Tasks marked “Needs admin” ask for your password once per run. OpenClean can only run these exact commands as administrator.</key>
+	<string>标有“需要管理员”的任务每次运行时会询问一次密码。OpenClean 只能以管理员身份运行这些确切的命令。</string>
+	<key>The app</key>
+	<string>该 App</string>
+	<key>The app could not be moved.</key>
+	<string>无法移动该 App。</string>
+	<key>The app itself is always included</key>
+	<string>App 本身始终包括在内</string>
+	<key>The command finished without errors.</key>
+	<string>命令已完成，没有错误。</string>
+	<key>The menu bar monitor only samples while it shows a figure or its window is open.</key>
+	<string>菜单栏监视器仅在显示数值或其窗口打开时采样。</string>
+	<key>The result shows only in the menu bar.</key>
+	<string>结果只会显示在菜单栏中。</string>
+	<key>The scan was stopped early. Results are partial.</key>
+	<string>扫描提前停止。结果不完整。</string>
+	<key>The scan was stopped early. Sizes are partial.</key>
+	<string>扫描提前停止。大小不完整。</string>
+	<key>The update didn't finish</key>
+	<string>更新未完成</string>
+	<key>These apps carry their own login items. macOS decides whether they run; turn them on or off in System Settings → General → Login Items.</key>
+	<string>这些 App 自带登录项。是否运行由 macOS 决定；请在“系统设置”→“通用”→“登录项”中打开或关闭。</string>
+	<key>Thin Time Machine local snapshots</key>
+	<string>精简 Time Machine 本地快照</string>
+	<key>This build of OpenClean has a new signature, so macOS no longer recognises the earlier permission. Remove OpenClean from the list in Settings, add it again, then click Check Again.</key>
+	<string>此版本的 OpenClean 签名已更改，macOS 不再识别之前的权限。请在“设置”的列表中移除 OpenClean，重新添加，然后点按“再次检查”。</string>
+	<key>This can take a minute.</key>
+	<string>这可能需要一分钟。</string>
+	<key>This folder is deep in the map, so its contents were summarized.</key>
+	<string>此文件夹在地图中层级很深，因此其内容已被汇总。</string>
+	<key>This is OpenClean itself</key>
+	<string>这是 OpenClean 本身</string>
+	<key>This module is planned for a later OpenClean release.</key>
+	<string>此模块计划在 OpenClean 的后续版本中推出。</string>
+	<key>This release can't be installed from inside OpenClean. Download it from GitHub instead.</key>
+	<string>此版本无法在 OpenClean 内安装。请改为从 GitHub 下载。</string>
+	<key>Tick a category to clean it</key>
+	<string>勾选类别即可清理</string>
+	<key>Tick items to move them</key>
+	<string>勾选项目即可移动</string>
+	<key>Tick the copies you don’t need; they go to the Trash. One copy of each file always stays, and nothing is picked for you.</key>
+	<string>勾选你不需要的副本，它们会进入废纸篓。每个文件总会保留一份副本，不会替你选择任何项目。</string>
+	<key>Today, %@</key>
+	<string>今天 %@</string>
+	<key>Trash</key>
+	<string>废纸篓</string>
+	<key>Trash, Mail, Safari and iOS backups can be scanned.</key>
+	<string>可以扫描废纸篓、邮件、Safari 和 iOS 备份。</string>
+	<key>Trash, Mail, Safari and iOS backups can only be scanned with Full Disk Access.</key>
+	<string>只有获得完全磁盘访问权限后才能扫描废纸篓、邮件、Safari 和 iOS 备份。</string>
+	<key>Trash, Mail, Safari and iOS backups live in folders macOS protects. OpenClean only reads what its cleaning rules list, and never sends anything off your Mac.</key>
+	<string>废纸篓、邮件、Safari 和 iOS 备份位于受 macOS 保护的文件夹中。OpenClean 只读取其清理规则列出的内容，绝不会将任何内容发送到 Mac 之外。</string>
+	<key>Trash…</key>
+	<string>移到废纸篓…</string>
+	<key>Turn Off</key>
+	<string>关闭</string>
+	<key>Turn On</key>
+	<string>打开</string>
+	<key>Turn on **OpenClean** in the list, or drag its icon below into the list.</key>
+	<string>在列表中打开 **OpenClean**，或将下方的图标拖到列表中。</string>
+	<key>Undo for 7 days</key>
+	<string>7 天内可撤销</string>
+	<key>Uninstall</key>
+	<string>卸载</string>
+	<key>Uninstall %@?</key>
+	<string>要卸载 %@ 吗？</string>
+	<key>Uninstall cancelled</key>
+	<string>已取消卸载</string>
+	<key>Uninstaller</key>
+	<string>卸载器</string>
+	<key>Uninstalling</key>
+	<string>正在卸载</string>
+	<key>Unknown</key>
+	<string>未知</string>
+	<key>Unknown app</key>
+	<string>未知 App</string>
+	<key>Update</key>
+	<string>更新</string>
+	<key>Updates</key>
+	<string>更新</string>
+	<key>User Caches &amp; Logs</key>
+	<string>用户缓存与日志</string>
+	<key>Utilities</key>
+	<string>实用工具</string>
+	<key>Value</key>
+	<string>值</string>
+	<key>Verifying…</key>
+	<string>正在验证…</string>
+	<key>Version %@</key>
+	<string>版本 %@</string>
+	<key>Videos</key>
+	<string>视频</string>
+	<key>View on GitHub</key>
+	<string>在 GitHub 上查看</string>
+	<key>Waiting for access…</key>
+	<string>正在等待访问权限…</string>
+	<key>Waiting for your password, then moving %@ to quarantine…</key>
+	<string>正在等待你输入密码，然后将 %@ 移入隔离区…</string>
+	<key>We found %@ to clean</key>
+	<string>找到 %@ 可清理</string>
+	<key>Welcome Tour…</key>
+	<string>欢迎导览…</string>
+	<key>Welcome back. Ready for another sweep?</key>
+	<string>欢迎回来。准备好再清理一次了吗？</string>
+	<key>Welcome to OpenClean</key>
+	<string>欢迎使用 OpenClean</string>
+	<key>Welcome tour</key>
+	<string>欢迎导览</string>
+	<key>What moves to quarantine</key>
+	<string>将移入隔离区的内容</string>
+	<key>What starts when you log in, and who installed it.</key>
+	<string>登录时启动的项目以及它们的安装者。</string>
+	<key>What's New</key>
+	<string>新功能</string>
+	<key>While OpenClean or its menu bar item is running, it scans in the background and tells you how much can be cleaned: in the menu bar, and with a notification when it's 1 GB or more. It never cleans by itself.</key>
+	<string>OpenClean 或其菜单栏项目运行时，会在后台扫描并告诉你可清理多少：显示在菜单栏中，达到 1 GB 或以上时还会发送通知。它绝不会自行清理。</string>
+	<key>Yesterday, %@</key>
+	<string>昨天 %@</string>
+	<key>You</key>
+	<string>你</string>
+	<key>You can put items back from the Trash in Finder.</key>
+	<string>你可以在访达中从废纸篓放回项目。</string>
+	<key>You can switch to other screens while this runs.</key>
+	<string>运行期间你可以切换到其他界面。</string>
+	<key>You have %@. Your current version stays in History after updating.</key>
+	<string>你当前使用的是 %@。更新后，当前版本会保留在“历史记录”中。</string>
+	<key>You're all set</key>
+	<string>一切就绪</string>
+	<key>You're up to date</key>
+	<string>已是最新版本</string>
+	<key>Your Mac is %@ lighter</key>
+	<string>你的 Mac 减轻了 %@</string>
+	<key>Your current version is kept in History, so you can go back to it. After OpenClean restarts, macOS will ask you to allow Full Disk Access again.</key>
+	<string>当前版本会保留在“历史记录”中，因此你可以回退。OpenClean 重新启动后，macOS 会要求你再次允许完全磁盘访问权限。</string>
+	<key>Your launch agents</key>
+	<string>你的启动代理</string>
+	<key>Your rule packs</key>
+	<string>你的规则包</string>
+	<key>You’ll see its size, its leftovers in your Library, and what would move to quarantine.</key>
+	<string>你将看到它的大小、它在资源库中的残留文件，以及将移入隔离区的内容。</string>
+	<key>and %lld more</key>
+	<string>以及另外 %lld 项</string>
+	<key>cleanup</key>
+	<string>次清理</string>
+	<key>cleanups</key>
+	<string>次清理</string>
+	<key>collapsed</key>
+	<string>已折叠</string>
+	<key>current</key>
+	<string>当前</string>
+	<key>expanded</key>
+	<string>已展开</string>
+	<key>files looked at · %@</key>
+	<string>已查看的文件 · %@</string>
+	<key>found</key>
+	<string>已找到</string>
+	<key>freed in total</key>
+	<string>共释放</string>
+	<key>iOS Backups</key>
+	<string>iOS 备份</string>
+	<key>kept running</key>
+	<string>保持运行</string>
+	<key>last opened</key>
+	<string>上次打开</string>
+	<key>launchctl couldn’t be asked for the current state, so “running” isn’t shown.</key>
+	<string>无法向 launchctl 查询当前状态，因此不显示“正在运行”。</string>
+	<key>macOS treats each new version of OpenClean as a new app. In Settings, remove OpenClean from the Full Disk Access list, add it again, then click Check Again.</key>
+	<string>macOS 会将 OpenClean 的每个新版本视为新的 App。请在“设置”中将 OpenClean 从“完全磁盘访问权限”列表中移除，重新添加，然后点按“再次检查”。</string>
+	<key>macOS will ask for your administrator password to move %@ to quarantine. If you restore it later, it comes back owned by you.</key>
+	<string>macOS 会要求输入管理员密码，才能将 %@ 移入隔离区。如果你之后恢复它，它将归你所有。</string>
+	<key>macOS will ask for your administrator password.</key>
+	<string>macOS 会要求输入管理员密码。</string>
+	<key>moved</key>
+	<string>已移动</string>
+	<key>needs your password</key>
+	<string>需要你的密码</string>
+	<key>never</key>
+	<string>从未</string>
+	<key>not selected</key>
+	<string>未选择</string>
+	<key>not visited yet</key>
+	<string>尚未查看</string>
+	<key>of %@</key>
+	<string>/ %@</string>
+	<key>of %@ on your startup disk</key>
+	<string>启动磁盘共 %@</string>
+	<key>on disk</key>
+	<string>磁盘占用</string>
+	<key>owner</key>
+	<string>所有者</string>
+	<key>partially selected</key>
+	<string>部分选择</string>
+	<key>restarted when needed</key>
+	<string>需要时重新启动</string>
+	<key>runs as root</key>
+	<string>以 root 身份运行</string>
+	<key>selected</key>
+	<string>已选择</string>
+	<key>starts at login</key>
+	<string>登录时启动</string>
+	<key>the app</key>
+	<string>该 App</string>
+	<key>the bundle ID</key>
+	<string>包 ID</string>
+	<key>used of %@</key>
+	<string>已用 / %@</string>
+	<key>visited</key>
+	<string>已查看</string>
+	<key>•</key>
+	<string>•</string>
+	<key>↑ %@ sent</key>
+	<string>↑ %@ 已发送</string>
+	<key>↓ %@  ↑ %@</key>
+	<string>↓ %1$@  ↑ %2$@</string>
+</dict>
+</plist>

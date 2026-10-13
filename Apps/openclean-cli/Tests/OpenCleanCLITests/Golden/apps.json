@@ -1,0 +1,60 @@
+{
+  "apps" : [
+    {
+      "bundleID" : "com.example.foo",
+      "bytes" : 40960,
+      "lastUsed" : "2027-01-15T08:00:00Z",
+      "leftoverBytes" : 4096,
+      "leftovers" : [
+        {
+          "bytes" : 2048,
+          "kind" : "caches",
+          "match" : "bundleID",
+          "path" : "/Users/t/Library/Caches/com.example.foo",
+          "reportOnly" : false,
+          "scope" : "user",
+          "selectedByDefault" : true
+        },
+        {
+          "bytes" : 2048,
+          "kind" : "applicationSupport",
+          "match" : "name",
+          "path" : "/Users/t/Library/Application Support/Foo",
+          "reportOnly" : false,
+          "scope" : "user",
+          "selectedByDefault" : false
+        },
+        {
+          "bytes" : 512,
+          "kind" : "launchDaemons",
+          "match" : "bundleID",
+          "path" : "/Library/LaunchDaemons/com.example.foo.plist",
+          "reportOnly" : true,
+          "scope" : "system",
+          "selectedByDefault" : false
+        }
+      ],
+      "name" : "Foo",
+      "path" : "/Users/t/Applications/Foo.app",
+      "removable" : true,
+      "requiresAdministrator" : false,
+      "running" : false,
+      "status" : "removable",
+      "version" : "1.2"
+    },
+    {
+      "bytes" : 1024,
+      "leftoverBytes" : 0,
+      "leftovers" : [
+
+      ],
+      "name" : "Tool",
+      "path" : "/Applications/Utilities/Tool.app",
+      "removable" : false,
+      "requiresAdministrator" : false,
+      "running" : true,
+      "status" : "noBundleID"
+    }
+  ],
+  "schema" : 1
+}

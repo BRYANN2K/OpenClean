@@ -21,6 +21,30 @@ admin prompt, Trash, lsof and process list are injected. Keep it that way.
 
 Only `Quarantine` and `Privilege` may remove files. `RemovalGuardTests` fails the build otherwise.
 
+## Add a rule in 5 minutes
+
+1. Find the folder. Check that the app rebuilds it: quit the app, move the folder aside, reopen the app
+   and use it. Note what, if anything, was lost.
+2. Copy the commented template and edit it:
+   ```sh
+   cp Rules/TEMPLATE.yaml.example Rules/my-tool.yaml
+   ```
+   Or add the rule to the existing pack it fits (`Rules/dev-tools.yaml`, `Rules/ai.yaml`, ...).
+3. Pick the safety level (see "Choosing a level" below). When in doubt, `review`: it is quarantined and
+   can be restored.
+4. Lint it and see what it finds (all read-only):
+   ```sh
+   swift run openclean rules lint Rules/my-tool.yaml
+   swift run openclean rules explain my-tool.cache
+   swift run openclean scan --category developer --json   # find "id" : "my-tool.cache" and its items
+   ```
+5. Run `make lint`, then open a pull request with a `feat(rules): …` commit. Mention how you checked that
+   the app rebuilds the folder, and link its docs if there are any.
+
+Not ready to write YAML? Open a
+[rule suggestion](https://github.com/leoAnimesh/OpenClean/issues/new?template=rule-suggestion.yml)
+instead. To keep a rule just for yourself, put the pack in `~/Library/Application Support/OpenClean/rules/`.
+
 ## Writing a rule
 
 ```yaml
@@ -48,13 +72,54 @@ rules:
 | `conditions` | `app_not_running`, `min_age_days`, `min_size` (e.g. `100MB`). |
 | `exclude` | Globs to leave out. |
 | `requires` | `full_disk_access`, or `admin` (only for `regenerable` rules). |
+| `make_writable` | `true` for a tool that makes its cache read-only (Go's `~/go/pkg/mod`): before deleting, OpenClean adds `u+w` to the folders you own inside the item, never following a symlink. Only for `regenerable` rules that delete immediately and don't need `admin`. |
 
 Choosing a level: if the app silently rebuilds it and nothing the user made is lost, it is
 `regenerable`. If it costs a long re-download (AI models, device symbols) or holds user data
-(backups, archives, downloads), it is `review`.
+(backups, archives, downloads), it is `review`. Anything inside a user's project, a virtual environment, or a cache a
+project loads directly (Yarn Plug'n'Play, pub, Maven's local repository, which also holds `mvn install`
+output) is `review` too, so it is quarantined and can be restored.
+
+A rule whose `paths` sit in `~/Library/Caches` should also be added to the `exclude` list of
+`user.app-caches` (`Rules/user-caches.yaml`), so the generic App caches rule never picks the folder up
+when your rule is skipped (for example because its app is running).
+
+Targets that a glob can't express are `Probe`s in `Packages/OpenCleanKit/Sources/Probes/`. The project
+probes (`node.project-modules`, `python.project-venvs`, `rust.project-targets`,
+`dev.project-build-outputs`) share one walk of the home folder (`ProjectArtifactFinder`): it never follows
+symlinks, stays on the home volume, skips hidden folders, `~/Library`, Documents, Desktop, Downloads, the
+media folders, deny-listed places and your exclusions, and only reports a folder next to the file that
+proves which tool made it (`package.json`, `Cargo.toml`, `pyvenv.cfg`, `Package.swift`, ...) in a project
+unchanged for 30 days (including its enclosing git repository). Folders the user adds under Settings →
+Project folders (`projectFolders` in `settings.json`) are walked too, even in Documents or Desktop; only
+the artifacts found there can get past the deny-list (`ProjectFolderExemption`, see AGENTS.md). The walk
+checks for cancellation before listing each folder, so stopping a scan stops it promptly.
 
 Check your pack with `openclean rules lint path/to/pack.yaml`, then try it with
 `openclean scan --json` before opening a pull request.
+
+## Translations
+
+The app (not the CLI) is localized with String Catalogs: `Apps/OpenClean/Sources/OpenCleanApp/Resources/Localizable.xcstrings`
+for the views and `Apps/OpenClean/Sources/OpenCleanAppModel/Resources/Localizable.xcstrings` for the
+model's messages. Open them in Xcode, or edit the JSON directly. The current German, Spanish, French,
+Japanese and Simplified Chinese translations are machine-assisted, so **native-speaker review is very
+welcome**: a pull request that only fixes wording is a great first contribution.
+
+- Keep the voice plain and factual, like the English. Translate safety wording precisely and never
+  soften it: what goes to quarantine, what can be restored and for how long, what is deleted immediately,
+  and when macOS asks for the administrator password.
+- Use the names macOS uses in your language for its own features (Full Disk Access, Trash, System
+  Settings, Login Items). "Smart Scan" and "Space Lens" stay as they are.
+- Keep every format specifier (`%@`, `%lld`); reorder them with positions (`%2$@`) if your language needs
+  to. Counts use plural variations; a sentence with two arguments uses a substitution for the counted one.
+- New UI text: a `Text("…")` literal is localized automatically; a `String` shown in the UI must come
+  from `String(localized: "…")` (in OpenCleanAppModel: `String(localized: "…", bundle: .appModel)`).
+  Then add the key with all five translations and run `scripts/compile-strings.sh`, which compiles the
+  catalogs into the `Resources/<lang>.lproj` folders the targets ship (commit them too).
+  `LocalizationCatalogTests` fails if a key misses a language, a translation reads different arguments
+  than its key, or the `.lproj` folders are out of date.
+- The CLI stays English: its output and `--json` are a contract for scripts.
 
 ## Pull requests
 
@@ -124,3 +189,23 @@ scripts/next-version.sh --notes         # the release notes
 bash scripts/tests/test-next-version.sh
 make release-assets VERSION=0.0.0-test  # native arch; add ARCH_FLAGS="--arch arm64 --arch x86_64" for universal
 ```
+
+### Homebrew
+
+This repository is a Homebrew tap: `Casks/openclean.rb` installs the release DMG (the app) and
+`Formula/openclean.rb` installs the CLI from the release's `openclean-cli-X.Y.Z.zip` (or builds `main`
+with `--HEAD`). Both pin the SHA-256 from the release's `SHA256SUMS.txt`.
+
+`main` is protected, so the release workflow can't commit the bump there. Its `homebrew` job runs after a
+release is published: it runs `scripts/bump-homebrew.sh X.Y.Z SHA256SUMS.txt`, pushes the result to a
+`homebrew/vX.Y.Z` branch and opens a `chore(homebrew): …` pull request (a `chore`, so merging it doesn't
+release again). Merge it to move the tap. Notes:
+
+- The repository setting Settings → Actions → General → **Allow GitHub Actions to create and approve pull
+  requests** must be on, or `gh pr create` fails (the release itself is already published by then).
+- GitHub doesn't run workflows for pull requests opened with `GITHUB_TOKEN`, so CI doesn't run on the bump
+  PR. Close and reopen it to run CI. The script is covered by `bash scripts/tests/test-bump-homebrew.sh`,
+  and the PR dry run (`release-dry-run`) shows the bump it would make.
+- If the job fails, bump by hand: download `SHA256SUMS.txt` from the release, run
+  `scripts/bump-homebrew.sh X.Y.Z path/to/SHA256SUMS.txt`, check with `brew style Casks Formula`, and open
+  the pull request yourself.
