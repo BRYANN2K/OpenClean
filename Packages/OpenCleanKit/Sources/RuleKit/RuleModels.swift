@@ -76,12 +76,16 @@ public struct Rule: Decodable, Sendable, Equatable, Identifiable {
     public var conditions: RuleConditions
     public var exclude: [String]
     public var requires: [Requirement]
+    /// `make_writable: true`: before deleting an item, give the user write permission on the folders they
+    /// own inside it (tools such as Go make their module cache read-only, so a plain delete fails partway).
+    /// Only for rules that delete immediately and don't need admin (the linter enforces this).
+    public var makeWritable: Bool
 
     public init(
         id: String, name: String, category: RuleCategory, explain: String,
         paths: [String] = [], probe: String? = nil, safety: SafetyLevel,
         deleteMode: DeleteMode? = nil, conditions: RuleConditions = RuleConditions(),
-        exclude: [String] = [], requires: [Requirement] = []
+        exclude: [String] = [], requires: [Requirement] = [], makeWritable: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -94,11 +98,13 @@ public struct Rule: Decodable, Sendable, Equatable, Identifiable {
         self.conditions = conditions
         self.exclude = exclude
         self.requires = requires
+        self.makeWritable = makeWritable
     }
 
     enum CodingKeys: String, CodingKey {
         case id, name, category, explain, paths, probe, safety, conditions, exclude, requires
         case deleteMode = "delete_mode"
+        case makeWritable = "make_writable"
     }
 
     public init(from decoder: any Decoder) throws {
@@ -114,6 +120,7 @@ public struct Rule: Decodable, Sendable, Equatable, Identifiable {
         conditions = try c.decodeIfPresent(RuleConditions.self, forKey: .conditions) ?? RuleConditions()
         exclude = try c.decodeIfPresent([String].self, forKey: .exclude) ?? []
         requires = try c.decodeIfPresent([Requirement].self, forKey: .requires) ?? []
+        makeWritable = try c.decodeIfPresent(Bool.self, forKey: .makeWritable) ?? false
     }
 
     public var effectiveDeleteMode: DeleteMode { deleteMode ?? safety.defaultDeleteMode }

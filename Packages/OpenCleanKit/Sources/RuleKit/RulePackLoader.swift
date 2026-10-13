@@ -23,7 +23,7 @@ public struct RulePackLoader: Sendable {
     static let packKeys: Set<String> = ["pack", "version", "rules"]
     static let ruleKeys: Set<String> = [
         "id", "name", "category", "explain", "paths", "probe", "safety",
-        "delete_mode", "conditions", "exclude", "requires",
+        "delete_mode", "conditions", "exclude", "requires", "make_writable",
     ]
     static let conditionKeys: Set<String> = ["app_not_running", "min_age_days", "min_size"]
 
