@@ -28,14 +28,17 @@ No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 
 | | |
 |---|---|
-| ![Smart Scan results: 19.39 GB found, safe items picked, review items left for you](docs/screenshots/smart-scan-results.png) | ![Review sheet: what is deleted now and what goes to quarantine for 7 days](docs/screenshots/review.png) |
-| **Smart Scan** — safe items are picked for you; anything else waits for your review. | **Review** — see what is deleted now and what is quarantined before you confirm. |
-| ![History: a cleanup with 2.31 GB in quarantine and 7 days left to restore it](docs/screenshots/history.png) | ![Uninstaller: an app with its Application Support folder and preferences, all moved to quarantine together](docs/screenshots/uninstaller.png) |
-| **History** — restore quarantined items until they expire. | **Uninstaller** — an app and its exact-match leftovers, restorable for 7 days. |
-| ![Space Lens: a sunburst map of the home folder with the largest folders listed](docs/screenshots/space-lens.png) | ![Performance: live CPU, memory, disk and network figures](docs/screenshots/performance.png) |
-| **Space Lens** — see what takes up space, plus large, old and duplicate files. | **Performance** — live figures, heavy consumers, login items and maintenance. |
+| ![Smart Scan results: 19.39 GB found, safe items picked, review items left for you](docs/screenshots/smart-scan-results.png) | ![Cleanup: every rule with its safety level and a plain-language explanation of why it can go](docs/screenshots/cleanup.png) |
+| **Smart Scan** — safe items are picked for you; anything else waits for your review. | **Cleanup** — every rule shows its safety level and why it is safe to remove. |
+| ![Review sheet: what is deleted now and what goes to quarantine for 7 days](docs/screenshots/review.png) | ![History: a cleanup with 2.31 GB in quarantine and 7 days left to restore it](docs/screenshots/history.png) |
+| **Review** — see what is deleted now and what is quarantined before you confirm. | **History** — restore quarantined items until they expire. |
+| ![Uninstaller: an app with its Application Support folder and preferences, all moved to quarantine together](docs/screenshots/uninstaller.png) | ![Space Lens: a sunburst map of the home folder with the largest folders listed](docs/screenshots/space-lens.png) |
+| **Uninstaller** — an app and its exact-match leftovers, restorable for 7 days. | **Space Lens** — see what takes up space, plus large, old and duplicate files. |
+| ![Performance: live CPU, memory, disk and network figures](docs/screenshots/performance.png) | |
+| **Performance** — live figures, heavy consumers, login items and maintenance. | |
 
-<sub>Captured on a demo home folder filled with sample caches and apps; no real user files are shown.</sub>
+<sub>Captured on a demo home folder filled with sample caches and apps; no real user files are shown. The Cleanup
+screenshot is rendered by the UI test harness (`OPENCLEAN_RECORD_SCREENSHOTS`), so it has no window title bar.</sub>
 
 ## Features
 
