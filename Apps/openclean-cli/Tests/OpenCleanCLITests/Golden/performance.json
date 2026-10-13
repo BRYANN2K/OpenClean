@@ -1,0 +1,38 @@
+{
+  "cpuUsage" : 0.412,
+  "disk" : {
+    "availableBytes" : 100000000000,
+    "totalBytes" : 500000000000
+  },
+  "intervalSeconds" : 1,
+  "memory" : {
+    "appBytes" : 6000000000,
+    "compressedBytes" : 3000000000,
+    "pressure" : "normal",
+    "totalBytes" : 16000000000,
+    "usedBytes" : 12000000000,
+    "wiredBytes" : 3000000000
+  },
+  "processesMeasured" : 3,
+  "schema" : 1,
+  "topCPU" : [
+    {
+      "bundlePath" : "/Applications/Big.app",
+      "cpuPercent" : 125,
+      "name" : "Big",
+      "pid" : 10,
+      "processCount" : 2,
+      "residentBytes" : 4000000000
+    }
+  ],
+  "topMemory" : [
+    {
+      "bundlePath" : "/Applications/Big.app",
+      "cpuPercent" : 125,
+      "name" : "Big",
+      "pid" : 10,
+      "processCount" : 2,
+      "residentBytes" : 4000000000
+    }
+  ]
+}

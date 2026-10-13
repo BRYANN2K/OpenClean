@@ -8,7 +8,8 @@ public struct OpenCleanCommand: ParsableCommand {
         abstract: "Transparent, open-source cleanup for macOS.",
         version: openCleanVersion,
         subcommands: [
-            ScanCommand.self, CleanCommand.self, HistoryCommand.self, RestoreCommand.self,
+            ScanCommand.self, CleanCommand.self, HistoryCommand.self, RestoreCommand.self, AppsCommand.self,
+            SpaceCommand.self, PerformanceCommand.self,
             RulesCommand.self, ScheduleCommand.self, PurgeCommand.self,
         ]
     )
