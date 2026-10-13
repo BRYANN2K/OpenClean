@@ -208,5 +208,58 @@ jobs:
         run: |
           if [ -n "${SIGNING_KEYCHAIN:-}" ]; then security delete-keychain "$SIGNING_KEYCHAIN" || true; fi
           rm -f "$RUNNER_TEMP"/AuthKey_*.p8 "$RUNNER_TEMP/developer-id.p12"
-      # TODO: bump Formula/openclean.rb (stable url + sha256 of the source tarball) after a release.
-      # Out of scope for now; the formula only supports --HEAD installs.
+
+  # Points the Homebrew cask and formula (this repository is the tap) at the new release. main is
+  # protected and GITHUB_TOKEN can't push to it, so this pushes a homebrew/vX.Y.Z branch and opens a pull
+  # request for the maintainer to merge; its commit is `chore(homebrew): …`, so merging doesn't release.
+  # Needs Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests".
+  # A pull request opened with GITHUB_TOKEN doesn't trigger CI (GitHub suppresses those runs); to run it,
+  # close and reopen the pull request. If this job fails, the release is already published: run
+  # `scripts/bump-homebrew.sh X.Y.Z SHA256SUMS.txt` locally and open the pull request by hand.
+  homebrew:
+    name: Homebrew bump PR for ${{ needs.version.outputs.version }}
+    needs: [version, release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the homebrew/vX.Y.Z branch
+      pull-requests: write # open the pull request
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main # the newest main, so the pull request applies even if main moved during the release
+      - name: Bump cask and formula
+        run: |
+          gh release download "v$VERSION" --pattern SHA256SUMS.txt --dir "$RUNNER_TEMP"
+          scripts/bump-homebrew.sh "$VERSION" "$RUNNER_TEMP/SHA256SUMS.txt"
+          ruby -c Casks/openclean.rb
+          ruby -c Formula/openclean.rb
+          git diff
+      - name: Open pull request
+        run: |
+          if git diff --quiet; then
+            echo "::notice::the cask and formula already point at $VERSION"
+            exit 0
+          fi
+          branch="homebrew/v$VERSION"
+          title="chore(homebrew): bump cask and formula to $VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git commit -q -am "$title"
+          git push --force origin "$branch"
+          if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[].number')" ]; then
+            echo "::notice::a pull request for $branch is already open; its branch was updated"
+            exit 0
+          fi
+          cat > "$RUNNER_TEMP/pr-body.md" <<EOF
+          Points \`Casks/openclean.rb\` and \`Formula/openclean.rb\` at
+          [v$VERSION](https://github.com/$GITHUB_REPOSITORY/releases/tag/v$VERSION), with the SHA-256
+          checksums from that release's \`SHA256SUMS.txt\`.
+
+          Opened by the release workflow with \`GITHUB_TOKEN\`, so CI did not run on it; close and reopen
+          this pull request to run it. Merging it does not release (\`chore\`).
+          EOF
+          gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/pr-body.md"

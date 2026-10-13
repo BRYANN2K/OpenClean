@@ -21,6 +21,30 @@ admin prompt, Trash, lsof and process list are injected. Keep it that way.
 
 Only `Quarantine` and `Privilege` may remove files. `RemovalGuardTests` fails the build otherwise.
 
+## Add a rule in 5 minutes
+
+1. Find the folder. Check that the app rebuilds it: quit the app, move the folder aside, reopen the app
+   and use it. Note what, if anything, was lost.
+2. Copy the commented template and edit it:
+   ```sh
+   cp Rules/TEMPLATE.yaml.example Rules/my-tool.yaml
+   ```
+   Or add the rule to the existing pack it fits (`Rules/dev-tools.yaml`, `Rules/ai.yaml`, ...).
+3. Pick the safety level (see "Choosing a level" below). When in doubt, `review`: it is quarantined and
+   can be restored.
+4. Lint it and see what it finds (all read-only):
+   ```sh
+   swift run openclean rules lint Rules/my-tool.yaml
+   swift run openclean rules explain my-tool.cache
+   swift run openclean scan --category developer --json   # find "id" : "my-tool.cache" and its items
+   ```
+5. Run `make lint`, then open a pull request with a `feat(rules): …` commit. Mention how you checked that
+   the app rebuilds the folder, and link its docs if there are any.
+
+Not ready to write YAML? Open a
+[rule suggestion](https://github.com/leoAnimesh/OpenClean/issues/new?template=rule-suggestion.yml)
+instead. To keep a rule just for yourself, put the pack in `~/Library/Application Support/OpenClean/rules/`.
+
 ## Writing a rule
 
 ```yaml
@@ -142,3 +166,23 @@ scripts/next-version.sh --notes         # the release notes
 bash scripts/tests/test-next-version.sh
 make release-assets VERSION=0.0.0-test  # native arch; add ARCH_FLAGS="--arch arm64 --arch x86_64" for universal
 ```
+
+### Homebrew
+
+This repository is a Homebrew tap: `Casks/openclean.rb` installs the release DMG (the app) and
+`Formula/openclean.rb` installs the CLI from the release's `openclean-cli-X.Y.Z.zip` (or builds `main`
+with `--HEAD`). Both pin the SHA-256 from the release's `SHA256SUMS.txt`.
+
+`main` is protected, so the release workflow can't commit the bump there. Its `homebrew` job runs after a
+release is published: it runs `scripts/bump-homebrew.sh X.Y.Z SHA256SUMS.txt`, pushes the result to a
+`homebrew/vX.Y.Z` branch and opens a `chore(homebrew): …` pull request (a `chore`, so merging it doesn't
+release again). Merge it to move the tap. Notes:
+
+- The repository setting Settings → Actions → General → **Allow GitHub Actions to create and approve pull
+  requests** must be on, or `gh pr create` fails (the release itself is already published by then).
+- GitHub doesn't run workflows for pull requests opened with `GITHUB_TOKEN`, so CI doesn't run on the bump
+  PR. Close and reopen it to run CI. The script is covered by `bash scripts/tests/test-bump-homebrew.sh`,
+  and the PR dry run (`release-dry-run`) shows the bump it would make.
+- If the job fails, bump by hand: download `SHA256SUMS.txt` from the release, run
+  `scripts/bump-homebrew.sh X.Y.Z path/to/SHA256SUMS.txt`, check with `brew style Casks Formula`, and open
+  the pull request yourself.

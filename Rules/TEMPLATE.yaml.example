@@ -1,0 +1,57 @@
+# OpenClean rule pack template.
+#
+# Copy this file to a new name ending in .yaml, either here in Rules/ (to contribute it) or to
+# ~/Library/Application Support/OpenClean/rules/ (just for you), then edit it:
+#
+#   cp Rules/TEMPLATE.yaml.example Rules/my-tool.yaml
+#   swift run openclean rules lint Rules/my-tool.yaml
+#   swift run openclean rules explain my-tool.cache
+#   swift run openclean scan --category developer --json   # read-only; find "id" : "my-tool.cache"
+#
+# A pack with any lint problem is skipped whole, so lint it before you rely on it. The linter also refuses
+# paths in or above protected places (Documents, Desktop, iCloud Drive, Mail, Keychains, .ssh, app
+# bundles, Photos libraries, /System, ...). Full reference: CONTRIBUTING.md "Writing a rule".
+
+# Pack name: lowercase, unique across packs. Usually the file name without .yaml.
+pack: my-tool
+# Format version. Always 1 for now.
+version: 1
+rules:
+  # One entry per thing a user would recognise. Ids are lowercase and dotted: tool.thing.
+  - id: my-tool.cache
+    # Shown in the app's list.
+    name: My Tool cache
+    # One of: system, user, browsers, developer, ai, mail, trash, ios.
+    category: developer
+    # Required. Say WHY removing it is safe and what the user loses, if anything. Shown in the app.
+    explain: Downloaded packages My Tool fetches again the next time a project needs them.
+    # Absolute or ~/ globs. `*` matches one level, `**` any depth (not at the end). Match the folders
+    # inside a cache rather than the cache folder itself, so the app's own folder stays in place.
+    paths:
+      - "~/Library/Caches/com.example.mytool/*"
+      - "~/.mytool/cache/*"
+    # regenerable: rebuilt automatically and nothing the user made is lost. Selected by default and
+    #              deleted immediately (no undo).
+    # review:      costs a long re-download, holds user data, or lives inside a project. The user opts
+    #              in; it is quarantined and can be restored.
+    # caution:     only shown with Advanced on (and, in the CLI, only when named with --rule);
+    #              quarantined.
+    safety: regenerable
+    # Optional. Every condition must hold for an item to be listed.
+    conditions:
+      # Skip while any of these apps is running (bundle ids; one id or a list).
+      app_not_running: [com.example.mytool]
+      # Only items not modified for this many days.
+      # min_age_days: 30
+      # Only items at least this big (KB, MB, GB).
+      # min_size: 100MB
+    # Optional. Globs to leave out, e.g. a subfolder that holds settings.
+    # exclude:
+    #   - "~/.mytool/cache/credentials"
+    # Optional. full_disk_access for protected folders, or admin (only for regenerable rules, for
+    # root-owned system caches).
+    # requires: [full_disk_access]
+#
+# A rule whose paths sit in ~/Library/Caches should also be added to the exclude list of
+# user.app-caches (Rules/user-caches.yaml), so the generic App caches rule never picks the folder up
+# when this rule is skipped (for example because the app is running).
