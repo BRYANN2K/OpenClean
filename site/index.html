@@ -93,10 +93,8 @@ a:hover { color: #fff; }
 
 /* Hero */
 .hero { padding: 112px 0 72px; text-align: center; overflow: hidden; }
-.app-icon { width: 112px; height: 112px; margin: 0 auto 18px; filter: drop-shadow(0 16px 30px rgba(0,0,0,.35)); }
-h1 { margin: 0; font-family: var(--rounded); font-weight: 400; font-size: clamp(44px, 8vw, 72px); line-height: 1.05; letter-spacing: -.02em; }
-h1 b { font-weight: 700; }
-.tagline { margin: 14px auto 6px; max-width: 760px; text-wrap: balance; font-size: clamp(20px, 3vw, 26px); font-weight: 700; line-height: 1.3; }
+.app-icon { width: 88px; height: 88px; margin: 0 auto 16px; filter: drop-shadow(0 16px 30px rgba(0,0,0,.35)); }
+h1 { margin: 0 auto 10px; max-width: 900px; text-wrap: balance; font-weight: 700; font-size: clamp(30px, 6.4vw, 46px); line-height: 1.12; letter-spacing: -.02em; }
 .sub { margin: 0 auto; color: var(--text-2); font-size: 17px; }
 .actions { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
 
@@ -142,6 +140,7 @@ h1 b { font-weight: 700; }
 .brew code::before { content: "$ "; color: var(--text-3); }
 .brew .capsule { padding: 6px 14px; font-size: 13px; flex: none; }
 .brew-label { font-size: 13px; color: var(--text-3); margin: 0 0 -12px; }
+.or { display: none; color: var(--text-3); font-size: 14px; }
 .brew-group { width: 100%; display: flex; flex-direction: column; align-items: center; }
 .brew-group .brew-label { margin: 0 0 10px; }
 .meta { margin: 0; color: var(--text-2); font-size: 14px; }
@@ -221,20 +220,22 @@ footer p { margin: 18px 0 0; max-width: 720px; }
 
 /* Hero on wide screens: compact, centred, with the screenshot sized by viewport height so it fits the fold */
 @media (min-width: 1024px) {
-  .hero { padding: 84px 0 28px; }
-  .hero .app-icon { display: none; }
-  .hero h1 { font-size: 60px; }
-  .hero .tagline { max-width: none; margin: 10px auto 4px; font-size: 24px; }
+  .hero { padding: 76px 0 28px; }
+  .hero .app-icon { width: 76px; height: 76px; margin-bottom: 14px; filter: drop-shadow(0 10px 22px rgba(0,0,0,.35)); }
+  .hero h1 { max-width: none; font-size: clamp(32px, 3.6vw, 40px); white-space: nowrap; margin-bottom: 8px; }
   .hero .sub { font-size: 16px; }
-  .hero .actions { flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; column-gap: 28px; row-gap: 14px; margin-top: 38px; }
-  .hero .cta-group { gap: 8px; }
-  .hero .brew-group { position: relative; width: auto; display: block; }
-  .hero .brew-group .brew-label { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); margin: 0; text-align: center; line-height: 1.2; }
-  .hero .brew-group .brew { min-height: 56px; }
-  .hero .meta { flex-basis: 100%; text-align: center; }
-  .hero .shot { margin: 26px auto 0; max-width: 1000px; }
+  .hero .actions { flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 18px; row-gap: 12px; margin-top: 26px; }
+  .hero .cta-group { display: contents; }
+  .hero .btn-primary { order: 0; }
+  .hero .or { order: 1; display: block; }
+  .hero .brew-group { order: 2; width: auto; display: block; }
+  .hero .cta-note { order: 3; flex-basis: 100%; text-align: center; margin-top: 2px; }
+  .hero .meta { order: 4; flex-basis: 100%; text-align: center; }
+  .hero .brew-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
+  .hero .brew { min-height: 56px; }
+  .hero .shot { margin: 24px auto 0; max-width: 1000px; }
   .hero .window { width: fit-content; max-width: 100%; margin-inline: auto; }
-  .hero .window img { width: auto; max-width: 100%; max-height: max(300px, calc(100svh - 464px)); }
+  .hero .window img { width: auto; max-width: 100%; max-height: max(300px, calc(100svh - 476px)); }
   .hero .shot figcaption { margin-top: 10px; }
 }
 @media (max-width: 900px) {
@@ -285,8 +286,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
     <div class="wrap hero-grid">
       <div class="hero-copy">
       <img class="app-icon" src="favicon.svg" alt="" width="112" height="112">
-      <h1>Open<b>Clean</b></h1>
-      <p class="tagline">A free, open-source Mac cleaner you can read and undo.</p>
+      <h1>A free, open-source Mac cleaner you can read and undo.</h1>
       <p class="sub">An open alternative to CleanMyMac for macOS.</p>
 
       <div class="actions">
@@ -294,6 +294,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
           <a class="btn-primary" data-download href="https://github.com/leoAnimesh/OpenClean/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Download for Mac</a>
           <p class="cta-note" id="hero-note">Free and open source</p>
         </div>
+        <span class="or" aria-hidden="true">or</span>
         <div class="brew-group">
         <p class="brew-label" id="brew-label">Or install with Homebrew</p>
         <div class="brew" role="group" aria-labelledby="brew-label">
