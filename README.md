@@ -32,12 +32,14 @@ No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
   Quit/Force Quit, login items and launch agents, and one-click maintenance (flush DNS, reindex Spotlight,
   rebuild Launch Services, thin Time Machine snapshots).
 - **Developer cleanup** — Xcode DerivedData, archives, device support and simulators; package caches for
-  npm/npx, Yarn, pnpm, Bun, Deno, Corepack, pip, uv, Poetry, conda, Cargo, Go, Gradle, Maven, Coursier, Ivy,
+  npm/npx, Yarn, pnpm, Bun, Deno, Corepack, pip, uv, Poetry, conda, Cargo, Go (build and module caches),
+  Gradle, Maven, Coursier, Ivy,
   SwiftPM, CocoaPods, pub, Bundler, Composer, Terraform and Homebrew; Playwright, Puppeteer, Cypress and
   Electron downloads; JetBrains indexes and VS Code / Cursor caches; Docker disk image reporting.
 - **Old project cleanup** — finds `node_modules`, Python virtual environments, Rust `target` folders and
   build output (SwiftPM, Maven, Gradle, Flutter, Next.js and more) in projects you haven't touched for 30
-  days; they go to quarantine, so a project can be restored as it was.
+  days; they go to quarantine, so a project can be restored as it was. Projects in Documents or Desktop are
+  searched only if you add their folder under Settings → Project folders.
 - **AI model cleanup** — Ollama, LM Studio, Hugging Face (models, datasets, Xet), PyTorch Hub, Whisper,
   Keras, TensorFlow Datasets and Kaggle downloads.
 - **Safe by design** — Safe / Review / Caution levels, a hard deny-list, pre-delete checks, and a
@@ -131,7 +133,9 @@ skipped (with a note on stderr) unless you pass `--allow-admin`.
 ## How it stays safe
 
 - A built-in deny-list (System, your Documents/Desktop, Keychains, Mail, iCloud Drive, app bundles,
-  Photos libraries) can never be removed, whatever a rule says. Deny-list checks are byte-level and
+  Photos libraries) can never be removed, whatever a rule says. The one exception is opt-in: folders such
+  as `node_modules` that the old-project search finds inside a project folder you chose in Settings may
+  go to quarantine even under Documents or Desktop; nothing else there is touched. Deny-list checks are byte-level and
   aware of Unicode normalization and letter case, so look-alike spellings of a protected path do not
   slip through.
 - Symlinks are never followed; a match that resolves outside its rule's folder is dropped.
