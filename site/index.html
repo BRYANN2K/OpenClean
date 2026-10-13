@@ -142,6 +142,8 @@ h1 b { font-weight: 700; }
 .brew code::before { content: "$ "; color: var(--text-3); }
 .brew .capsule { padding: 6px 14px; font-size: 13px; flex: none; }
 .brew-label { font-size: 13px; color: var(--text-3); margin: 0 0 -12px; }
+.brew-group { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.brew-group .brew-label { margin: 0 0 10px; }
 .meta { margin: 0; color: var(--text-2); font-size: 14px; }
 .meta span[aria-hidden] { color: var(--text-3); margin-inline: 6px; }
 .fine { margin: 0; font-size: 13px; color: var(--text-3); }
@@ -217,22 +219,23 @@ footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: w
 footer a { color: var(--text-2); }
 footer p { margin: 18px 0 0; max-width: 720px; }
 
-/* Hero: two columns on wide screens so the whole app screenshot sits above the fold */
+/* Hero on wide screens: compact, centred, with the screenshot sized by viewport height so it fits the fold */
 @media (min-width: 1024px) {
-  .hero { min-height: 100svh; display: flex; align-items: center; padding: 84px 0 40px; text-align: left; }
-  .hero .wrap.hero-grid { width: min(1280px, 100% - 64px); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: center; }
-  .hero .app-icon { width: 72px; height: 72px; margin: 0 0 16px; filter: drop-shadow(0 10px 20px rgba(0,0,0,.35)); }
-  .hero h1 { font-size: clamp(48px, 4.6vw, 64px); }
-  .hero .tagline { margin: 12px 0 6px; font-size: clamp(20px, 1.9vw, 24px); }
-  .hero .sub { margin: 0; font-size: 16px; }
-  .hero .actions { align-items: flex-start; margin-top: 26px; gap: 16px; }
-  .hero .cta-group { align-items: flex-start; gap: 10px; }
-  .hero .brew-label { margin: 6px 0 -8px; }
-  .hero .brew { width: 100%; max-width: 100%; padding-left: 14px; }
-  .hero .brew code { font-size: 12.5px; }
-  .hero .shot { margin: 0; max-width: none; }
-  .hero .window { box-shadow: 0 30px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.25), 0 0 120px rgba(75,242,184,.12); }
-  .hero .shot figcaption { text-align: left; }
+  .hero { padding: 84px 0 28px; }
+  .hero .app-icon { display: none; }
+  .hero h1 { font-size: 60px; }
+  .hero .tagline { max-width: none; margin: 10px auto 4px; font-size: 24px; }
+  .hero .sub { font-size: 16px; }
+  .hero .actions { flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; column-gap: 28px; row-gap: 14px; margin-top: 38px; }
+  .hero .cta-group { gap: 8px; }
+  .hero .brew-group { position: relative; width: auto; display: block; }
+  .hero .brew-group .brew-label { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); margin: 0; text-align: center; line-height: 1.2; }
+  .hero .brew-group .brew { min-height: 56px; }
+  .hero .meta { flex-basis: 100%; text-align: center; }
+  .hero .shot { margin: 26px auto 0; max-width: 1000px; }
+  .hero .window { width: fit-content; max-width: 100%; margin-inline: auto; }
+  .hero .window img { width: auto; max-width: 100%; max-height: max(300px, calc(100svh - 464px)); }
+  .hero .shot figcaption { margin-top: 10px; }
 }
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
@@ -291,10 +294,12 @@ footer p { margin: 18px 0 0; max-width: 720px; }
           <a class="btn-primary" data-download href="https://github.com/leoAnimesh/OpenClean/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Download for Mac</a>
           <p class="cta-note" id="hero-note">Free and open source</p>
         </div>
+        <div class="brew-group">
         <p class="brew-label" id="brew-label">Or install with Homebrew</p>
         <div class="brew" role="group" aria-labelledby="brew-label">
           <code id="brew-cmd">brew install --cask leoanimesh/openclean/openclean</code>
           <button class="capsule" type="button" aria-live="polite" data-copy="brew-cmd" aria-label="Copy Homebrew command">Copy</button>
+        </div>
         </div>
         <p class="meta">macOS 14+<span aria-hidden="true">·</span>Apple silicon &amp; Intel<span aria-hidden="true">·</span>Signed &amp; notarized</p>
       </div>
