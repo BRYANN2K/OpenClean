@@ -182,6 +182,14 @@ let package = Package(
             ],
             path: "Apps/OpenClean/Tests/OpenCleanAppModelTests"
         ),
+        .testTarget(
+            name: "OpenCleanAppUITests",
+            dependencies: [
+                "OpenCleanApp", "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine",
+                "Permissions", "TestSupport", "Updater",
+            ],
+            path: "Apps/OpenClean/Tests/OpenCleanAppUITests"
+        ),
         .executableTarget(
             name: "OpenCleanApp",
             dependencies: [
