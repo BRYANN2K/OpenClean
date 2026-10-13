@@ -150,8 +150,8 @@ let package = Package(
         .target(
             name: "OpenCleanCLI",
             dependencies: [
-                "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions",
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "AppInventory", "SpaceKit",
+                "SystemMonitor", .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ],
             path: "Apps/openclean-cli/Sources/OpenCleanCLI"
         ),
@@ -162,7 +162,10 @@ let package = Package(
         ),
         .testTarget(
             name: "OpenCleanCLITests",
-            dependencies: ["OpenCleanCLI", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "TestSupport"],
+            dependencies: [
+                "OpenCleanCLI", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "AppInventory", "SpaceKit",
+                "SystemMonitor", "TestSupport",
+            ],
             path: "Apps/openclean-cli/Tests/OpenCleanCLITests",
             exclude: ["Golden"]
         ),

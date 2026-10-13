@@ -6,8 +6,14 @@ import RuleKit
 /// Uninstaller entry points: list apps, find leftovers, move an app and its leftovers to quarantine.
 extension OpenCleanCoordinator {
     /// True when running against a pretend home (`OPENCLEAN_HOME`, or a test's temp home).
+    ///
+    /// Compared with the account's home from the user database, not `NSHomeDirectory()`: that one follows
+    /// `CFFIXED_USER_HOME`, which the CLI tests (and anyone) can point at the pretend home, and then the
+    /// real `/Applications` would be listed and uninstallable. If the account's home can't be read, this
+    /// fails closed (pretend).
     var usesPretendHome: Bool {
-        let real = NSHomeDirectory()
+        guard let entry = getpwuid(getuid()), let directory = entry.pointee.pw_dir else { return true }
+        let real = String(cString: directory)
         return canonicalPathKey(resolvedHome) != canonicalPathKey(realPath(real) ?? real)
     }
 
