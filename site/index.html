@@ -224,6 +224,8 @@ h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.3; }
   .hero .or { display: inline; }
   .hero .brew-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
   .hero .brew { min-height: 56px; box-sizing: border-box; }
+  .hero .brew { width: 340px; }
+  .hero .brew code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 }
 .cta .actions { margin-top: 24px; }
 footer { padding: 40px 0 48px; font-size: 14px; color: var(--text-3); border-top: 1px solid var(--glass-divider); }
@@ -284,7 +286,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
           <span class="or" aria-hidden="true">or</span>
           <p class="brew-label" id="brew-label">Or install with Homebrew</p>
           <div class="brew" role="group" aria-labelledby="brew-label">
-            <code id="brew-cmd">brew install --cask leoanimesh/openclean/openclean</code>
+            <code id="brew-cmd" title="brew install --cask leoanimesh/openclean/openclean">brew install --cask leoanimesh/openclean/openclean</code>
             <button class="capsule" type="button" aria-live="polite" data-copy="brew-cmd" aria-label="Copy Homebrew command">Copy</button>
           </div>
         </div>
