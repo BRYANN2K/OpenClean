@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenClean – Free, open-source Mac cleaner</title>
+<meta name="description" content="OpenClean is a free, open-source Mac cleaner you can read and undo. Clean up junk, uninstall apps completely, see what fills your disk and watch your Mac from the menu bar. No account, no tracking.">
+<link rel="canonical" href="https://leoanimesh.github.io/OpenClean/">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#082A33">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="OpenClean">
+<meta property="og:title" content="OpenClean – Free, open-source Mac cleaner">
+<meta property="og:description" content="A free, open-source Mac cleaner you can read and undo. An open alternative to CleanMyMac for macOS.">
+<meta property="og:url" content="https://leoanimesh.github.io/OpenClean/">
+<meta property="og:image" content="https://leoanimesh.github.io/OpenClean/assets/social-preview.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="OpenClean, the free, open-source Mac cleaner">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpenClean – Free, open-source Mac cleaner">
+<meta name="twitter:description" content="A free, open-source Mac cleaner you can read and undo. An open alternative to CleanMyMac for macOS.">
+<meta name="twitter:image" content="https://leoanimesh.github.io/OpenClean/assets/social-preview.jpg">
+<meta name="twitter:image:alt" content="OpenClean, the free, open-source Mac cleaner">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "OpenClean",
+  "description": "A free, open-source Mac cleaner you can read and undo. Clean up junk, uninstall apps, see what fills your disk and watch your Mac from the menu bar.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "macOS 14 or later",
+  "url": "https://leoanimesh.github.io/OpenClean/",
+  "downloadUrl": "https://github.com/leoAnimesh/OpenClean/releases/latest",
+  "installUrl": "https://github.com/leoAnimesh/OpenClean/releases/latest",
+  "image": "https://leoanimesh.github.io/OpenClean/assets/social-preview.jpg",
+  "screenshot": "https://leoanimesh.github.io/OpenClean/assets/smart-scan-results.webp",
+  "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+  "isAccessibleForFree": true,
+  "codeRepository": "https://github.com/leoAnimesh/OpenClean",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "leoAnimesh", "url": "https://github.com/leoAnimesh" }
+}
+</script>
+
+<style>
+:root {
+  --mint: #4BF2B8; --teal: #12A88B; --deep-teal: #0A4756;
+  --accent: #7DF5C8; --gold: #FFD58A;
+  --text: #fff; --text-2: rgba(255,255,255,.8); --text-3: rgba(255,255,255,.62);
+  --glass: rgba(255,255,255,.09); --glass-stroke: rgba(255,255,255,.14); --glass-divider: rgba(255,255,255,.08);
+  --radius: 16px;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; font-family: var(--font); font-size: 16px; line-height: 1.55; color: var(--text);
+  background: #082A33;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { color: #fff; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.skip { position: absolute; left: -999px; top: 8px; padding: 8px 14px; background: #fff; color: var(--deep-teal); border-radius: 999px; z-index: 10; font-weight: 600; }
+.skip:focus { left: 12px; }
+.wrap { width: min(1080px, 100% - 40px); margin-inline: auto; }
+
+/* Backdrops (Theme.swift: Backdrop) */
+.bd-scan    { background: linear-gradient(135deg, #082A33 0%, #0B4A4C 52%, #12795F 100%); }
+.bd-history { background: linear-gradient(135deg, #0C1B33 0%, #15335A 52%, #1F5A7A 100%); }
+.bd-deep    { background: linear-gradient(180deg, #082A33 0%, #05181D 100%); }
+
+/* Header */
+.top { position: absolute; inset: 0 0 auto 0; z-index: 2; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; padding-block: 18px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+.brand img { width: 32px; height: 32px; }
+.wordmark { font-family: var(--rounded); font-size: 20px; letter-spacing: -.01em; }
+.wordmark b { font-weight: 700; }
+.top nav { display: flex; gap: 22px; font-size: 14px; }
+.top nav a { color: var(--text-2); text-decoration: none; }
+.top nav a:hover { color: #fff; }
+
+/* Hero */
+.hero { padding: 112px 0 72px; text-align: center; overflow: hidden; }
+.app-icon { width: 112px; height: 112px; margin: 0 auto 18px; filter: drop-shadow(0 16px 30px rgba(0,0,0,.35)); }
+h1 { margin: 0; font-family: var(--rounded); font-weight: 400; font-size: clamp(44px, 8vw, 72px); line-height: 1.05; letter-spacing: -.02em; }
+h1 b { font-weight: 700; }
+.tagline { margin: 14px auto 6px; max-width: 760px; text-wrap: balance; font-size: clamp(20px, 3vw, 26px); font-weight: 700; line-height: 1.3; }
+.sub { margin: 0 auto; color: var(--text-2); font-size: 17px; }
+.actions { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+
+/* GlassCircleButtonStyle */
+.glass-circle {
+  width: 132px; height: 132px; border-radius: 50%;
+  display: grid; place-items: center; text-align: center;
+  color: #fff; text-decoration: none; font-weight: 600; font-size: 17px; line-height: 1.2;
+  background:
+    radial-gradient(circle at 32% 22%, rgba(255,255,255,.42), rgba(255,255,255,0) 58%),
+    linear-gradient(160deg, rgba(255,255,255,.26), rgba(255,255,255,.06));
+  border: 1px solid rgba(255,255,255,.38);
+  box-shadow: 0 0 0 9px rgba(255,255,255,.05), 0 0 0 10px rgba(255,255,255,.12), 0 18px 40px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.4);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  transition: transform .2s ease, background-color .2s ease;
+}
+.glass-circle:hover { color: #fff; transform: scale(1.04); background-color: rgba(255,255,255,.06); }
+.glass-circle:active { transform: scale(.97); }
+.glass-circle svg { width: 26px; height: 26px; display: block; margin: 0 auto 4px; }
+
+/* Capsule (CapsuleButtonStyle) */
+.capsule {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px; border-radius: 999px; font: inherit; font-size: 15px; font-weight: 600;
+  color: #fff; text-decoration: none; cursor: pointer;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+  transition: background-color .2s ease;
+}
+.capsule:hover { background: rgba(255,255,255,.2); color: #fff; }
+.capsule.prominent { background: #fff; color: var(--deep-teal); border-color: #fff; }
+.capsule.prominent:hover { background: rgba(255,255,255,.88); color: var(--deep-teal); }
+
+/* Homebrew command */
+.brew {
+  display: flex; align-items: center; gap: 4px; max-width: 100%;
+  padding: 6px 6px 6px 18px; border-radius: 999px;
+  background: rgba(0,0,0,.22); border: 1px solid var(--glass-stroke);
+}
+.brew code { font-family: var(--mono); font-size: 14px; color: var(--text); white-space: nowrap; overflow-x: auto; scrollbar-width: none; }
+.brew code::before { content: "$ "; color: var(--text-3); }
+.brew .capsule { padding: 6px 14px; font-size: 13px; flex: none; }
+.brew-label { font-size: 13px; color: var(--text-3); margin: 0 0 -12px; }
+.meta { margin: 0; color: var(--text-2); font-size: 14px; }
+.meta span[aria-hidden] { color: var(--text-3); margin-inline: 6px; }
+.fine { margin: 0; font-size: 13px; color: var(--text-3); }
+
+/* Window frame for screenshots */
+.shot { margin: 64px auto 0; max-width: 1000px; }
+.window {
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--glass-stroke);
+  box-shadow: 0 30px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.25);
+  background: #0B4A4C;
+}
+.shot figcaption { margin-top: 14px; color: var(--text-3); font-size: 13px; text-align: center; }
+
+/* Sections */
+section { padding: 88px 0; }
+h2 { text-wrap: balance; margin: 0 0 10px; font-size: clamp(28px, 4vw, 34px); line-height: 1.15; letter-spacing: -.01em; }
+.lead { margin: 0 0 40px; color: var(--text-2); font-size: 17px; max-width: 640px; }
+h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.3; }
+
+/* Glass panel */
+.glass { background: var(--glass); border: 1px solid var(--glass-stroke); border-radius: var(--radius); }
+
+/* Feature cards */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; list-style: none; padding: 0; margin: 0; }
+.card { padding: 22px; }
+.card p { margin: 0; color: var(--text-2); font-size: 15px; }
+.tile { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 14px; box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 4px 10px rgba(0,0,0,.2); }
+.tile svg { width: 24px; height: 24px; }
+.t-scan   { background: linear-gradient(#4BF2B8, #12A88B); }
+.t-uninst { background: linear-gradient(#B07CF0, #7B3FC4); }
+.t-lens   { background: linear-gradient(#62BFFF, #2E6BEA); }
+.t-dev    { background: linear-gradient(#9B8CFF, #5643D9); }
+.t-perf   { background: linear-gradient(#FFC56E, #EE7A1C); }
+.t-priv   { background: linear-gradient(#55E3D2, #168C9C); }
+
+/* Safe and undoable */
+.history-shot { margin: 0 0 16px; }
+.history-shot .window { background: #15335A; }
+.safe-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.safe-grid li:nth-child(2) { border-top: 0; }
+.safe-grid li:nth-child(odd) { border-right: 1px solid var(--glass-divider); }
+.rows { list-style: none; margin: 0; padding: 4px 0; }
+.rows li { display: flex; gap: 14px; padding: 16px 20px; }
+.rows li + li { border-top: 1px solid var(--glass-divider); }
+.rows svg { flex: none; width: 22px; height: 22px; margin-top: 2px; color: var(--accent); }
+.rows strong { display: block; font-size: 15px; }
+.rows span { color: var(--text-2); font-size: 15px; }
+.tag { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; background: rgba(0,0,0,.22); }
+.tag.safe-t { color: var(--text-2); }
+.tag.review { color: var(--gold); }
+
+/* FAQ */
+.faq { max-width: 820px; }
+.faq details { padding: 0 20px; }
+.faq details + details { border-top: 1px solid var(--glass-divider); }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 18px 0; font-weight: 600; font-size: 16px;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: ""; flex: none; width: 9px; height: 9px; border-right: 2px solid var(--text-2); border-bottom: 2px solid var(--text-2); transform: rotate(45deg) translateY(-3px); transition: transform .2s ease; }
+.faq details[open] summary::after { transform: rotate(225deg) translateY(-2px); }
+.faq details p { margin: -4px 0 18px; color: var(--text-2); font-size: 15px; }
+
+/* CTA + footer */
+.cta { text-align: center; }
+.cta .actions { margin-top: 24px; }
+footer { padding: 40px 0 48px; font-size: 14px; color: var(--text-3); border-top: 1px solid var(--glass-divider); }
+footer .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px 32px; align-items: flex-start; }
+footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+footer a { color: var(--text-2); }
+footer p { margin: 18px 0 0; max-width: 720px; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .top nav { display: none; }
+  .hero { padding-top: 96px; }
+  .grid { grid-template-columns: 1fr; }
+  .safe-grid { grid-template-columns: 1fr; }
+  .safe-grid li:nth-child(2) { border-top: 1px solid var(--glass-divider); }
+  .safe-grid li:nth-child(odd) { border-right: 0; }
+  section { padding: 64px 0; }
+  .shot { margin-top: 48px; }
+  .brew { border-radius: 18px; padding: 10px 8px 10px 16px; }
+  .brew code { font-size: 13px; white-space: normal; overflow-wrap: anywhere; text-align: left; }
+  .meta span[aria-hidden] { margin-inline: 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="OpenClean home">
+      <img src="favicon.svg" alt="" width="32" height="32">
+      <span class="wordmark">Open<b>Clean</b></span>
+    </a>
+    <nav aria-label="Page">
+      <a href="#features">Features</a>
+      <a href="#safety">Safety</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/leoAnimesh/OpenClean">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero bd-scan">
+    <div class="wrap">
+      <img class="app-icon" src="favicon.svg" alt="" width="112" height="112">
+      <h1>Open<b>Clean</b></h1>
+      <p class="tagline">A free, open-source Mac cleaner you can read and undo.</p>
+      <p class="sub">An open alternative to CleanMyMac for macOS.</p>
+
+      <div class="actions">
+        <a class="glass-circle" href="https://github.com/leoAnimesh/OpenClean/releases/latest">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+            Download
+          </span>
+        </a>
+        <p class="brew-label" id="brew-label">Or install with Homebrew</p>
+        <div class="brew" role="group" aria-labelledby="brew-label">
+          <code id="brew-cmd">brew install --cask leoanimesh/openclean/openclean</code>
+          <button class="capsule" type="button" aria-live="polite" data-copy="brew-cmd" aria-label="Copy Homebrew command">Copy</button>
+        </div>
+        <p class="meta">macOS 14+<span aria-hidden="true">·</span>Apple silicon &amp; Intel<span aria-hidden="true">·</span>Signed &amp; notarized</p>
+      </div>
+
+      <figure class="shot">
+        <div class="window">
+          <img src="assets/smart-scan-results.webp" width="1600" height="1000" fetchpriority="high"
+               alt="OpenClean's Smart Scan results: user caches and logs marked Safe, developer tools, AI models and Trash marked Review, with sizes and a round Clean button.">
+        </div>
+        <figcaption>Smart Scan explains every item before anything is removed.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section id="features" class="bd-deep" aria-labelledby="features-title">
+    <div class="wrap">
+      <h2 id="features-title">What it does</h2>
+      <p class="lead">Six tools in one app, with no account, trial or purchase.</p>
+      <ul class="grid">
+        <li class="card glass">
+          <div class="tile t-scan" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff"><path d="M10 3c.6 4.2 2 5.6 6.2 6.2C12 9.8 10.6 11.2 10 15.4 9.4 11.2 8 9.8 3.8 9.2 8 8.6 9.4 7.2 10 3Z"/><path d="M17.5 13c.35 2.3 1 3 3.3 3.3-2.3.35-2.95 1-3.3 3.3-.35-2.3-1-2.95-3.3-3.3 2.3-.3 2.95-1 3.3-3.3Z"/></svg></div>
+          <h3>Clean up junk</h3>
+          <p>Smart Scan finds caches, logs, Trash and other leftovers, and tells you why each one is safe to remove.</p>
+        </li>
+        <li class="card glass">
+          <div class="tile t-uninst" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="m9 9 6 6M15 9l-6 6"/></svg></div>
+          <h3>Uninstall apps completely</h3>
+          <p>Remove an app together with the files it leaves behind.</p>
+        </li>
+        <li class="card glass">
+          <div class="tile t-lens" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff"><path d="M11 3.1A9 9 0 1 0 20.9 13H11Z"/><path d="M13 2.05V11h8.95A9 9 0 0 0 13 2.05Z" opacity=".75"/></svg></div>
+          <h3>See what fills your disk</h3>
+          <p>Space Lens maps your storage and finds large, old and duplicate files.</p>
+        </li>
+        <li class="card glass">
+          <div class="tile t-dev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg></div>
+          <h3>Clean up developer tools</h3>
+          <p>Xcode, npm, Cargo, Docker, AI model downloads and old project folders.</p>
+        </li>
+        <li class="card glass">
+          <div class="tile t-perf" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M4.5 17a8.5 8.5 0 1 1 15 0"/><path d="m12 14 3.5-4.5"/><circle cx="12" cy="14" r="1.4" fill="#fff"/></svg></div>
+          <h3>Watch your Mac</h3>
+          <p>CPU, memory, disk and network in the menu bar.</p>
+        </li>
+        <li class="card glass">
+          <div class="tile t-priv" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="#fff" stroke="none"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg></div>
+          <h3>Private</h3>
+          <p>No account, no tracking. It only checks GitHub for updates, and you can turn that off.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="safety" class="bd-history" aria-labelledby="safety-title">
+    <div class="wrap">
+      <h2 id="safety-title">Safe and undoable</h2>
+      <p class="lead">Nothing is removed until you review it, and most of it can come back.</p>
+      <figure class="history-shot">
+        <div class="window">
+          <img src="assets/history.webp" width="1120" height="240" loading="lazy" decoding="async"
+               alt="OpenClean's History screen: a cleanup from today with 2.31 GB in quarantine, 7 days left, and a Restore All button.">
+        </div>
+      </figure>
+        <ul class="rows glass safe-grid">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 8.2 7.5 9.5 4.3-1.3 7.5-5 7.5-9.5V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+            <div><strong>Your personal files stay put</strong><span>OpenClean never touches your documents, photos, mail or system files.</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>
+            <div><strong>Quarantine first, then gone</strong><span>Anything that is not trivially rebuilt goes to a quarantine first. Restore it from History for up to 90 days (7 by default).</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7Z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>
+            <div><strong>Rules you can read</strong><span>Every cleaning rule is a plain, readable file, and the app explains each one before you clean.</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><strong>Labelled in words</strong><span>Each item is tagged <span class="tag safe-t">Safe</span> or <span class="tag review">Review</span>. Safe items are picked for you; Review items wait for you to choose.</span></div>
+          </li>
+        </ul>
+      <p class="fine" style="margin-top:16px">Want the details? Read <a href="https://github.com/leoAnimesh/OpenClean/blob/main/docs/how-it-works.md">how it works</a>.</p>
+    </div>
+  </section>
+
+  <section id="faq" class="bd-deep" aria-labelledby="faq-title">
+    <div class="wrap">
+      <h2 id="faq-title">Questions</h2>
+      <p class="lead">Short answers. The <a href="https://github.com/leoAnimesh/OpenClean/blob/main/docs/how-it-works.md">how it works</a> page has the long ones.</p>
+      <div class="faq glass">
+        <details>
+          <summary>Is it really free?</summary>
+          <p>Yes. Free and open source under GPL-3.0, with no account, trial or purchase.</p>
+        </details>
+        <details>
+          <summary>Can I get my files back?</summary>
+          <p>Yes. Anything that is not trivially rebuilt is moved to quarantine, and History restores it until it expires.</p>
+        </details>
+        <details>
+          <summary>Does it need special permissions?</summary>
+          <p>Full Disk Access, once, so it can see the Trash, old iOS backups and other protected folders. It asks for your administrator password only to clean system caches.</p>
+        </details>
+        <details>
+          <summary>Does it send my data anywhere?</summary>
+          <p>No. The only network request is a daily check for a new release, which you can switch off in Settings.</p>
+        </details>
+        <details>
+          <summary>Which languages does it speak?</summary>
+          <p>English, German, Spanish, French, Japanese and Simplified Chinese. It follows your macOS language.</p>
+        </details>
+        <details>
+          <summary>Is there a command line version?</summary>
+          <p>Yes. <code>brew install leoanimesh/openclean/openclean</code> installs the <code>openclean</code> command. See the <a href="https://github.com/leoAnimesh/OpenClean/blob/main/docs/cli.md">command line guide</a>.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta bd-scan" aria-labelledby="cta-title">
+    <div class="wrap">
+      <h2 id="cta-title">Get OpenClean</h2>
+      <p class="sub">Drag it onto Applications and run your first Smart Scan.</p>
+      <div class="actions">
+        <a class="glass-circle" href="https://github.com/leoAnimesh/OpenClean/releases/latest">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+            Download
+          </span>
+        </a>
+        <a class="capsule" href="https://github.com/leoAnimesh/OpenClean">View source on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bd-deep">
+  <div class="wrap">
+    <div class="row">
+      <a class="brand" href="./">
+        <img src="favicon.svg" alt="" width="28" height="28">
+        <span class="wordmark">Open<b>Clean</b></span>
+      </a>
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="https://github.com/leoAnimesh/OpenClean">GitHub</a></li>
+          <li><a href="https://github.com/leoAnimesh/OpenClean/releases">Releases</a></li>
+          <li><a href="https://github.com/leoAnimesh/OpenClean/blob/main/docs/how-it-works.md">How it works</a></li>
+          <li><a href="https://github.com/leoAnimesh/OpenClean/blob/main/docs/cli.md">Command line</a></li>
+          <li><a href="https://github.com/leoAnimesh/OpenClean/blob/main/CONTRIBUTING.md">Contributing</a></li>
+          <li><a href="https://github.com/leoAnimesh/OpenClean/blob/main/LICENSE">License: GPL-3.0</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p>OpenClean is independent and not affiliated with MacPaw. CleanMyMac is a trademark of MacPaw.</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll("[data-copy]").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var text = document.getElementById(btn.dataset.copy).textContent;
+    var done = function (ok) {
+      btn.textContent = ok ? "Copied" : "Press ⌘C";
+      setTimeout(function () { btn.textContent = "Copy"; }, 1800);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    } else {
+      var range = document.createRange();
+      range.selectNodeContents(document.getElementById(btn.dataset.copy));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      try { done(document.execCommand("copy")); } catch (e) { done(false); }
+    }
+  });
+});
+</script>
+</body>
+</html>
