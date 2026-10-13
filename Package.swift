@@ -50,7 +50,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ProbesTests",
-            dependencies: ["Probes", "ScanEngine", "ProcessKit", "TestSupport"],
+            dependencies: ["Probes", "ScanEngine", "ProcessKit", "RuleKit", "TestSupport"],
             path: "Packages/OpenCleanKit/Tests/ProbesTests"
         ),
         .target(
