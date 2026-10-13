@@ -42,7 +42,7 @@ struct ScanReminderSettingsSection: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(Theme.textSecondary)
             VStack(spacing: 0) {
-                row("Background Smart Scan", detail: scheduleDetail) {
+                row(String(localized: "Background Smart Scan"), detail: scheduleDetail) {
                     Picker("", selection: frequency) {
                         ForEach(ScanReminderFrequency.allCases) { Text($0.title).tag($0) }
                     }
@@ -52,14 +52,17 @@ struct ScanReminderSettingsSection: View {
                 if let finding = reminder.lastFinding {
                     Divider().overlay(Theme.glassDivider)
                     row(
-                        "Last background scan",
+                        String(localized: "Last background scan"),
                         detail:
-                            "\(formatRelativeDay(finding.date)): \(formatBytes(finding.bytes)) in \(finding.itemCount) items"
+                            "\(formatRelativeDay(finding.date)): \(formatBytes(finding.bytes)) · \(String(localized: "\(finding.itemCount) items"))"
                     ) { EmptyView() }
                 }
                 if reminder.frequency != .off, reminder.notificationsAllowed == false {
                     Divider().overlay(Theme.glassDivider)
-                    row("Notifications are off", detail: "The result shows only in the menu bar.") {
+                    row(
+                        String(localized: "Notifications are off"),
+                        detail: String(localized: "The result shows only in the menu bar.")
+                    ) {
                         Button("Open Notification Settings") { openNotificationSettings() }
                             .buttonStyle(CapsuleButtonStyle())
                     }
@@ -86,9 +89,11 @@ struct ScanReminderSettingsSection: View {
 
     private var scheduleDetail: String {
         guard reminder.frequency != .off, let next = reminder.nextScanDate else {
-            return "Off. Nothing runs in the background."
+            return String(localized: "Off. Nothing runs in the background.")
         }
-        return "Next scan \(next.formatted(date: .abbreviated, time: .omitted)) or later, while OpenClean is running."
+        return String(
+            localized:
+                "Next scan \(next.formatted(date: .abbreviated, time: .omitted)) or later, while OpenClean is running.")
     }
 
     private func row(_ title: String, detail: String, @ViewBuilder trailing: () -> some View) -> some View {

@@ -380,9 +380,9 @@ struct SafetyTag: View {
 
     static func label(_ safety: SafetyLevel) -> String {
         switch safety {
-        case .regenerable: "Safe"
-        case .review: "Review"
-        case .caution: "Caution"
+        case .regenerable: String(localized: "Safe")
+        case .review: String(localized: "Review")
+        case .caution: String(localized: "Caution")
         }
     }
 

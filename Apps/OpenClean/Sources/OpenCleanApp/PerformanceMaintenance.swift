@@ -27,7 +27,7 @@ struct MaintenanceListView: View {
         }
         .scrollIndicators(.never)
         .alert(
-            "Run “\(confirmTarget?.title ?? "")”?", isPresented: confirmBinding, presenting: confirmTarget
+            "Run “\(confirmTarget?.localizedTitle ?? "")”?", isPresented: confirmBinding, presenting: confirmTarget
         ) { task in
             Button("Cancel", role: .cancel) {}
             Button(task.needsAdmin ? "Continue…" : "Run") { Task { await model.run(task) } }
@@ -44,8 +44,10 @@ struct MaintenanceListView: View {
         let command = (task.adminCommand?.steps ?? task.userCommand.map { [$0] } ?? [])
             .map { $0.joined(separator: " ") }
             .joined(separator: " && ")
-        let admin = task.needsAdmin ? "macOS will ask for your administrator password. " : ""
-        return "\(task.explanation)\n\n\(admin)Runs: \(command)"
+        let runs = String(localized: "Runs: \(command)")
+        guard task.needsAdmin else { return "\(task.localizedExplanation)\n\n\(runs)" }
+        let admin = String(localized: "macOS will ask for your administrator password.")
+        return "\(task.localizedExplanation)\n\n\(admin) \(runs)"
     }
 }
 
@@ -58,10 +60,10 @@ struct MaintenanceRow: View {
         HStack(alignment: .top, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
-                    Text(task.title).font(.system(size: 15, weight: .semibold))
-                    if task.needsAdmin { StatusTag(text: "Needs admin", color: Theme.gold) }
+                    Text(task.localizedTitle).font(.system(size: 15, weight: .semibold))
+                    if task.needsAdmin { StatusTag(text: String(localized: "Needs admin"), color: Theme.gold) }
                 }
-                Text(task.explanation)
+                Text(task.localizedExplanation)
                     .font(.system(size: 13))
                     .foregroundStyle(Theme.textSecondary)
                     .lineLimit(3)
@@ -73,7 +75,7 @@ struct MaintenanceRow: View {
             Button("Run…", action: onRun)
                 .buttonStyle(CapsuleButtonStyle())
                 .fixedSize()
-                .accessibilityLabel("Run \(task.title)")
+                .accessibilityLabel("Run \(task.localizedTitle)")
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 14)
@@ -81,9 +83,10 @@ struct MaintenanceRow: View {
     }
 
     private var lastRunText: String {
-        guard let record else { return "Not run from OpenClean yet" }
+        guard let record else { return String(localized: "Not run from OpenClean yet") }
         let when = formatRelativeDay(record.date)
-        return record.succeeded ? "Last run \(when)" : "Last attempt \(when) didn’t finish"
+        return record.succeeded
+            ? String(localized: "Last run \(when)") : String(localized: "Last attempt \(when) didn’t finish")
     }
 }
 
@@ -111,8 +114,8 @@ struct MaintenanceProgressView: View {
                 .frame(width: 220, height: 220)
                 .onAppear { spinning = true }
                 .accessibilityElement()
-                .accessibilityLabel("Running \(task.title)")
-                Text(task.title).font(.system(size: 30, weight: .bold)).padding(.top, 28)
+                .accessibilityLabel("Running \(task.localizedTitle)")
+                Text(task.localizedTitle).font(.system(size: 30, weight: .bold)).padding(.top, 28)
                 Text(
                     task.needsAdmin
                         ? "Enter your administrator password when macOS asks. This can take a moment."
@@ -165,9 +168,9 @@ struct MaintenanceProgressView: View {
 
     private func headline(_ task: MaintenanceTask, _ outcome: MaintenanceOutcome) -> String {
         switch outcome {
-        case .succeeded: "\(task.title): done"
-        case .cancelled: "Cancelled"
-        case .failed: "\(task.title) didn’t finish"
+        case .succeeded: String(localized: "\(task.localizedTitle): done")
+        case .cancelled: String(localized: "Cancelled")
+        case .failed: String(localized: "\(task.localizedTitle) didn’t finish")
         }
     }
 
@@ -175,9 +178,11 @@ struct MaintenanceProgressView: View {
         switch outcome {
         case .succeeded:
             task == .reindexSpotlight
-                ? "Spotlight is rebuilding its index in the background. Search results fill in as it goes."
-                : "The command finished without errors."
-        case .cancelled: "Nothing was run."
+                ? String(
+                    localized: "Spotlight is rebuilding its index in the background. Search results fill in as it goes."
+                )
+                : String(localized: "The command finished without errors.")
+        case .cancelled: String(localized: "Nothing was run.")
         case .failed(let message): message
         }
     }

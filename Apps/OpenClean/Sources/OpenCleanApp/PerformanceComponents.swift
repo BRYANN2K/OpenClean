@@ -8,31 +8,35 @@ import SystemMonitor
 
 func formatPercent(_ fraction: Double?) -> String {
     guard let fraction else { return "–" }
-    return "\(Int((fraction * 100).rounded()))%"
+    return fraction.formatted(.percent.precision(.fractionLength(0)))
 }
 
 /// "1.2 MB/s", "340 KB/s", "0 KB/s".
 func formatRate(_ bytesPerSecond: Double?) -> String {
     guard let bytesPerSecond else { return "–" }
-    if bytesPerSecond < 1_000 { return "0 KB/s" }
-    return ByteCountFormatter.string(fromByteCount: Int64(bytesPerSecond), countStyle: .file) + "/s"
+    let formatter = ByteCountFormatter()
+    formatter.countStyle = .file
+    // "0 KB/s" rather than "Zero KB/s".
+    formatter.allowsNonnumericFormatting = false
+    if bytesPerSecond < 1_000 { formatter.allowedUnits = .useKB }
+    return String(localized: "\(formatter.string(fromByteCount: bytesPerSecond < 1_000 ? 0 : Int64(bytesPerSecond)))/s")
 }
 
 /// "Today, 5:13 PM", "Yesterday, 9:02 AM", otherwise "Mar 4, 5:13 PM" (same style as History).
 func formatRelativeDay(_ date: Date) -> String {
     let time = date.formatted(date: .omitted, time: .shortened)
     let calendar = Calendar.current
-    if calendar.isDateInToday(date) { return "Today, \(time)" }
-    if calendar.isDateInYesterday(date) { return "Yesterday, \(time)" }
+    if calendar.isDateInToday(date) { return String(localized: "Today, \(time)") }
+    if calendar.isDateInYesterday(date) { return String(localized: "Yesterday, \(time)") }
     return date.formatted(.dateTime.month(.abbreviated).day().hour().minute())
 }
 
 func pressureLabel(_ pressure: MemoryPressure) -> String {
     switch pressure {
-    case .normal: "Normal"
-    case .warning: "Elevated"
-    case .critical: "High"
-    case .unknown: "Unknown"
+    case .normal: String(localized: "Normal")
+    case .warning: String(localized: "Elevated")
+    case .critical: String(localized: "High")
+    case .unknown: String(localized: "Unknown")
     }
 }
 

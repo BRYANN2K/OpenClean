@@ -17,7 +17,8 @@ enum AppQuitter {
         return app
     }
 
-    static let protectedReason = "Part of macOS, another user's, or OpenClean itself — it can't be quit from here."
+    static let protectedReason = String(
+        localized: "Part of macOS, another user's, or OpenClean itself — it can't be quit from here.")
 
     /// Apps go through `NSRunningApplication`; a lone background process of the user's own goes
     /// through `ProcessTerminator`, which re-checks its identity before killing it.
@@ -28,14 +29,18 @@ enum AppQuitter {
     /// Force quits and returns a one-line result for the user.
     static func forceQuit(_ group: ProcessGroup) -> String {
         if let app = runningApp(for: group) {
-            return app.forceTerminate() ? "\(group.name) was force quit." : "\(group.name) could not be force quit."
+            return app.forceTerminate()
+                ? String(localized: "\(group.name) was force quit.")
+                : String(localized: "\(group.name) could not be force quit.")
         }
-        guard let process = group.killableProcess else { return "\(group.name) can't be force quit from OpenClean." }
+        guard let process = group.killableProcess else {
+            return String(localized: "\(group.name) can't be force quit from OpenClean.")
+        }
         switch ProcessTerminator().forceQuit(process) {
-        case .killed: return "\(group.name) was force quit."
-        case .changed: return "\(group.name) had already quit or changed, so nothing was done."
-        case .protected: return "\(group.name) can't be force quit from OpenClean."
-        case .failed: return "\(group.name) could not be force quit."
+        case .killed: return String(localized: "\(group.name) was force quit.")
+        case .changed: return String(localized: "\(group.name) had already quit or changed, so nothing was done.")
+        case .protected: return String(localized: "\(group.name) can't be force quit from OpenClean.")
+        case .failed: return String(localized: "\(group.name) could not be force quit.")
         }
     }
 }
@@ -105,10 +110,13 @@ struct HeavyConsumersView: View {
 
     private func quit(_ group: ProcessGroup) {
         guard let app = AppQuitter.runningApp(for: group) else {
-            notice = "\(group.name) can't be quit from OpenClean."
+            notice = String(localized: "\(group.name) can't be quit from OpenClean.")
             return
         }
-        notice = app.terminate() ? "Asked \(group.name) to quit." : "\(group.name) didn't accept the request to quit."
+        notice =
+            app.terminate()
+            ? String(localized: "Asked \(group.name) to quit.")
+            : String(localized: "\(group.name) didn't accept the request to quit.")
     }
 
     private func forceQuit(_ group: ProcessGroup) {
@@ -147,7 +155,7 @@ struct ConsumerRow: View {
                 Button("Force Quit…", action: onForceQuit).buttonStyle(CapsuleButtonStyle()).fixedSize()
                     .frame(minWidth: 190, alignment: .trailing)
             } else {
-                StatusTag(text: group.bundlePath == nil ? "Process" : "Protected")
+                StatusTag(text: group.bundlePath == nil ? String(localized: "Process") : String(localized: "Protected"))
                     .frame(minWidth: 190, alignment: .trailing)
                     .help("OpenClean only offers Quit for apps, never for macOS components or itself.")
             }
@@ -159,7 +167,7 @@ struct ConsumerRow: View {
 
     private var detail: String {
         let count = group.processes.count
-        return count == 1 ? (group.processes.first?.name ?? "") : "\(count) processes"
+        return count == 1 ? (group.processes.first?.name ?? "") : String(localized: "\(count) processes")
     }
 }
 

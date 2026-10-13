@@ -19,9 +19,9 @@ public final class SpaceLensModel {
 
         public var title: String {
             switch self {
-            case .map: "Space map"
-            case .large: "Large & old files"
-            case .duplicates: "Duplicates"
+            case .map: String(localized: "Space map", bundle: .appModel)
+            case .large: String(localized: "Large & old files", bundle: .appModel)
+            case .duplicates: String(localized: "Duplicates", bundle: .appModel)
             }
         }
     }
@@ -121,7 +121,8 @@ public final class SpaceLensModel {
             guard self.generations[.map] == generation else { return }
             guard let result else {
                 self.mapPhase = .idle
-                self.errorMessage = "That folder can't be scanned. It may have been moved or deleted."
+                self.errorMessage = String(
+                    localized: "That folder can't be scanned. It may have been moved or deleted.", bundle: .appModel)
                 return
             }
             self.mapResult = result

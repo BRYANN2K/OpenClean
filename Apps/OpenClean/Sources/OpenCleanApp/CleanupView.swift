@@ -22,14 +22,14 @@ struct CleanupView: View {
                                 category = entry.category
                             } leading: {
                                 CheckboxButton(
-                                    state: model.state(of: entry.category), label: entry.category.displayName
+                                    state: model.state(of: entry.category), label: entry.category.localizedName
                                 ) {
                                     model.setSelected(model.state(of: entry.category) != .on, category: entry.category)
                                 }
                             } content: {
                                 HStack(spacing: 10) {
                                     CategoryIcon(category: entry.category, size: 26)
-                                    Text(entry.category.displayName)
+                                    Text(entry.category.localizedName)
                                         .font(.system(size: 13, weight: selected ? .semibold : .regular))
                                         .lineLimit(1)
                                     Spacer()
@@ -105,9 +105,9 @@ struct CleanupView: View {
     private func detail(for rule: RuleResult) -> String {
         switch rule.status {
         case .scanned: formatBytes(rule.totalSize)
-        case .needsFullDiskAccess: "Needs access"
-        case .skippedAppRunning: "App running"
-        case .cancelled: "Cancelled"
+        case .needsFullDiskAccess: String(localized: "Needs access")
+        case .skippedAppRunning: String(localized: "App running")
+        case .cancelled: String(localized: "Cancelled")
         }
     }
 }
@@ -134,7 +134,7 @@ struct RuleDetailView: View {
                     Label("Grant Full Disk Access to scan this.", systemImage: "lock")
                 }
                 Table(rule.items) {
-                    TableColumn("") { item in
+                    TableColumn(Text(verbatim: "")) { item in
                         CheckboxButton(
                             state: model.selectedPaths.contains(item.path) ? .on : .off,
                             label: (item.path as NSString).lastPathComponent
@@ -167,7 +167,7 @@ struct RuleDetailView: View {
                 .scrollContentBackground(.hidden)
                 .alternatingRowBackgrounds(.disabled)
                 if !rule.errors.isEmpty {
-                    DisclosureGroup("\(rule.errors.count) note(s)") {
+                    DisclosureGroup("\(rule.errors.count) notes") {
                         ForEach(rule.errors, id: \.self) { note in
                             Text(note).font(.caption).textSelection(.enabled)
                         }

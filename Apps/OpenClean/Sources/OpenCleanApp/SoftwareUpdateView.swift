@@ -93,21 +93,23 @@ struct SoftwareUpdateSheet: View {
 
     private var title: String {
         switch updates.state {
-        case .idle, .checking: "Checking for updates…"
-        case .upToDate: "You're up to date"
-        case .available, .downloading, .verifying: "A new version of OpenClean is available"
-        case .ready: "Ready to install OpenClean \(newVersion)"
-        case .installing: "Installing OpenClean \(newVersion)…"
-        case .failed: updates.release == nil ? "Couldn't check for updates" : "The update didn't finish"
+        case .idle, .checking: String(localized: "Checking for updates…")
+        case .upToDate: String(localized: "You're up to date")
+        case .available, .downloading, .verifying: String(localized: "A new version of OpenClean is available")
+        case .ready: String(localized: "Ready to install OpenClean \(newVersion)")
+        case .installing: String(localized: "Installing OpenClean \(newVersion)…")
+        case .failed:
+            updates.release == nil
+                ? String(localized: "Couldn't check for updates") : String(localized: "The update didn't finish")
         }
     }
 
     private var subtitle: String {
         switch updates.state {
-        case .idle, .checking: "Asking GitHub for the latest release."
-        case .upToDate: "OpenClean \(updates.currentVersionText) is the newest version."
+        case .idle, .checking: String(localized: "Asking GitHub for the latest release.")
+        case .upToDate: String(localized: "OpenClean \(updates.currentVersionText) is the newest version.")
         case .available, .downloading, .verifying, .ready, .installing:
-            "OpenClean \(newVersion) is available — you have \(updates.currentVersionText)."
+            String(localized: "OpenClean \(newVersion) is available — you have \(updates.currentVersionText).")
         case .failed(let message): message
         }
     }
@@ -136,7 +138,10 @@ struct SoftwareUpdateSheet: View {
                 note(blocker, symbol: "exclamationmark.triangle.fill", color: Theme.gold)
             } else {
                 note(
-                    "Your current version is kept in History, so you can go back to it. After OpenClean restarts, macOS will ask you to allow Full Disk Access again.",
+                    String(
+                        localized:
+                            "Your current version is kept in History, so you can go back to it. After OpenClean restarts, macOS will ask you to allow Full Disk Access again."
+                    ),
                     symbol: "clock.arrow.circlepath", color: Theme.accent)
             }
         case .installing:
@@ -215,7 +220,7 @@ struct SoftwareUpdateSheet: View {
         }
     }
 
-    private func status(_ text: String) -> some View {
+    private func status(_ text: LocalizedStringKey) -> some View {
         HStack(spacing: 10) {
             ProgressView().controlSize(.small)
             Text(text).font(.system(size: 14)).foregroundStyle(Theme.textSecondary)
@@ -304,7 +309,7 @@ struct DownloadProgressView: View {
 
     private var label: String {
         let received = formatBytes(progress.received)
-        let size = progress.total.map { "\(received) of \(formatBytes($0))" } ?? received
+        let size = progress.total.map { String(localized: "\(received) of \(formatBytes($0))") } ?? received
         return "\(size) · \(formatRate(progress.bytesPerSecond))"
     }
 }

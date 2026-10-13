@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "OpenClean",
+    defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     dependencies: [
         .package(url: "https://github.com/jpsim/Yams.git", from: "5.1.0"),
@@ -175,7 +176,8 @@ let package = Package(
                 "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions", "AppInventory", "SystemMonitor",
                 "Maintenance", "SpaceKit", "Updater",
             ],
-            path: "Apps/OpenClean/Sources/OpenCleanAppModel"
+            path: "Apps/OpenClean/Sources/OpenCleanAppModel",
+            resources: [.process("Resources/Localizable.xcstrings")]
         ),
         .testTarget(
             name: "OpenCleanAppModelTests",
@@ -189,7 +191,7 @@ let package = Package(
             name: "OpenCleanAppUITests",
             dependencies: [
                 "OpenCleanApp", "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine",
-                "Permissions", "TestSupport", "Updater",
+                "Permissions", "TestSupport", "Updater", "AppInventory", "Maintenance", "SpaceKit",
             ],
             path: "Apps/OpenClean/Tests/OpenCleanAppUITests"
         ),
@@ -199,7 +201,8 @@ let package = Package(
                 "OpenCleanAppModel", "OpenCleanKit", "RuleKit", "ScanEngine", "Quarantine", "Permissions",
                 "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit", "Updater",
             ],
-            path: "Apps/OpenClean/Sources/OpenCleanApp"
+            path: "Apps/OpenClean/Sources/OpenCleanApp",
+            resources: [.process("Resources/Localizable.xcstrings")]
         ),
     ]
 )

@@ -11,9 +11,12 @@ struct LargeFilesTab: View {
         switch model.largePhase {
         case .idle:
             SpaceLensHomeView(
-                symbol: "doc.badge.clock.fill", headline: "Find large and old files",
+                symbol: "doc.badge.clock.fill", headline: String(localized: "Find large and old files"),
                 message:
-                    "Looks through your home folder for big files, like videos, disk images and installers. ~/Library and apps are left out.",
+                    String(
+                        localized:
+                            "Looks through your home folder for big files, like videos, disk images and installers. ~/Library and apps are left out."
+                    ),
                 scan: { model.startLargeScan() },
                 options: {
                     LargeFileOptionsBar()
@@ -21,8 +24,9 @@ struct LargeFilesTab: View {
         case .scanning:
             let progress = model.largeProgress
             SpaceLensScanningView(
-                status: "Looking for large files…", bigNumber: progress.files.formatted(),
-                detail: "files looked at · \(formatBytes(progress.bytes))", stop: { model.stopScan(.large) })
+                status: String(localized: "Looking for large files…"), bigNumber: progress.files.formatted(),
+                detail: String(localized: "files looked at · \(formatBytes(progress.bytes))"),
+                stop: { model.stopScan(.large) })
         case .results:
             LargeFilesResultsView()
         }
@@ -56,16 +60,16 @@ struct LargeFileOptionsBar: View {
     }
 
     private func formatThreshold(_ bytes: Int64) -> String {
-        bytes >= 1_000_000_000 ? "\(bytes / 1_000_000_000) GB" : "\(bytes / 1_000_000) MB"
+        formatBytes(bytes)
     }
 
     private func ageLabel(_ days: Int?) -> String {
         switch days {
-        case nil: "Any time"
-        case 90: "3 months"
-        case 180: "6 months"
-        case 365: "1 year"
-        case let days?: "\(days) days"
+        case nil: String(localized: "Any time")
+        case 90: String(localized: "3 months")
+        case 180: String(localized: "6 months")
+        case 365: String(localized: "1 year")
+        case let days?: String(localized: "\(days) days")
         }
     }
 }
@@ -97,12 +101,13 @@ struct LargeFilesResultsView: View {
                     if let report = model.lastReport { SpaceLensReportBanner(report: report) }
                     if groups.isEmpty {
                         SpaceLensEmptyState(
-                            symbol: "checkmark.circle", title: "No matching files", message: emptyMessage)
+                            symbol: "checkmark.circle", title: String(localized: "No matching files"),
+                            message: emptyMessage)
                     }
                     ForEach(groups, id: \.kind) { group in
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text(group.kind.displayName).font(.system(size: 18, weight: .bold))
+                                Text(group.kind.localizedName).font(.system(size: 18, weight: .bold))
                                 Spacer()
                                 Text(formatBytes(group.files.reduce(0) { $0 + $1.size }))
                                     .font(.system(size: 14))
@@ -132,12 +137,12 @@ struct LargeFilesResultsView: View {
     private func row(_ file: LargeFile) -> some View {
         let candidate = model.candidate(for: file)
         var details = [spaceLensFolder(file.path, home: model.home)]
-        if let opened = file.lastOpened { details.append("Last opened \(spaceLensDate(opened))") }
+        if let opened = file.lastOpened { details.append(String(localized: "Last opened \(spaceLensDate(opened))")) }
         return SpaceLensItemRow(
             path: file.path, title: file.name, subtitle: details.joined(separator: " · "), size: file.size,
             isSelected: model.isSelected(file.path),
             disabledReason: model.protection(for: file.path, isDirectory: file.snapshot.isDirectory)
-                .map { "Can’t be moved to the Trash: \($0)" },
+                .map { String(localized: "Can’t be moved to the Trash: \($0)") },
             onToggle: { model.toggle(candidate) },
             accessory: {
                 if file.isUserContent { SpaceLensTag(text: userContentLabel(file.path, home: model.home)) }
@@ -145,15 +150,18 @@ struct LargeFilesResultsView: View {
     }
 
     private func headline(_ files: [LargeFile]) -> String {
-        guard !files.isEmpty else { return "No large files found" }
+        guard !files.isEmpty else { return String(localized: "No large files found") }
         let total = files.reduce(Int64(0)) { $0 + $1.size }
-        return "\(files.count) file\(files.count == 1 ? "" : "s") · \(formatBytes(total))"
+        return "\(String(localized: "\(files.count) files")) · \(formatBytes(total))"
     }
 
     private var emptyMessage: String {
-        var message = "Nothing over \(formatBytes(model.largeFilter.minimumSize))"
-        if let days = model.largeFilter.notOpenedForDays { message += " that hasn’t been opened in \(days) days" }
-        return message + ". Try a smaller size."
+        let size = formatBytes(model.largeFilter.minimumSize)
+        if let days = model.largeFilter.notOpenedForDays {
+            return String(
+                localized: "Nothing over \(size) that hasn’t been opened in \(days) days. Try a smaller size.")
+        }
+        return String(localized: "Nothing over \(size). Try a smaller size.")
     }
 }
 
@@ -166,9 +174,12 @@ struct DuplicatesTab: View {
         switch model.duplicatePhase {
         case .idle:
             SpaceLensHomeView(
-                symbol: "square.on.square.fill", headline: "Find duplicate files",
+                symbol: "square.on.square.fill", headline: String(localized: "Find duplicate files"),
                 message:
-                    "Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays.",
+                    String(
+                        localized:
+                            "Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays."
+                    ),
                 scanDisabled: model.duplicateRoots.isEmpty,
                 scan: { model.startDuplicateScan() },
                 options: {
@@ -179,13 +190,15 @@ struct DuplicatesTab: View {
             if progress.phase == .comparing, progress.toCompare > 0 {
                 let percent = Int(Double(progress.compared) / Double(max(1, progress.toCompare)) * 100)
                 SpaceLensScanningView(
-                    status: "Comparing files…", bigNumber: "\(min(100, percent))%",
-                    detail: "\(progress.compared.formatted()) of \(progress.toCompare.formatted()) checks",
+                    status: String(localized: "Comparing files…"), bigNumber: "\(min(100, percent))%",
+                    detail: String(
+                        localized: "\(progress.compared.formatted()) of \(progress.toCompare.formatted()) checks"),
                     stop: { model.stopScan(.duplicates) })
             } else {
                 SpaceLensScanningView(
-                    status: "Listing files…", bigNumber: progress.files.formatted(),
-                    detail: "files looked at · \(formatBytes(progress.bytes))", stop: { model.stopScan(.duplicates) })
+                    status: String(localized: "Listing files…"), bigNumber: progress.files.formatted(),
+                    detail: String(localized: "files looked at · \(formatBytes(progress.bytes))"),
+                    stop: { model.stopScan(.duplicates) })
             }
         case .results:
             DuplicatesResultsView()
@@ -220,7 +233,9 @@ struct DuplicateRootsBar: View {
             }
             HStack(spacing: 10) {
                 Button("Add Folder…") {
-                    if let path = chooseFolder(startingAt: model.home, prompt: "Add") { model.addDuplicateRoot(path) }
+                    if let path = chooseFolder(startingAt: model.home, prompt: String(localized: "Add")) {
+                        model.addDuplicateRoot(path)
+                    }
                 }
                 .buttonStyle(CapsuleButtonStyle())
                 Button("Reset") { model.resetDuplicateRoots() }
@@ -262,8 +277,8 @@ struct DuplicatesResultsView: View {
                     if let report = model.lastReport { SpaceLensReportBanner(report: report) }
                     if groups.isEmpty {
                         SpaceLensEmptyState(
-                            symbol: "checkmark.circle", title: "No duplicates",
-                            message: "No identical files over 1 MB in these folders.")
+                            symbol: "checkmark.circle", title: String(localized: "No duplicates"),
+                            message: String(localized: "No identical files over 1 MB in these folders."))
                     }
                     ForEach(groups) { group in
                         DuplicateGroupPanel(group: group)
@@ -286,9 +301,9 @@ struct DuplicatesResultsView: View {
     }
 
     private func headline(_ groups: [DuplicateGroup]) -> String {
-        guard !groups.isEmpty else { return "No duplicates found" }
+        guard !groups.isEmpty else { return String(localized: "No duplicates found") }
         let total = groups.reduce(Int64(0)) { $0 + $1.reclaimable }
-        return "\(formatBytes(total)) in \(groups.count) duplicate group\(groups.count == 1 ? "" : "s")"
+        return "\(formatBytes(total)) · \(String(localized: "\(groups.count) duplicate groups"))"
     }
 }
 
@@ -303,10 +318,13 @@ struct DuplicateGroupPanel: View {
                     .font(.system(size: 15, weight: .bold))
                     .lineLimit(1)
                     .truncationMode(.middle)
-                Text("\(group.files.count) copies · \(formatBytes(group.logicalSize)) each")
-                    .font(.system(size: 13))
-                    .foregroundStyle(Theme.textSecondary)
-                    .monospacedDigit()
+                Text(
+                    verbatim:
+                        "\(String(localized: "\(group.files.count) copies")) · \(String(localized: "\(formatBytes(group.logicalSize)) each"))"
+                )
+                .font(.system(size: 13))
+                .foregroundStyle(Theme.textSecondary)
+                .monospacedDigit()
                 Spacer()
                 Text("\(formatBytes(group.reclaimable)) extra")
                     .font(.system(size: 13))
@@ -327,19 +345,22 @@ struct DuplicateGroupPanel: View {
         let protection = model.protection(for: file.path, isDirectory: false)
         let reason: String? =
             if let protection {
-                "Can’t be moved to the Trash: \(protection)"
+                String(localized: "Can’t be moved to the Trash: \(protection)")
             } else if !model.canSelect(file, in: group) {
-                "Keep at least one copy"
+                String(localized: "Keep at least one copy")
             } else {
                 nil
             }
         return SpaceLensItemRow(
             path: file.path, title: file.name,
-            subtitle: "\(spaceLensFolder(file.path, home: model.home)) · Modified \(spaceLensDate(file.modified))",
+            subtitle: String(
+                localized: "\(spaceLensFolder(file.path, home: model.home)) · Modified \(spaceLensDate(file.modified))"),
             size: file.size, isSelected: selected, disabledReason: reason,
             onToggle: { model.toggle(file, in: group) },
             accessory: {
-                if file.path == group.suggestedKeep { SpaceLensTag(text: "Suggested to keep", color: Theme.accent) }
+                if file.path == group.suggestedKeep {
+                    SpaceLensTag(text: String(localized: "Suggested to keep"), color: Theme.accent)
+                }
                 if file.isUserContent { SpaceLensTag(text: userContentLabel(file.path, home: model.home)) }
             })
     }

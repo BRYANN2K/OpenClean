@@ -14,24 +14,27 @@ struct PerformanceOverview: View {
                     columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)], spacing: 14
                 ) {
                     MetricCard(
-                        title: "CPU", symbol: "cpu", value: formatPercent(model.cpu),
-                        detail: "Busy across all cores", points: model.cpuHistory, maxValue: 1)
+                        title: String(localized: "CPU"), symbol: "cpu", value: formatPercent(model.cpu),
+                        detail: String(localized: "Busy across all cores"), points: model.cpuHistory, maxValue: 1)
                     MetricCard(
-                        title: "Memory", symbol: "memorychip",
+                        title: String(localized: "Memory"), symbol: "memorychip",
                         value: model.memory.map { formatBytes(Int64($0.used)) } ?? "–",
                         detail: memoryDetail, points: model.memoryHistory, maxValue: 1,
                         tag: model.memory.map {
-                            ("Pressure: \(pressureLabel($0.pressure))", pressureColor($0.pressure))
+                            (String(localized: "Pressure: \(pressureLabel($0.pressure))"), pressureColor($0.pressure))
                         })
                     MetricCard(
-                        title: "Disk", symbol: "internaldrive",
-                        value: model.disk.map { "\(formatCapacity($0.available)) free" } ?? "–",
-                        detail: model.disk.map { "of \(formatCapacity($0.total)) on your startup disk" } ?? "",
+                        title: String(localized: "Disk"), symbol: "internaldrive",
+                        value: model.disk.map { String(localized: "\(formatCapacity($0.available)) free") } ?? "–",
+                        detail: model.disk.map {
+                            String(localized: "of \(formatCapacity($0.total)) on your startup disk")
+                        } ?? "",
                         fraction: model.disk.map { $0.usedFraction })
                     MetricCard(
-                        title: "Network", symbol: "arrow.up.arrow.down",
+                        title: String(localized: "Network"), symbol: "arrow.up.arrow.down",
                         value: "↓ \(formatRate(model.network?.receivedPerSecond))",
-                        detail: "↑ \(formatRate(model.network?.sentPerSecond)) sent", points: model.receivedHistory)
+                        detail: String(localized: "↑ \(formatRate(model.network?.sentPerSecond)) sent"),
+                        points: model.receivedHistory)
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -70,7 +73,7 @@ struct PerformanceOverview: View {
 
     private var memoryDetail: String {
         guard let memory = model.memory else { return "" }
-        return "used of \(formatCapacity(Int64(memory.total)))"
+        return String(localized: "used of \(formatCapacity(Int64(memory.total)))")
     }
 }
 

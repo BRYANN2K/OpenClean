@@ -24,11 +24,11 @@ struct SettingsView: View {
                 }
 
                 section("General", symbol: "menubar.rectangle") {
-                    row("Show CPU and memory in the menu bar") {
+                    row(String(localized: "Show CPU and memory in the menu bar")) {
                         Toggle("", isOn: $menuBarEnabled).toggleStyle(.switch).labelsHidden()
                     }
                     divider
-                    row("Menu bar shows") {
+                    row(String(localized: "Menu bar shows")) {
                         Picker("", selection: $menuBarMetric) {
                             ForEach(MenuBarMetric.allCases) { Text($0.title).tag($0.rawValue) }
                         }
@@ -39,11 +39,11 @@ struct SettingsView: View {
                 }
 
                 section("Updates", symbol: "arrow.down.circle") {
-                    row("Check for updates automatically") {
+                    row(String(localized: "Check for updates automatically")) {
                         Toggle("", isOn: $updates.autoCheck).toggleStyle(.switch).labelsHidden()
                     }
                     divider
-                    row("OpenClean \(updates.currentVersionText)", detail: lastCheckedText) {
+                    row(String(localized: "OpenClean \(updates.currentVersionText)"), detail: lastCheckedText) {
                         Button("Check Now") { updates.checkForUpdates() }
                             .buttonStyle(CapsuleButtonStyle())
                     }
@@ -54,18 +54,23 @@ struct SettingsView: View {
 
                 section("Cleaning", symbol: "sparkles") {
                     row(
-                        "Keep removed files for \(model.retentionDays) days",
-                        detail: "After this, quarantined files are deleted for good."
+                        String(localized: "Keep removed files for \(model.retentionDays) days"),
+                        detail: String(localized: "After this, quarantined files are deleted for good.")
                     ) {
                         Stepper("", value: $model.retentionDays, in: 1...90).labelsHidden()
                     }
                     divider
-                    row("Show advanced (caution) rules", detail: "Adds rules that need a closer look before cleaning.")
-                    {
+                    row(
+                        String(localized: "Show advanced (caution) rules"),
+                        detail: String(localized: "Adds rules that need a closer look before cleaning.")
+                    ) {
                         Toggle("", isOn: $model.advancedEnabled).toggleStyle(.switch).labelsHidden()
                     }
                     divider
-                    row("Your rule packs", detail: "Add your own YAML rules to this folder.") {
+                    row(
+                        String(localized: "Your rule packs"),
+                        detail: String(localized: "Add your own YAML rules to this folder.")
+                    ) {
                         Button("Reveal in Finder") { revealUserRules() }
                             .buttonStyle(CapsuleButtonStyle())
                     }
@@ -85,7 +90,7 @@ struct SettingsView: View {
                         }
                         divider
                     }
-                    row("Add a folder or file") {
+                    row(String(localized: "Add a folder or file")) {
                         Button("Add…") { addExclusion() }
                             .buttonStyle(CapsuleButtonStyle())
                     }
@@ -105,9 +110,12 @@ struct SettingsView: View {
                         divider
                     }
                     row(
-                        "Add a project folder",
+                        String(localized: "Add a project folder"),
                         detail:
-                            "Only node_modules, virtual environments and build output go to quarantine. Nothing else in it is touched."
+                            String(
+                                localized:
+                                    "Only node_modules, virtual environments and build output go to quarantine. Nothing else in it is touched."
+                            )
                     ) {
                         Button("Add…") { addProjectFolder() }
                             .buttonStyle(CapsuleButtonStyle())
@@ -116,10 +124,11 @@ struct SettingsView: View {
                 .layoutProbe("settings.projectFolders")
 
                 section("Permissions", symbol: "lock.shield") {
-                    row("Full Disk Access", detail: accessDetail) {
+                    row(String(localized: "Full Disk Access"), detail: accessDetail) {
                         HStack(spacing: 10) {
                             StatusTag(
-                                text: model.accessAdvice == .ok ? "Allowed" : "Not allowed",
+                                text: model.accessAdvice == .ok
+                                    ? String(localized: "Allowed") : String(localized: "Not allowed"),
                                 color: model.accessAdvice == .ok ? Theme.accent : Theme.gold)
                             Button("Open Privacy Settings") {
                                 NSWorkspace.shared.open(FullDiskAccessChecker.settingsURL)
@@ -130,7 +139,10 @@ struct SettingsView: View {
                 }
 
                 section("About", symbol: "info.circle") {
-                    row("OpenClean \(updates.currentVersionText)", detail: "Open source under GPL-3.0.") {
+                    row(
+                        String(localized: "OpenClean \(updates.currentVersionText)"),
+                        detail: String(localized: "Open source under GPL-3.0.")
+                    ) {
                         Button("GitHub") {
                             if let url = URL(string: "https://github.com/leoAnimesh/OpenClean") {
                                 NSWorkspace.shared.open(url)
@@ -139,7 +151,10 @@ struct SettingsView: View {
                         .buttonStyle(CapsuleButtonStyle())
                     }
                     divider
-                    row("Welcome tour", detail: "See the feature tour and permission setup again.") {
+                    row(
+                        String(localized: "Welcome tour"),
+                        detail: String(localized: "See the feature tour and permission setup again.")
+                    ) {
                         Button("Show Tour") { onboarding.restart() }
                             .buttonStyle(CapsuleButtonStyle())
                     }
@@ -154,20 +169,22 @@ struct SettingsView: View {
     }
 
     private var lastCheckedText: String {
-        "Last checked \(updates.lastChecked.map(formatRelativeDay) ?? "never")"
+        String(localized: "Last checked \(updates.lastChecked.map(formatRelativeDay) ?? String(localized: "never"))")
     }
 
     private var accessDetail: String {
         switch model.accessAdvice {
-        case .ok: "Trash, Mail, Safari and iOS backups can be scanned."
-        case .grant: "Needed to scan Trash, Mail, Safari and iOS backups."
-        case .regrantAfterRebuild: "OpenClean was updated: remove it from the list and add it again."
+        case .ok: String(localized: "Trash, Mail, Safari and iOS backups can be scanned.")
+        case .grant: String(localized: "Needed to scan Trash, Mail, Safari and iOS backups.")
+        case .regrantAfterRebuild: String(localized: "OpenClean was updated: remove it from the list and add it again.")
         }
     }
 
     // MARK: Building blocks
 
-    private func section(_ title: String, symbol: String, @ViewBuilder content: () -> some View) -> some View {
+    private func section(_ title: LocalizedStringKey, symbol: String, @ViewBuilder content: () -> some View)
+        -> some View
+    {
         VStack(alignment: .leading, spacing: 10) {
             Label(title, systemImage: symbol)
                 .font(.system(size: 15, weight: .semibold))
@@ -192,7 +209,7 @@ struct SettingsView: View {
         .frame(minHeight: 52)
     }
 
-    private func note(_ text: String) -> some View {
+    private func note(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.system(size: 12))
             .foregroundStyle(Theme.textSecondary)
@@ -218,8 +235,8 @@ struct SettingsView: View {
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
-        panel.prompt = "Add"
-        panel.message = "Choose a folder where you keep code projects."
+        panel.prompt = String(localized: "Add")
+        panel.message = String(localized: "Choose a folder where you keep code projects.")
         if panel.runModal() == .OK, let url = panel.url {
             model.addProjectFolder(url.path)
         }

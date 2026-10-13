@@ -25,8 +25,8 @@ enum SpaceLensFinder {
 func spaceLensDate(_ date: Date) -> String {
     let calendar = Calendar.current
     let time = date.formatted(date: .omitted, time: .shortened)
-    if calendar.isDateInToday(date) { return "Today, \(time)" }
-    if calendar.isDateInYesterday(date) { return "Yesterday, \(time)" }
+    if calendar.isDateInToday(date) { return String(localized: "Today, \(time)") }
+    if calendar.isDateInYesterday(date) { return String(localized: "Yesterday, \(time)") }
     return date.formatted(.dateTime.month(.abbreviated).day().year())
 }
 
@@ -43,7 +43,8 @@ func spaceLensFolder(_ path: String, home: String) -> String {
 
 /// "From Documents" / "From Desktop" for files in the user-content folders.
 func userContentLabel(_ path: String, home: String) -> String {
-    pathIsWithin(path, home + "/Desktop", caseInsensitive: true) ? "From Desktop" : "From Documents"
+    pathIsWithin(path, home + "/Desktop", caseInsensitive: true)
+        ? String(localized: "From Desktop") : String(localized: "From Documents")
 }
 
 /// Finder's icon for a file or folder, cached by path.
@@ -89,7 +90,10 @@ struct SpaceLensItemRow<Accessory: View>: View {
             CheckboxButton(state: isSelected ? .on : .off, label: title) { onToggle() }
                 .disabled(disabledReason != nil)
                 .opacity(disabledReason == nil ? 1 : 0.35)
-                .help(disabledReason ?? (isSelected ? "Don’t move to the Trash" : "Move to the Trash"))
+                .help(
+                    disabledReason
+                        ?? (isSelected
+                            ? String(localized: "Don’t move to the Trash") : String(localized: "Move to the Trash")))
             FileIcon(path: path)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 8) {
@@ -189,7 +193,9 @@ struct SpaceLensTrashBar: View {
                 Text(count > 0 ? "\(formatBytes(model.selectedBytes)) selected" : "Nothing selected")
                     .font(.system(size: 22, weight: .bold)).monospacedDigit()
                 Text(
-                    count > 0 ? "\(count) item\(count == 1 ? "" : "s") · goes to the Trash" : "Tick items to move them"
+                    count > 0
+                        ? String(localized: "\(count) items · goes to the Trash")
+                        : String(localized: "Tick items to move them")
                 )
                 .font(.system(size: 12))
                 .foregroundStyle(Theme.textSecondary)
@@ -238,8 +244,8 @@ struct SpaceLensReportBanner: View {
                     Text(headline(moved: moved)).font(.system(size: 14, weight: .semibold))
                     Text(
                         skipped.isEmpty
-                            ? "You can put items back from the Trash in Finder."
-                            : "\(skipped.count) item\(skipped.count == 1 ? " was" : "s were") left in place."
+                            ? String(localized: "You can put items back from the Trash in Finder.")
+                            : String(localized: "\(skipped.count) items were left in place.")
                     )
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textSecondary)
@@ -279,13 +285,13 @@ struct SpaceLensReportBanner: View {
 
     private func headline(moved: Int) -> String {
         moved == 0
-            ? "Nothing was moved to the Trash"
-            : "Moved \(moved) item\(moved == 1 ? "" : "s") (\(formatBytes(report.trashedBytes))) to the Trash"
+            ? String(localized: "Nothing was moved to the Trash")
+            : "\(String(localized: "\(moved) items moved to the Trash")) · \(formatBytes(report.trashedBytes))"
     }
 
     private func reason(_ outcome: TrashOutcome) -> String {
         switch outcome {
-        case .trashed: "moved"
+        case .trashed: String(localized: "moved")
         case .skipped(let reason): reason.description.capitalizedFirst
         case .failed(let message): message
         }
@@ -306,8 +312,9 @@ struct SpaceLensAccessNote: View {
             HStack(spacing: 10) {
                 Image(systemName: "lock.fill").foregroundStyle(Theme.gold)
                 Text(
-                    "\(unreadable) folder\(unreadable == 1 ? "" : "s") couldn’t be read."
-                        + (model.hasFullDiskAccess ? "" : " Full Disk Access lets OpenClean include them.")
+                    String(localized: "\(unreadable) folders couldn’t be read.")
+                        + (model.hasFullDiskAccess
+                            ? "" : " " + String(localized: "Full Disk Access lets OpenClean include them."))
                 )
                 .font(.system(size: 13))
                 .foregroundStyle(Theme.textSecondary)
@@ -325,7 +332,7 @@ struct SpaceLensAccessNote: View {
 
 /// "Start over" link at the top left of a results screen.
 struct SpaceLensBackButton: View {
-    let title: String
+    let title: LocalizedStringKey
     let action: () -> Void
 
     var body: some View {

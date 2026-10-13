@@ -53,7 +53,10 @@ struct UninstallerListView: View {
                     .lineLimit(2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                StatPill(text: "\(model.uninstallableApps.count) apps · \(formatBytes(model.totalAppBytes))") {
+                StatPill(
+                    text:
+                        "\(String(localized: "\(model.uninstallableApps.count) apps")) · \(formatBytes(model.totalAppBytes))"
+                ) {
                     Image(systemName: "square.grid.2x2").font(.system(size: 11, weight: .semibold))
                 }
                 .fixedSize()
@@ -234,11 +237,11 @@ struct UninstallBar: View {
     }
 
     private func caption(count: Int) -> String {
-        guard let app = model.selectedApp else { return "Select an app" }
+        guard let app = model.selectedApp else { return String(localized: "Select an app") }
         guard app.status.isRemovable else { return app.status.explanation }
-        if model.selectedAppIsRunning { return "Quit \(app.name) to uninstall it" }
-        let summary = "\(app.name) + \(leftoverCount(count)) to quarantine"
-        return app.status.requiresAdministrator ? summary + " · needs your password" : summary
+        if model.selectedAppIsRunning { return String(localized: "Quit \(app.name) to uninstall it") }
+        let summary = String(localized: "\(app.name) + \(leftoverCount(count)) to quarantine")
+        return app.status.requiresAdministrator ? summary + " · " + String(localized: "needs your password") : summary
     }
 }
 
@@ -282,7 +285,7 @@ struct UninstallerConfirmSheet: View {
                 }
                 if byName > 0 {
                     Label(
-                        "\(byName) item\(byName == 1 ? " was" : "s were") matched by name. Check \(byName == 1 ? "it belongs" : "they belong") to this app.",
+                        "\(byName) items were matched by name. Check that they belong to this app.",
                         systemImage: "exclamationmark.triangle"
                     )
                     .font(.callout)

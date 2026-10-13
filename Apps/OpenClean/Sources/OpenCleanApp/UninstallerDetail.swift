@@ -47,12 +47,13 @@ struct UninstallerDetailView: View {
     @ViewBuilder
     private func notices(for app: InstalledApp) -> some View {
         if !app.status.isRemovable {
-            notice(symbol: "lock.fill", text: app.status.explanation, tint: Theme.gold)
+            notice(symbol: "lock.fill", text: app.status.localizedExplanation, tint: Theme.gold)
         } else if model.selectedAppIsRunning {
             HStack(spacing: 12) {
                 notice(
                     symbol: "exclamationmark.triangle.fill",
-                    text: quitNotice ?? "\(app.name) is running. Quit it to uninstall.", tint: Theme.gold)
+                    text: quitNotice ?? String(localized: "\(app.name) is running. Quit it to uninstall."),
+                    tint: Theme.gold)
                 Button("Force Quit…") { forceQuit(app) }
                     .buttonStyle(CapsuleButtonStyle())
                     .fixedSize()
@@ -62,7 +63,10 @@ struct UninstallerDetailView: View {
             notice(
                 symbol: "lock.fill",
                 text:
-                    "\(app.name) is owned by the system. macOS will ask for your administrator password to move it to quarantine.",
+                    String(
+                        localized:
+                            "\(app.name) is owned by the system. macOS will ask for your administrator password to move it to quarantine."
+                    ),
                 tint: Theme.gold)
         }
     }
@@ -81,21 +85,22 @@ struct UninstallerDetailView: View {
         }
         let alert = NSAlert()
         alert.alertStyle = .warning
-        alert.messageText = "Force quit \(app.name)?"
-        alert.informativeText = "Any unsaved changes in \(app.name) will be lost."
-        alert.addButton(withTitle: "Force Quit")
-        alert.addButton(withTitle: "Cancel")
+        alert.messageText = String(localized: "Force quit \(app.name)?")
+        alert.informativeText = String(localized: "Any unsaved changes in \(app.name) will be lost.")
+        alert.addButton(withTitle: String(localized: "Force Quit"))
+        alert.addButton(withTitle: String(localized: "Cancel"))
         alert.buttons.first?.hasDestructiveAction = true
         guard alert.runModal() == .alertFirstButtonReturn else { return }
         isQuitting = true
-        quitNotice = "Quitting \(app.name)…"
+        quitNotice = String(localized: "Quitting \(app.name)…")
         for runningApp in running { runningApp.forceTerminate() }
         Task {
             for _ in 0..<30 where running.contains(where: { !$0.isTerminated }) {
                 try? await Task.sleep(for: .milliseconds(100))
             }
             isQuitting = false
-            quitNotice = running.allSatisfy(\.isTerminated) ? nil : "\(app.name) didn't quit. Try again."
+            quitNotice =
+                running.allSatisfy(\.isTerminated) ? nil : String(localized: "\(app.name) didn't quit. Try again.")
             model.select(app)
         }
     }
@@ -119,7 +124,8 @@ struct UninstallerDetailView: View {
                     title: (app.path as NSString).lastPathComponent,
                     folder: ((app.path as NSString).deletingLastPathComponent as NSString).abbreviatingWithTildeInPath,
                     tag: app.status.requiresAdministrator
-                        ? ("Needs password", Theme.gold) : ("Application", Theme.textSecondary),
+                        ? (String(localized: "Needs password"), Theme.gold)
+                        : (String(localized: "Application"), Theme.textSecondary),
                     size: app.size, state: .on, isLocked: true
                 ) {}
                 ForEach(model.leftoverGroups, id: \.kind) { group in
@@ -154,7 +160,7 @@ struct UninstallerDetailView: View {
                     .foregroundStyle(Theme.textSecondary)
             } else {
                 Text(
-                    "Only exact matches are listed: folders and files named after \(app.bundleID ?? "the bundle ID"), or exactly “\(app.name)” in Application Support, Caches and Logs."
+                    "Only exact matches are listed: folders and files named after \(app.bundleID ?? String(localized: "the bundle ID")), or exactly “\(app.name)” in Application Support, Caches and Logs."
                 )
                 .font(.system(size: 12))
                 .foregroundStyle(Theme.textTertiary)
@@ -181,7 +187,8 @@ struct UninstallerDetailView: View {
                     }
                     UninstallerItemRow(
                         title: leftover.displayName, folder: leftover.displayFolder,
-                        tag: ("Report only", Theme.textTertiary), size: leftover.size, state: nil, isLocked: true
+                        tag: (String(localized: "Report only"), Theme.textTertiary), size: leftover.size, state: nil,
+                        isLocked: true
                     ) {}
                 }
             }
@@ -198,11 +205,14 @@ struct UninstallerAppHeader: View {
             UninstallerAppIcon(path: app.path, size: 64)
             VStack(alignment: .leading, spacing: 4) {
                 Text(app.name).font(.system(size: 22, weight: .bold)).lineLimit(1)
-                Text([app.version.map { "Version \($0)" }, app.bundleID].compactMap { $0 }.joined(separator: " · "))
-                    .font(.system(size: 13))
-                    .foregroundStyle(Theme.textSecondary)
-                    .lineLimit(1)
-                    .textSelection(.enabled)
+                Text(
+                    [app.version.map { String(localized: "Version \($0)") }, app.bundleID].compactMap { $0 }.joined(
+                        separator: " · ")
+                )
+                .font(.system(size: 13))
+                .foregroundStyle(Theme.textSecondary)
+                .lineLimit(1)
+                .textSelection(.enabled)
                 Text((app.path as NSString).abbreviatingWithTildeInPath)
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textTertiary)
@@ -211,8 +221,8 @@ struct UninstallerAppHeader: View {
                     .textSelection(.enabled)
                 HStack(spacing: 20) {
                     fact(formatBytes(app.size), "on disk")
-                    fact(app.lastUsed.map(uninstallerDateText) ?? "Unknown", "last opened")
-                    fact(app.ownerUID == 0 ? "System (root)" : "You", "owner")
+                    fact(app.lastUsed.map(uninstallerDateText) ?? String(localized: "Unknown"), "last opened")
+                    fact(app.ownerUID == 0 ? String(localized: "System (root)") : String(localized: "You"), "owner")
                 }
                 .padding(.top, 6)
             }
@@ -221,7 +231,7 @@ struct UninstallerAppHeader: View {
         .accessibilityElement(children: .combine)
     }
 
-    private func fact(_ value: String, _ label: String) -> some View {
+    private func fact(_ value: String, _ label: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(value).font(.system(size: 14, weight: .semibold)).monospacedDigit().lineLimit(1)
             Text(label).font(.system(size: 11)).foregroundStyle(Theme.textSecondary)
@@ -244,7 +254,7 @@ struct UninstallerItemRow: View {
             if let state {
                 CheckboxButton(state: state, label: title, action: toggle)
                     .disabled(isLocked)
-                    .help(isLocked ? "The app itself is always included" : "")
+                    .help(isLocked ? String(localized: "The app itself is always included") : "")
             } else {
                 Image(systemName: "lock")
                     .font(.system(size: 12))

@@ -17,9 +17,9 @@ public enum ScanReminderFrequency: String, CaseIterable, Identifiable, Sendable 
 
     public var title: String {
         switch self {
-        case .off: "Off"
-        case .weekly: "Weekly"
-        case .monthly: "Monthly"
+        case .off: String(localized: "Off", bundle: .appModel)
+        case .weekly: String(localized: "Weekly", bundle: .appModel)
+        case .monthly: String(localized: "Monthly", bundle: .appModel)
         }
     }
 }
@@ -220,11 +220,15 @@ public final class ScanReminderModel {
 
     /// "About 3.2 GB can be cleaned".
     public static func headline(for finding: ScanReminderFinding) -> String {
-        "About \(ByteCountFormatter.string(fromByteCount: finding.bytes, countStyle: .file)) can be cleaned"
+        let size = ByteCountFormatter.string(fromByteCount: finding.bytes, countStyle: .file)
+        return String(localized: "About \(size) can be cleaned", bundle: .appModel)
     }
 
-    public static let notificationBody =
-        "A background Smart Scan found it. Nothing was removed; open OpenClean to review and clean."
+    public static var notificationBody: String {
+        String(
+            localized: "A background Smart Scan found it. Nothing was removed; open OpenClean to review and clean.",
+            bundle: .appModel)
+    }
 
     // MARK: Lifecycle
 

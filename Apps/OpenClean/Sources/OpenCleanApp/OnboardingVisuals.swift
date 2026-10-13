@@ -125,14 +125,14 @@ struct SafetyVisual: View {
         } content: { phase in
             HStack(spacing: 40) {
                 VStack(alignment: .leading, spacing: 12) {
-                    row("App caches", .user, .regenerable)
+                    row(String(localized: "App caches"), .user, .regenerable)
                         .opacity(phase == .shown ? 1 : 0)
                         .scaleEffect(phase == .shown ? 1 : 0.9)
-                    row("Old simulators", .developer, .review)
+                    row(String(localized: "Old simulators"), .developer, .review)
                         .opacity(phase == .shown || phase == .restored ? 1 : 0)
                         .offset(x: phase == .removed ? 250 : phase == .hidden ? -20 : 0)
                         .scaleEffect(phase == .removed ? 0.55 : 1)
-                    row("Mail downloads", .mail, .caution)
+                    row(String(localized: "Mail downloads"), .mail, .caution)
                         .opacity(phase == .shown ? 1 : 0)
                         .offset(x: phase == .removed || phase == .restored ? 250 : phase == .hidden ? -20 : 0)
                         .scaleEffect(phase == .removed || phase == .restored ? 0.55 : 1)
@@ -200,8 +200,10 @@ private enum GatherPhase: CaseIterable { case hidden, spread, gathered, dropped 
 
 struct UninstallerVisual: View {
     private let chips: [(String, CGSize)] = [
-        ("Caches", CGSize(width: -190, height: -50)), ("Preferences", CGSize(width: 190, height: -50)),
-        ("Containers", CGSize(width: -200, height: 40)), ("Launch agent", CGSize(width: 200, height: 40)),
+        (String(localized: "Caches"), CGSize(width: -190, height: -50)),
+        (String(localized: "Preferences"), CGSize(width: 190, height: -50)),
+        (String(localized: "Containers"), CGSize(width: -200, height: 40)),
+        (String(localized: "Launch agent"), CGSize(width: 200, height: 40)),
     ]
 
     var body: some View {
@@ -276,8 +278,8 @@ struct SpaceLensVisual: View {
                 }
             } content: { phase in
                 ZStack(alignment: .topLeading) {
-                    fileCard("IMG_2041.heic", "Suggested to keep")
-                    fileCard("IMG_2041 copy.heic", "Same content")
+                    fileCard("IMG_2041.heic", String(localized: "Suggested to keep"))
+                    fileCard("IMG_2041 copy.heic", String(localized: "Same content"))
                         .offset(phase == .apart ? CGSize(width: 70, height: 26) : .zero)
                         .scaleEffect(phase == .trashed ? 0.6 : 1)
                         .opacity(phase == .trashed ? 0 : 1)
@@ -360,8 +362,8 @@ struct PerformanceVisual: View {
             .background(.black.opacity(0.28), in: RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 10) {
-                bar("CPU", model.cpu)
-                bar("Memory", model.memory?.usedFraction)
+                bar(String(localized: "CPU"), model.cpu)
+                bar(String(localized: "Memory"), model.memory?.usedFraction)
                 OnboardingSparkline(values: model.cpuHistory.map(\.value))
                     .trim(from: 0, to: drawn ? 1 : 0)
                     .stroke(Theme.accent, lineWidth: 2)

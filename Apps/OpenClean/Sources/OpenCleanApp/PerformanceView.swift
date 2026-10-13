@@ -8,19 +8,19 @@ enum PerformanceSection: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .overview: "Overview"
-        case .consumers: "Heavy consumers"
-        case .loginItems: "Login items"
-        case .maintenance: "Maintenance"
+        case .overview: String(localized: "Overview")
+        case .consumers: String(localized: "Heavy consumers")
+        case .loginItems: String(localized: "Login items")
+        case .maintenance: String(localized: "Maintenance")
         }
     }
 
     var subtitle: String {
         switch self {
-        case .overview: "Live figures from your Mac, updated every 2 seconds while you watch."
-        case .consumers: "Apps and processes using the most CPU and memory right now."
-        case .loginItems: "What starts when you log in, and who installed it."
-        case .maintenance: "One-click macOS housekeeping. Each task says exactly what it runs."
+        case .overview: String(localized: "Live figures from your Mac, updated every 2 seconds while you watch.")
+        case .consumers: String(localized: "Apps and processes using the most CPU and memory right now.")
+        case .loginItems: String(localized: "What starts when you log in, and who installed it.")
+        case .maintenance: String(localized: "One-click macOS housekeeping. Each task says exactly what it runs.")
         }
     }
 }

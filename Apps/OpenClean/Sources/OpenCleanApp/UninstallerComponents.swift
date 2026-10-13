@@ -43,12 +43,13 @@ extension InstalledApp {
     /// Short state shown in the app list; nil for an ordinary, removable app.
     var stateLabel: (text: String, tint: Color)? {
         switch status {
-        case .removable: isRunning ? ("Running", Theme.gold) : nil
-        case .appleApp: ("Apple app", Theme.textTertiary)
+        case .removable: isRunning ? (String(localized: "Running"), Theme.gold) : nil
+        case .appleApp: (String(localized: "Apple app"), Theme.textTertiary)
         case .openClean: ("OpenClean", Theme.textTertiary)
-        case .needsAdministrator: isRunning ? ("Running", Theme.gold) : ("Needs password", Theme.gold)
-        case .listOnly: ("Utilities", Theme.textTertiary)
-        case .noBundleID: ("No bundle ID", Theme.textTertiary)
+        case .needsAdministrator:
+            isRunning ? (String(localized: "Running"), Theme.gold) : (String(localized: "Needs password"), Theme.gold)
+        case .listOnly: (String(localized: "Utilities"), Theme.textTertiary)
+        case .noBundleID: (String(localized: "No bundle ID"), Theme.textTertiary)
         }
     }
 }
@@ -56,8 +57,8 @@ extension InstalledApp {
 extension Leftover {
     var matchLabel: (text: String, tint: Color) {
         switch match {
-        case .bundleID: ("Matches bundle ID", Theme.textSecondary)
-        case .name: ("Matches name", Theme.gold)
+        case .bundleID: (String(localized: "Matches bundle ID"), Theme.textSecondary)
+        case .name: (String(localized: "Matches name"), Theme.gold)
         }
     }
 
@@ -69,12 +70,12 @@ extension Leftover {
 func uninstallerDateText(_ date: Date) -> String {
     let time = date.formatted(date: .omitted, time: .shortened)
     let calendar = Calendar.current
-    if calendar.isDateInToday(date) { return "Today, \(time)" }
-    if calendar.isDateInYesterday(date) { return "Yesterday, \(time)" }
+    if calendar.isDateInToday(date) { return String(localized: "Today, \(time)") }
+    if calendar.isDateInYesterday(date) { return String(localized: "Yesterday, \(time)") }
     return date.formatted(.dateTime.month(.abbreviated).day().year())
 }
 
 /// "1 leftover", "3 leftovers".
 func leftoverCount(_ count: Int) -> String {
-    "\(count) leftover\(count == 1 ? "" : "s")"
+    String(localized: "\(count) leftovers")
 }

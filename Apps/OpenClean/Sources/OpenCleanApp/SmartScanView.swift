@@ -32,7 +32,7 @@ struct ScanHomeView: View {
             HStack(spacing: 8) {
                 Spacer()
                 if let disk = model.disk {
-                    StatPill(text: "\(formatCapacity(disk.available)) free") {
+                    StatPill(text: String(localized: "\(formatCapacity(disk.available)) free")) {
                         ProgressRing(fraction: disk.freeFraction, lineWidth: 2.5).frame(width: 13, height: 13)
                     }
                 }
@@ -69,8 +69,8 @@ struct ScanHomeView: View {
     }
 
     private func caption(_ stats: CleanupStats) -> String {
-        guard let last = stats.lastCleanup else { return "Press Return to start" }
-        return "Last cleanup \(last.formatted(.relative(presentation: .named)))"
+        guard let last = stats.lastCleanup else { return String(localized: "Press Return to start") }
+        return String(localized: "Last cleanup \(last.formatted(.relative(presentation: .named)))")
     }
 }
 
@@ -113,7 +113,7 @@ struct ScanningView: View {
                         .opacity(category == currentCategory ? 1 : 0.45)
                         .scaleEffect(category == currentCategory ? 1.12 : 1)
                         .animation(.spring(duration: 0.3), value: currentCategory)
-                        .help(category.displayName)
+                        .help(category.localizedName)
                 }
             }
             .padding(14)
@@ -140,8 +140,8 @@ struct ScanningView: View {
     }
 
     private var currentLabel: String {
-        guard let category = currentCategory else { return "Starting scan…" }
-        return "Scanning \(category.displayName)…"
+        guard let category = currentCategory else { return String(localized: "Starting scan…") }
+        return String(localized: "Scanning \(category.localizedName)…")
     }
 }
 
@@ -196,7 +196,7 @@ struct ResultsView: View {
                     }
                     if !locked.isEmpty {
                         Label(
-                            "\(ListFormatter.localizedString(byJoining: locked.map(\.displayName))) can only be scanned with Full Disk Access.",
+                            "\(ListFormatter.localizedString(byJoining: locked.map(\.localizedName))) can only be scanned with Full Disk Access.",
                             systemImage: "lock.fill"
                         )
                         .font(.system(size: 13))
@@ -232,7 +232,9 @@ struct ResultsView: View {
 
     private var headline: String {
         let total = model.result?.totalSize ?? 0
-        return total > 0 ? "We found \(formatBytes(total)) to clean" : "Nothing to clean right now"
+        return total > 0
+            ? String(localized: "We found \(formatBytes(total)) to clean")
+            : String(localized: "Nothing to clean right now")
     }
 }
 
@@ -295,12 +297,12 @@ struct CategoryRow: View {
         let total = rules.reduce(Int64(0)) { $0 + $1.totalSize }
         let state = model.state(of: category)
         HStack(spacing: 14) {
-            CheckboxButton(state: state, label: category.displayName) {
+            CheckboxButton(state: state, label: category.localizedName) {
                 model.setSelected(state != .on, category: category)
             }
             CategoryIcon(category: category)
             VStack(alignment: .leading, spacing: 2) {
-                Text(category.displayName).font(.system(size: 14, weight: .semibold))
+                Text(category.localizedName).font(.system(size: 14, weight: .semibold))
                 Text(detail).font(.system(size: 12)).foregroundStyle(Theme.textSecondary)
             }
             Spacer()
@@ -327,8 +329,8 @@ struct CategoryRow: View {
     private var detail: String {
         let count = rules.flatMap(\.items).filter { !$0.reportOnly }.count
         let needsAccess = rules.filter { $0.status == .needsFullDiskAccess }.count
-        var parts = ["\(count) item\(count == 1 ? "" : "s")"]
-        if needsAccess > 0 { parts.append("\(needsAccess) need Full Disk Access") }
+        var parts = [String(localized: "\(count) items")]
+        if needsAccess > 0 { parts.append(String(localized: "\(needsAccess) need Full Disk Access")) }
         return parts.joined(separator: " · ")
     }
 }
@@ -347,7 +349,7 @@ struct CleanBar: View {
                 Text(
                     bytes > 0
                         ? splitSummary(now: plan?.immediateBytes ?? 0, quarantine: plan?.quarantineBytes ?? 0)
-                        : "Tick a category to clean it"
+                        : String(localized: "Tick a category to clean it")
                 )
                 .font(.system(size: 12))
                 .foregroundStyle(Theme.textSecondary)
@@ -445,7 +447,7 @@ struct SkippedItemsBanner: View {
                     Text(skipped.headline).font(.system(size: 14, weight: .semibold))
                     Text(
                         skipped.suggestsRescan
-                            ? "\(skipped.summary) Scan again to pick them up."
+                            ? String(localized: "\(skipped.summary) Scan again to pick them up.")
                             : skipped.summary
                     )
                     .font(.system(size: 12))
@@ -509,15 +511,16 @@ struct OutcomeCards: View {
     var body: some View {
         HStack(spacing: 14) {
             card(symbol: "checkmark.circle.fill", tint: Theme.accent) {
-                "Freed now"
+                String(localized: "Freed now")
             } value: {
                 formatBytes(report.deletedBytes)
             }
             card(symbol: "arrow.uturn.backward.circle.fill", tint: Theme.gold) {
-                "In quarantine"
+                String(localized: "In quarantine")
             } value: {
                 report.quarantinedBytes > 0
-                    ? "\(formatBytes(report.quarantinedBytes)) · undo for \(retentionDays) days" : "Nothing"
+                    ? "\(formatBytes(report.quarantinedBytes)) · \(String(localized: "undo for \(retentionDays) days"))"
+                    : String(localized: "Nothing")
             }
         }
         .frame(maxWidth: 640)
@@ -546,11 +549,12 @@ struct OutcomeCards: View {
 /// "X freed now · Y to quarantine", leaving out whichever side is zero.
 func splitSummary(now: Int64, quarantine: Int64, retentionDays: Int? = nil) -> String {
     var parts: [String] = []
-    if now > 0 || quarantine == 0 { parts.append("\(formatBytes(now)) freed now") }
+    if now > 0 || quarantine == 0 { parts.append(String(localized: "\(formatBytes(now)) freed now")) }
     if quarantine > 0 {
         parts.append(
-            retentionDays.map { "\(formatBytes(quarantine)) in quarantine for \($0) days" }
-                ?? "\(formatBytes(quarantine)) to quarantine")
+            retentionDays.map {
+                "\(String(localized: "\(formatBytes(quarantine)) in quarantine")) · \(String(localized: "undo for \($0) days"))"
+            } ?? String(localized: "\(formatBytes(quarantine)) to quarantine"))
     }
     return parts.joined(separator: " · ")
 }

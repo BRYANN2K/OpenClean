@@ -53,6 +53,10 @@ done
 /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist" | grep -qx "$version" ||
     fail "the app bundle is not stamped with $version"
 "$cli" --version | grep -q "$version" || fail "the CLI does not report $version"
+for lang in de es fr ja zh-Hans; do
+    [ -f "$app/Contents/Resources/$lang.lproj/Localizable.strings" ] || fail "the app has no $lang translations"
+    [ -d "$app/Contents/Resources/OpenClean_OpenCleanAppModel.bundle" ] || fail "the app lacks the OpenCleanAppModel resource bundle"
+done
 codesign --verify --deep --strict --verbose=2 "$app"
 
 [ -n "$team" ] || exit 0

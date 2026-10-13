@@ -4,6 +4,15 @@
 <dict>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>de</string>
+        <string>es</string>
+        <string>fr</string>
+        <string>ja</string>
+        <string>zh-Hans</string>
+    </array>
     <key>CFBundleExecutable</key>
     <string>OpenClean</string>
     <key>CFBundleIdentifier</key>

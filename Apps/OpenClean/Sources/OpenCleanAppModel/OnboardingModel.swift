@@ -16,14 +16,14 @@ public enum OnboardingStep: Int, CaseIterable, Sendable, Identifiable {
 
     public var title: String {
         switch self {
-        case .welcome: "Welcome"
-        case .smartScan: "Smart Scan"
-        case .safety: "Safe by design"
-        case .uninstaller: "Uninstaller"
-        case .spaceLens: "Space Lens"
-        case .performance: "Performance"
-        case .fullDiskAccess: "Full Disk Access"
-        case .done: "All set"
+        case .welcome: String(localized: "Welcome", bundle: .appModel)
+        case .smartScan: String(localized: "Smart Scan", bundle: .appModel)
+        case .safety: String(localized: "Safe by design", bundle: .appModel)
+        case .uninstaller: String(localized: "Uninstaller", bundle: .appModel)
+        case .spaceLens: String(localized: "Space Lens", bundle: .appModel)
+        case .performance: String(localized: "Performance", bundle: .appModel)
+        case .fullDiskAccess: String(localized: "Full Disk Access", bundle: .appModel)
+        case .done: String(localized: "All set", bundle: .appModel)
         }
     }
 }

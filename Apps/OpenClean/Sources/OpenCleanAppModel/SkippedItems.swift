@@ -23,7 +23,7 @@ public struct SkippedItems: Equatable, Sendable {
         var order: [String] = []
         var paths: [String: [String]] = [:]
         for entry in entries {
-            guard let explanation = entry.plainSkipExplanation else { continue }
+            guard let explanation = Self.explanation(for: entry) else { continue }
             if paths[explanation] == nil { order.append(explanation) }
             paths[explanation, default: []].append(entry.originalPath)
         }
@@ -36,12 +36,67 @@ public struct SkippedItems: Equatable, Sendable {
 
     /// "2 items were left in place", or "1 item was left in place".
     public var headline: String {
-        "\(count) item\(count == 1 ? " was" : "s were") left in place"
+        String(localized: "\(count) items were left in place", bundle: .appModel)
     }
 
     /// One line under the headline: the reason when there is only one, otherwise a pointer to the details.
     public var summary: String {
         if groups.count == 1, let only = groups.first { return only.explanation }
-        return "For different reasons; see the details."
+        return String(localized: "For different reasons; see the details.", bundle: .appModel)
+    }
+
+    /// `ManifestEntry.plainSkipExplanation`, translated: why the entry was left in place; nil unless it was
+    /// skipped or failed. A failed removal's own message comes from macOS and is shown as recorded.
+    public static func explanation(for entry: ManifestEntry) -> String? {
+        let parsed = entry.reason.flatMap(SkipReason.init(recorded:))
+        switch entry.outcome {
+        case .skipped:
+            if let parsed { return explanation(for: parsed) }
+            if let reason = entry.reason { return String(localized: "Skipped: \(reason).", bundle: .appModel) }
+            return String(localized: "Skipped.", bundle: .appModel)
+        case .failed:
+            if let parsed { return explanation(for: parsed) }
+            return entry.reason ?? String(localized: "Couldn't be removed.", bundle: .appModel)
+        default:
+            return nil
+        }
+    }
+
+    /// `SkipReason.plainExplanation`, translated.
+    public static func explanation(for reason: SkipReason) -> String {
+        switch reason {
+        case .reportOnly:
+            String(localized: "Shown for information only. OpenClean never removes it.", bundle: .appModel)
+        case .missing:
+            String(localized: "Already gone. Something else removed it after the scan.", bundle: .appModel)
+        case .changedSinceScan:
+            String(localized: "Changed since the scan; an app may be using it.", bundle: .appModel)
+        case .inUse:
+            String(localized: "Open in another app. Quit the app, then scan again.", bundle: .appModel)
+        case .openFilesUnknown:
+            String(
+                localized: "OpenClean couldn't check whether another app had it open, so it left it alone.",
+                bundle: .appModel)
+        case .appRunning(let app):
+            String(localized: "\(app) was running. Quit it, then scan again.", bundle: .appModel)
+        case .protected:
+            String(localized: "In a protected location. OpenClean never removes it.", bundle: .appModel)
+        case .adminCancelled:
+            String(localized: "The administrator password prompt was cancelled.", bundle: .appModel)
+        case .adminUnsupportedPath:
+            String(localized: "Its path can't be passed safely to the administrator prompt.", bundle: .appModel)
+        case .adminBatchFull:
+            String(
+                localized: "Too many system items for one password prompt. Clean again to remove the rest.",
+                bundle: .appModel)
+        case .adminUnsafeParent:
+            String(
+                localized: "A folder above it isn't protected by macOS, so it wasn't removed as administrator.",
+                bundle: .appModel)
+        case .adminRequiresImmediate:
+            String(localized: "System items can only be deleted, not moved to quarantine.", bundle: .appModel)
+        case .appNotMoved:
+            String(localized: "The app wasn't moved, so this was left in place.", bundle: .appModel)
+        }
     }
 }

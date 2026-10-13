@@ -9,7 +9,7 @@ struct SpaceLensConfirmSheet: View {
     var body: some View {
         let items = model.selectedCandidates
         VStack(alignment: .leading, spacing: 16) {
-            Text("Move \(items.count) item\(items.count == 1 ? "" : "s") to the Trash?").font(.title2.bold())
+            Text("Move \(items.count) items to the Trash?").font(.title2.bold())
             Text("\(formatBytes(model.selectedBytes)) in total. You can put items back from the Trash in Finder.")
                 .foregroundStyle(.secondary)
             ScrollView {

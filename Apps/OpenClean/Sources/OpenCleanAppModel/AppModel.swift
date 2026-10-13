@@ -232,7 +232,8 @@ public final class AppModel {
         do {
             try coordinator.settingsStore.save(settings)
         } catch {
-            errorMessage = "Could not save settings: \(error.localizedDescription)"
+            errorMessage = String(
+                localized: "Could not save settings: \(error.localizedDescription)", bundle: .appModel)
         }
         if previous.advancedEnabled != settings.advancedEnabled { reloadRules() }
         let invalidates =

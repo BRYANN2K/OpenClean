@@ -8,13 +8,13 @@ enum SidebarItem: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .smartScan: "Smart Scan"
-        case .cleanup: "Cleanup"
-        case .history: "History"
-        case .uninstaller: "Uninstaller"
-        case .spaceLens: "Space Lens"
-        case .performance: "Performance"
-        case .settings: "Settings"
+        case .smartScan: String(localized: "Smart Scan")
+        case .cleanup: String(localized: "Cleanup")
+        case .history: String(localized: "History")
+        case .uninstaller: String(localized: "Uninstaller")
+        case .spaceLens: String(localized: "Space Lens")
+        case .performance: String(localized: "Performance")
+        case .settings: String(localized: "Settings")
         }
     }
 
@@ -183,12 +183,12 @@ struct Wordmark: View {
     var size: CGFloat
 
     var body: some View {
-        (Text("Open").fontWeight(.regular) + Text("Clean").fontWeight(.bold))
+        (Text(verbatim: "Open").fontWeight(.regular) + Text(verbatim: "Clean").fontWeight(.bold))
             .font(.system(size: size, design: .rounded))
             .kerning(-0.3)
             .lineLimit(1)
             .fixedSize()
             .foregroundStyle(.white)
-            .accessibilityLabel("OpenClean")
+            .accessibilityLabel(Text(verbatim: "OpenClean"))
     }
 }

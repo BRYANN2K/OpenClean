@@ -69,7 +69,7 @@ struct UninstallerLoadingView: View {
                 .font(.system(size: 56, weight: .bold))
                 .rollingNumber(Int(fraction * 100))
             if let progress = model.progress, progress.total > 0 {
-                Text("\(progress.finished) of \(progress.total) apps measured")
+                Text("\(progress.finished) of \(progress.total) measured")
                     .font(.system(size: 14))
                     .rollingNumber(progress.finished)
                     .monospacedDigit()
@@ -110,8 +110,8 @@ struct UninstallerWorkingView: View {
 
             Text(
                 model.processedApp?.status.requiresAdministrator == true
-                    ? "Waiting for your password, then moving \(model.processedApp?.name ?? "the app") to quarantine…"
-                    : "Moving \(model.processedApp?.name ?? "the app") to quarantine…"
+                    ? "Waiting for your password, then moving \(model.processedApp?.name ?? String(localized: "the app")) to quarantine…"
+                    : "Moving \(model.processedApp?.name ?? String(localized: "the app")) to quarantine…"
             )
             .font(.system(size: 15))
             .foregroundStyle(Theme.textSecondary)
@@ -119,9 +119,12 @@ struct UninstallerWorkingView: View {
             Text(formatBytes(model.selectedBytes))
                 .font(.system(size: 56, weight: .bold))
                 .monospacedDigit()
-            Text("\(model.processedApp?.name ?? "App") + \(leftoverCount(model.chosenLeftovers.count))")
-                .font(.system(size: 14))
-                .foregroundStyle(Theme.textSecondary)
+            Text(
+                verbatim:
+                    "\(model.processedApp?.name ?? String(localized: "App")) + \(leftoverCount(model.chosenLeftovers.count))"
+            )
+            .font(.system(size: 14))
+            .foregroundStyle(Theme.textSecondary)
             Spacer(minLength: 24)
             Text("Apps that are running, changed since the list was loaded, or in use are skipped automatically.")
                 .font(.system(size: 12))
@@ -139,7 +142,7 @@ struct UninstallerCompleteView: View {
     @Environment(AppModel.self) private var appModel
 
     var body: some View {
-        let name = model.processedApp?.name ?? "The app"
+        let name = model.processedApp?.name ?? String(localized: "The app")
         let days = appModel.settings.clampedRetentionDays
         VStack(spacing: 0) {
             Spacer(minLength: 24)
@@ -204,8 +207,11 @@ struct UninstallerCompleteView: View {
         switch model.outcome {
         case .refused(let refusal): return sentence(refusal.description)
         case .finished(let report):
-            return sentence(report.manifest.entries.first?.reason ?? "The app could not be moved.")
-        case nil: return "The app could not be moved."
+            if let entry = report.manifest.entries.first, let explanation = SkippedItems.explanation(for: entry) {
+                return sentence(explanation)
+            }
+            return String(localized: "The app could not be moved.")
+        case nil: return String(localized: "The app could not be moved.")
         }
     }
 
@@ -218,12 +224,13 @@ struct UninstallerCompleteView: View {
     private func skipped(_ entries: [ManifestEntry]) -> some View {
         if !entries.isEmpty {
             VStack(alignment: .leading, spacing: 6) {
-                Text("\(entries.count) item\(entries.count == 1 ? " was" : "s were") skipped and left in place")
+                Text("\(entries.count) items were skipped and left in place")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Theme.gold)
                 ForEach(entries.prefix(5)) { entry in
                     Text(
-                        "\((entry.originalPath as NSString).abbreviatingWithTildeInPath) — \(entry.reason ?? "skipped")"
+                        verbatim:
+                            "\((entry.originalPath as NSString).abbreviatingWithTildeInPath) — \(SkippedItems.explanation(for: entry) ?? entry.outcome.localizedName)"
                     )
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textSecondary)
