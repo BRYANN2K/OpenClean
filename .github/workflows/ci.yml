@@ -14,6 +14,8 @@ jobs:
         run: swift --version
       - name: Test release version script
         run: bash scripts/tests/test-next-version.sh
+      - name: Test Homebrew bump script
+        run: bash scripts/tests/test-bump-homebrew.sh
       - name: Build
         run: swift build
       - name: Test
@@ -49,6 +51,18 @@ jobs:
         run: make release-assets VERSION="$VERSION" ARCH_FLAGS="--arch arm64 --arch x86_64"
       - name: Check assets
         run: scripts/check-release-assets.sh "$VERSION"
+      - name: Homebrew bump (dry run)
+        run: |
+          # What the release's homebrew job would change, applied to a copy of the tap files.
+          tap="$RUNNER_TEMP/tap"
+          mkdir -p "$tap/Casks" "$tap/Formula"
+          cp Casks/openclean.rb "$tap/Casks/"
+          cp Formula/openclean.rb "$tap/Formula/"
+          scripts/bump-homebrew.sh "$VERSION" build/release/SHA256SUMS.txt "$tap"
+          ruby -c "$tap/Casks/openclean.rb"
+          ruby -c "$tap/Formula/openclean.rb"
+          diff -u Casks/openclean.rb "$tap/Casks/openclean.rb" || true
+          diff -u Formula/openclean.rb "$tap/Formula/openclean.rb" || true
       - name: Release notes
         run: |
           scripts/next-version.sh --notes --version "$VERSION" | tee "$RUNNER_TEMP/release-notes.md"

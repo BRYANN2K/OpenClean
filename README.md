@@ -75,6 +75,21 @@ Releases are signed with a Developer ID and notarized by Apple, so they open lik
 Releases are published automatically when changes are merged to `main` (see
 [CONTRIBUTING.md](CONTRIBUTING.md#releases--versioning)).
 
+### Homebrew
+
+This repository is also a Homebrew tap:
+
+```sh
+brew install --cask leoanimesh/openclean/openclean   # the app (same signed, notarized DMG)
+brew install leoanimesh/openclean/openclean          # the openclean CLI (release build)
+brew install --HEAD leoanimesh/openclean/openclean   # the CLI built from the latest main (needs Xcode 16+)
+```
+
+The app keeps itself up to date (Settings → Updates), so `brew upgrade` leaves the cask alone unless you
+pass `--greedy`; `brew upgrade openclean` updates the CLI. The tap follows a new release shortly after it
+is published. `brew uninstall --zap --cask openclean` removes the app's preferences and caches but keeps
+`~/Library/Application Support/OpenClean`, which holds your quarantine (files you can still restore).
+
 ### Updates and privacy
 
 OpenClean checks api.github.com once a day for a new release (you can turn this off in Settings → Updates
@@ -92,13 +107,6 @@ Requires macOS 14+ and Xcode 16+.
 git clone https://github.com/leoAnimesh/OpenClean.git
 cd OpenClean
 make install          # app → /Applications, CLI → /usr/local/bin (may need sudo)
-```
-
-CLI only, via Homebrew (builds from the latest source):
-
-```sh
-brew tap leoanimesh/openclean https://github.com/leoAnimesh/OpenClean
-brew install --HEAD openclean
 ```
 
 ### Full Disk Access
