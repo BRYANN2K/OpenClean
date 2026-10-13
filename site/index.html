@@ -282,7 +282,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
 
       <div class="actions">
         <div class="hero-row">
-          <a class="btn-primary" href="https://github.com/leoAnimesh/OpenClean/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Download for Mac</a>
+          <a class="btn-primary" data-download href="https://github.com/leoAnimesh/OpenClean/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Download for Mac</a>
           <span class="or" aria-hidden="true">or</span>
           <p class="brew-label" id="brew-label">Or install with Homebrew</p>
           <div class="brew" role="group" aria-labelledby="brew-label">
@@ -290,7 +290,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
             <button class="capsule" type="button" aria-live="polite" data-copy="brew-cmd" aria-label="Copy Homebrew command">Copy</button>
           </div>
         </div>
-        <p class="cta-note">Free and open source</p>
+        <p class="cta-note" data-download-note>Free and open source</p>
         <p class="meta">macOS 14+<span aria-hidden="true">·</span>Apple silicon &amp; Intel<span aria-hidden="true">·</span>Signed &amp; notarized</p>
       </div>
 
@@ -414,7 +414,7 @@ footer p { margin: 18px 0 0; max-width: 720px; }
       <p class="sub">Drag it onto Applications and run your first Smart Scan.</p>
       <div class="actions">
         <div class="cta-row">
-          <a class="btn-primary" href="https://github.com/leoAnimesh/OpenClean/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Download for Mac</a>
+          <a class="btn-primary" data-download href="https://github.com/leoAnimesh/OpenClean/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>Download for Mac</a>
           <a class="capsule btn-secondary" href="https://github.com/leoAnimesh/OpenClean">View source on GitHub</a>
         </div>
         <p class="cta-note">Free and open source<span aria-hidden="true"> · </span>macOS 14+</p>
@@ -463,6 +463,31 @@ document.querySelectorAll("[data-copy]").forEach(function (btn) {
     }
   });
 });
+(function () {
+  var links = document.querySelectorAll("[data-download]");
+  if (!links.length || !window.fetch || !window.AbortController) return;
+  var ctl = new AbortController();
+  var timer = setTimeout(function () { ctl.abort(); }, 4000);
+  fetch("https://api.github.com/repos/leoAnimesh/OpenClean/releases/latest", {
+    credentials: "omit",
+    headers: { Accept: "application/vnd.github+json" },
+    signal: ctl.signal
+  }).then(function (r) {
+    if (!r.ok) throw new Error("status " + r.status);
+    return r.json();
+  }).then(function (rel) {
+    var re = /^OpenClean-(\d+\.\d+\.\d+)\.dmg$/, hit = null, ver = null;
+    (rel.assets || []).some(function (a) {
+      var m = re.exec(a.name || "");
+      if (m && /^https:\/\//.test(a.browser_download_url || "")) { hit = a.browser_download_url; ver = m[1]; return true; }
+      return false;
+    });
+    if (!hit) return;
+    links.forEach(function (a) { a.href = hit; });
+    var note = document.querySelector("[data-download-note]");
+    if (note) note.textContent = "Version " + ver + " \u00b7 Free and open source";
+  }).catch(function () {}).then(function () { clearTimeout(timer); });
+})();
 </script>
 </body>
 </html>
