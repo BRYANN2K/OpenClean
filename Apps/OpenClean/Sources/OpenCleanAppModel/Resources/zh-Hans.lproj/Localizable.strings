@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ is turned off and won't start again until you turn it on.</key>
+	<string>%@ 已关闭，在你打开它之前不会再次启动。</string>
+	<key>%@ is turned on.</key>
+	<string>%@ 已打开。</string>
+	<key>%@ was running. Quit it, then scan again.</key>
+	<string>%@ 当时正在运行。请退出它，然后再次扫描。</string>
+	<key>A background Smart Scan found it. Nothing was removed; open OpenClean to review and clean.</key>
+	<string>后台 Smart Scan 发现了这些内容。未移除任何内容；打开 OpenClean 进行检查和清理。</string>
+	<key>A folder above it isn't protected by macOS, so it wasn't removed as administrator.</key>
+	<string>其上层文件夹不受 macOS 保护，因此未以管理员身份移除。</string>
+	<key>About %@ can be cleaned</key>
+	<string>约 %@ 可清理</string>
+	<key>All set</key>
+	<string>一切就绪</string>
+	<key>Already gone. Something else removed it after the scan.</key>
+	<string>已不存在。扫描后有其他程序移除了它。</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU and memory</key>
+	<string>CPU 和内存</string>
+	<key>Changed since the scan; an app may be using it.</key>
+	<string>自扫描后已更改；可能有 App 正在使用它。</string>
+	<key>Could not save settings: %@</key>
+	<string>无法存储设置：%@</string>
+	<key>Couldn't be removed.</key>
+	<string>无法移除。</string>
+	<key>Couldn't install the update: %@.</key>
+	<string>无法安装更新：%@。</string>
+	<key>Duplicates</key>
+	<string>重复项</string>
+	<key>For different reasons; see the details.</key>
+	<string>原因各不相同；请查看详细信息。</string>
+	<key>Full Disk Access</key>
+	<string>完全磁盘访问权限</string>
+	<key>Icon only</key>
+	<string>仅图标</string>
+	<key>In a protected location. OpenClean never removes it.</key>
+	<string>位于受保护的位置。OpenClean 绝不会移除它。</string>
+	<key>Its path can't be passed safely to the administrator prompt.</key>
+	<string>其路径无法安全地传递给管理员提示。</string>
+	<key>Large &amp; old files</key>
+	<string>大文件和旧文件</string>
+	<key>Memory</key>
+	<string>内存</string>
+	<key>Monthly</key>
+	<string>每月</string>
+	<key>Network</key>
+	<string>网络</string>
+	<key>Off</key>
+	<string>关闭</string>
+	<key>Open in another app. Quit the app, then scan again.</key>
+	<string>已在其他 App 中打开。请退出该 App，然后再次扫描。</string>
+	<key>OpenClean couldn't check whether another app had it open, so it left it alone.</key>
+	<string>OpenClean 无法确认是否有其他 App 打开了它，因此未做处理。</string>
+	<key>OpenClean couldn't reach GitHub (%@). Check your connection and try again.</key>
+	<string>OpenClean 无法连接 GitHub（%@）。请检查网络连接后重试。</string>
+	<key>Performance</key>
+	<string>性能</string>
+	<key>Safe by design</key>
+	<string>安全设计</string>
+	<key>Shown for information only. OpenClean never removes it.</key>
+	<string>仅供参考。OpenClean 绝不会移除它。</string>
+	<key>Skipped.</key>
+	<string>已跳过。</string>
+	<key>Skipped: %@.</key>
+	<string>已跳过：%@。</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space map</key>
+	<string>空间地图</string>
+	<key>System items can only be deleted, not moved to quarantine.</key>
+	<string>系统项目只能删除，不能移入隔离区。</string>
+	<key>That folder can't be scanned. It may have been moved or deleted.</key>
+	<string>无法扫描该文件夹。它可能已被移动或删除。</string>
+	<key>The administrator password prompt was cancelled.</key>
+	<string>管理员密码提示已被取消。</string>
+	<key>The app wasn't moved, so this was left in place.</key>
+	<string>该 App 未被移动，因此此项目保留在原处。</string>
+	<key>Too many system items for one password prompt. Clean again to remove the rest.</key>
+	<string>系统项目过多，一次密码提示无法全部处理。请再次清理以移除其余项目。</string>
+	<key>Uninstaller</key>
+	<string>卸载器</string>
+	<key>Weekly</key>
+	<string>每周</string>
+	<key>Welcome</key>
+	<string>欢迎</string>
+	<key>unknown</key>
+	<string>未知</string>
+</dict>
+</plist>

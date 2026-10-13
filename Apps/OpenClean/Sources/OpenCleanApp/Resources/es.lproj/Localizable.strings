@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ + %@ to quarantine</key>
+	<string>%1$@ + %2$@ a cuarentena</string>
+	<key>%@ Scan again to pick them up.</key>
+	<string>%@ Vuelve a analizar para incluirlos.</string>
+	<key>%@ can only be scanned with Full Disk Access.</key>
+	<string>%@ solo se puede analizar con Acceso total al disco.</string>
+	<key>%@ can't be force quit from OpenClean.</key>
+	<string>%@ no se puede forzar a salir desde OpenClean.</string>
+	<key>%@ can't be quit from OpenClean.</key>
+	<string>%@ no se puede cerrar desde OpenClean.</string>
+	<key>%@ could not be force quit.</key>
+	<string>No se pudo forzar la salida de %@.</string>
+	<key>%@ didn't accept the request to quit.</key>
+	<string>%@ no aceptó la solicitud de cierre.</string>
+	<key>%@ didn't quit. Try again.</key>
+	<string>%@ no se cerró. Inténtalo de nuevo.</string>
+	<key>%@ didn’t finish</key>
+	<string>%@ no terminó</string>
+	<key>%@ each</key>
+	<string>%@ cada una</string>
+	<key>%@ extra</key>
+	<string>%@ de más</string>
+	<key>%@ free</key>
+	<string>%@ libres</string>
+	<key>%@ freed by OpenClean</key>
+	<string>%@ liberados por OpenClean</string>
+	<key>%@ freed now</key>
+	<string>%@ liberados ahora</string>
+	<key>%@ had already quit or changed, so nothing was done.</key>
+	<string>%@ ya se había cerrado o cambiado, así que no se hizo nada.</string>
+	<key>%@ in /Library stay in place (needs administrator — not supported yet).</key>
+	<string>%@ en /Library se quedan donde están (requiere administrador; aún no compatible).</string>
+	<key>%@ in quarantine</key>
+	<string>%@ en cuarentena</string>
+	<key>%@ in total. You can put items back from the Trash in Finder.</key>
+	<string>%@ en total. Puedes devolver los ítems desde la Papelera en el Finder.</string>
+	<key>%@ is owned by the system. macOS will ask for your administrator password to move it to quarantine.</key>
+	<string>%@ pertenece al sistema. macOS te pedirá la contraseña de administrador para moverla a cuarentena.</string>
+	<key>%@ is running. Quit it to uninstall.</key>
+	<string>%@ se está ejecutando. Ciérrala para desinstalarla.</string>
+	<key>%@ of %@</key>
+	<string>%1$@ de %2$@</string>
+	<key>%@ of %@ checks</key>
+	<string>%1$@ de %2$@ comprobaciones</string>
+	<key>%@ selected</key>
+	<string>%@ seleccionados</string>
+	<key>%@ to quarantine</key>
+	<string>%@ a cuarentena</string>
+	<key>%@ was force quit.</key>
+	<string>Se forzó la salida de %@.</string>
+	<key>%@ was not uninstalled</key>
+	<string>%@ no se desinstaló</string>
+	<key>%@ was uninstalled</key>
+	<string>%@ se desinstaló</string>
+	<key>%@ · %@</key>
+	<string>%1$@ · %2$@</string>
+	<key>%@ · Modified %@</key>
+	<string>%1$@ · Modificado %2$@</string>
+	<key>%@ — %@</key>
+	<string>%1$@ — %2$@</string>
+	<key>%@. The list beside it shows the same items.</key>
+	<string>%@. La lista de al lado muestra los mismos ítems.</string>
+	<key>%@/s</key>
+	<string>%@/s</string>
+	<key>%@: %@. %@</key>
+	<string>%1$@: %2$@. %3$@</string>
+	<key>%@: done</key>
+	<string>%@: listo</string>
+	<key>%lld</key>
+	<string>%lld</string>
+	<key>%lld of %lld measured</key>
+	<string>%1$lld de %2$lld medidas</string>
+	<key>%lld percent</key>
+	<string>%lld por ciento</string>
+	<key>%lld restored, %lld skipped.</key>
+	<string>%1$lld restaurados, %2$lld omitidos.</string>
+	<key>%lld skipped</key>
+	<string>%lld omitidos</string>
+	<key>%lld unreadable</key>
+	<string>%lld ilegibles</string>
+	<key>%lld%%</key>
+	<string>%lld %%</string>
+	<key>1 year</key>
+	<string>1 año</string>
+	<key>3 months</key>
+	<string>3 meses</string>
+	<key>6 months</key>
+	<string>6 meses</string>
+	<key>A new version of OpenClean is available</key>
+	<string>Hay una nueva versión de OpenClean disponible</string>
+	<key>A transparent, open-source cleaner for your Mac. Take a quick look at what it does, then set up the one permission it needs.</key>
+	<string>Un limpiador transparente y de código abierto para tu Mac. Echa un vistazo rápido a lo que hace y luego configura el único permiso que necesita.</string>
+	<key>AI Models &amp; Caches</key>
+	<string>Modelos y cachés de IA</string>
+	<key>About</key>
+	<string>Acerca de</string>
+	<key>Access granted</key>
+	<string>Acceso concedido</string>
+	<key>Add</key>
+	<string>Añadir</string>
+	<key>Add Folder…</key>
+	<string>Añadir carpeta…</string>
+	<key>Add a folder or file</key>
+	<string>Añadir una carpeta o un archivo</string>
+	<key>Add a project folder</key>
+	<string>Añadir una carpeta de proyectos</string>
+	<key>Add your own YAML rules to this folder.</key>
+	<string>Añade tus propias reglas YAML a esta carpeta.</string>
+	<key>Adds rules that need a closer look before cleaning.</key>
+	<string>Añade reglas que requieren una revisión más detenida antes de limpiar.</string>
+	<key>Add…</key>
+	<string>Añadir…</string>
+	<key>After this, quarantined files are deleted for good.</key>
+	<string>Después, los archivos en cuarentena se eliminan definitivamente.</string>
+	<key>Agents and daemons in /Library are installed by an administrator and run for everyone. OpenClean lists them so you know they’re there, but doesn’t change them.</key>
+	<string>Los agentes y daemons de /Library los instala un administrador y se ejecutan para todos los usuarios. OpenClean los muestra para que sepas que existen, pero no los modifica.</string>
+	<key>Alias (not followed)</key>
+	<string>Alias (no se sigue)</string>
+	<key>Allow Full Disk Access</key>
+	<string>Permitir Acceso total al disco</string>
+	<key>Allowed</key>
+	<string>Permitido</string>
+	<key>Also found in /Library</key>
+	<string>También encontrado en /Library</string>
+	<key>An interactive map of your disk, plus large &amp; old files and duplicates. Nothing is pre-selected, and anything you remove goes to the Trash.</key>
+	<string>Un mapa interactivo de tu disco, además de archivos grandes y antiguos y duplicados. No hay nada preseleccionado y todo lo que eliminas va a la Papelera.</string>
+	<key>Any time</key>
+	<string>Cualquier momento</string>
+	<key>Any unsaved changes in %@ will be lost.</key>
+	<string>Se perderán los cambios no guardados en %@.</string>
+	<key>App</key>
+	<string>App</string>
+	<key>App caches</key>
+	<string>Cachés de apps</string>
+	<key>App running</key>
+	<string>App en ejecución</string>
+	<key>Apple app</key>
+	<string>App de Apple</string>
+	<key>Apple app — part of macOS, never removed</key>
+	<string>App de Apple: forma parte de macOS, nunca se elimina</string>
+	<key>Application</key>
+	<string>Aplicación</string>
+	<key>Apps and processes using the most CPU and memory right now.</key>
+	<string>Apps y procesos que más CPU y memoria usan ahora mismo.</string>
+	<key>Apps that are running, changed since the list was loaded, or in use are skipped automatically.</key>
+	<string>Las apps que están en ejecución, que han cambiado desde que se cargó la lista o que están en uso se omiten automáticamente.</string>
+	<key>Archives</key>
+	<string>Archivos comprimidos</string>
+	<key>Asked %@ to quit.</key>
+	<string>Se pidió a %@ que se cerrara.</string>
+	<key>Asking GitHub for the latest release.</key>
+	<string>Consultando a GitHub la última versión.</string>
+	<key>Asks macOS to remove the local Time Machine snapshots it can drop to free space. Backups on your backup disk are not touched.</key>
+	<string>Pide a macOS que elimine las instantáneas locales de Time Machine que puede descartar para liberar espacio. Las copias del disco de copia de seguridad no se tocan.</string>
+	<key>Back</key>
+	<string>Atrás</string>
+	<key>Background Smart Scan</key>
+	<string>Smart Scan en segundo plano</string>
+	<key>Background Smart Scan, %@. Nothing was removed.</key>
+	<string>Smart Scan en segundo plano, %@. No se eliminó nada.</string>
+	<key>Background items inside apps</key>
+	<string>Ítems en segundo plano dentro de apps</string>
+	<key>Browser</key>
+	<string>Navegador</string>
+	<key>Browser Caches</key>
+	<string>Cachés del navegador</string>
+	<key>Busy across all cores</key>
+	<string>Uso en todos los núcleos</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU %@, memory %@</key>
+	<string>CPU %1$@, memoria %2$@</string>
+	<key>CPU %lld percent</key>
+	<string>CPU al %lld por ciento</string>
+	<key>CPU and memory in the menu bar</key>
+	<string>CPU y memoria en la barra de menús</string>
+	<key>Caches</key>
+	<string>Cachés</string>
+	<key>Caches, logs and leftovers look tidy. Scan again any time.</key>
+	<string>Las cachés, los registros y los restos están en orden. Vuelve a analizar cuando quieras.</string>
+	<key>Caches, logs, browser data and developer leftovers, found in seconds. Safe items are ticked for you, and nothing is removed until you press Clean.</key>
+	<string>Cachés, registros, datos del navegador y restos de desarrollo, encontrados en segundos. Los ítems seguros se marcan por ti y no se elimina nada hasta que pulses Limpiar.</string>
+	<key>Can be moved to quarantine</key>
+	<string>Se puede mover a cuarentena</string>
+	<key>Cancel</key>
+	<string>Cancelar</string>
+	<key>Cancelled</key>
+	<string>Cancelado</string>
+	<key>Can’t be moved to the Trash: %@</key>
+	<string>No se puede mover a la Papelera: %@</string>
+	<key>Caution</key>
+	<string>Precaución</string>
+	<key>Check Again</key>
+	<string>Comprobar de nuevo</string>
+	<key>Check Now</key>
+	<string>Comprobar ahora</string>
+	<key>Check for Updates…</key>
+	<string>Buscar actualizaciones…</string>
+	<key>Check for updates automatically</key>
+	<string>Buscar actualizaciones automáticamente</string>
+	<key>Checking for updates…</key>
+	<string>Buscando actualizaciones…</string>
+	<key>Checking…</key>
+	<string>Comprobando…</string>
+	<key>Choose</key>
+	<string>Elegir</string>
+	<key>Choose Folder…</key>
+	<string>Elegir carpeta…</string>
+	<key>Choose a folder where you keep code projects.</key>
+	<string>Elige una carpeta donde guardes proyectos de código.</string>
+	<key>Clean</key>
+	<string>Limpiar</string>
+	<key>Cleaning</key>
+	<string>Limpieza</string>
+	<key>Cleaning…</key>
+	<string>Limpiando…</string>
+	<key>Cleanup</key>
+	<string>Limpieza</string>
+	<key>Clear search</key>
+	<string>Borrar búsqueda</string>
+	<key>Click **Open System Settings**.</key>
+	<string>Haz clic en **Abrir Ajustes del Sistema**.</string>
+	<key>Click to go up</key>
+	<string>Haz clic para subir un nivel</string>
+	<key>Close</key>
+	<string>Cerrar</string>
+	<key>Come back here. OpenClean notices on its own.</key>
+	<string>Vuelve aquí. OpenClean lo detecta por sí solo.</string>
+	<key>Coming soon</key>
+	<string>Próximamente</string>
+	<key>Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays.</key>
+	<string>Compara archivos byte a byte en las carpetas de abajo. No se elige nada por ti y siempre se conserva una copia de cada archivo.</string>
+	<key>Comparing files…</key>
+	<string>Comparando archivos…</string>
+	<key>Containers</key>
+	<string>Contenedores</string>
+	<key>Continue</key>
+	<string>Continuar</string>
+	<key>Continue…</key>
+	<string>Continuar…</string>
+	<key>Copies made by APFS cloning share space on disk, so moving one may free less than shown.</key>
+	<string>Las copias creadas por clonación APFS comparten espacio en disco, así que mover una puede liberar menos de lo indicado.</string>
+	<key>Couldn't check for updates</key>
+	<string>No se pudieron buscar actualizaciones</string>
+	<key>Damaged session %@</key>
+	<string>Sesión dañada %@</string>
+	<key>Deleted</key>
+	<string>Eliminado</string>
+	<key>Deleted now</key>
+	<string>Se eliminan ahora</string>
+	<key>Details</key>
+	<string>Detalles</string>
+	<key>Details are in History.</key>
+	<string>Los detalles están en el Historial.</string>
+	<key>Developer Tools</key>
+	<string>Herramientas de desarrollo</string>
+	<key>Discard these results and go back. Nothing is removed.</key>
+	<string>Descartar estos resultados y volver. No se elimina nada.</string>
+	<key>Disk</key>
+	<string>Disco</string>
+	<key>Disk images</key>
+	<string>Imágenes de disco</string>
+	<key>Dismiss</key>
+	<string>Descartar</string>
+	<key>Done</key>
+	<string>Listo</string>
+	<key>Don’t move to the Trash</key>
+	<string>No mover a la Papelera</string>
+	<key>Download &amp; Install</key>
+	<string>Descargar e instalar</string>
+	<key>Download from GitHub</key>
+	<string>Descargar de GitHub</string>
+	<key>Downloading</key>
+	<string>Descargando</string>
+	<key>Drag OpenClean into the Full Disk Access list</key>
+	<string>Arrastra OpenClean a la lista de Acceso total al disco</string>
+	<key>Drag this icon into the list if OpenClean isn't there.</key>
+	<string>Arrastra este icono a la lista si OpenClean no aparece.</string>
+	<key>Elevated</key>
+	<string>Elevada</string>
+	<key>Empty folder</key>
+	<string>Carpeta vacía</string>
+	<key>Enter your administrator password when macOS asks. This can take a moment.</key>
+	<string>Introduce tu contraseña de administrador cuando macOS la pida. Puede tardar un momento.</string>
+	<key>Erases and rebuilds the Spotlight index for your startup disk. Use it when search misses files. Rebuilding runs in the background and can take an hour or more.</key>
+	<string>Borra y vuelve a crear el índice de Spotlight del disco de arranque. Úsalo cuando la búsqueda no encuentre archivos. La reconstrucción se hace en segundo plano y puede tardar una hora o más.</string>
+	<key>Every item is also listed in History.</key>
+	<string>Cada ítem también aparece en el Historial.</string>
+	<key>Every removal can be undone</key>
+	<string>Todo lo eliminado se puede deshacer</string>
+	<key>Excluded locations</key>
+	<string>Ubicaciones excluidas</string>
+	<key>Expired and deleted</key>
+	<string>Caducado y eliminado</string>
+	<key>Explored Smart Scan, Uninstaller, Space Lens and Performance</key>
+	<string>Has visto Smart Scan, Desinstalador, Space Lens y Rendimiento</string>
+	<key>Failed</key>
+	<string>Error</string>
+	<key>File</key>
+	<string>Archivo</string>
+	<key>Files from Documents or Desktop are moved only because you ticked each one.</key>
+	<string>Los archivos de Documentos o Escritorio solo se mueven porque has marcado cada uno.</string>
+	<key>Files that changed since the scan or are in use are skipped automatically.</key>
+	<string>Los archivos que han cambiado desde el análisis o están en uso se omiten automáticamente.</string>
+	<key>Files that changed since the scan, or are open in another app, are skipped automatically.</key>
+	<string>Los archivos que han cambiado desde el análisis o están abiertos en otra app se omiten automáticamente.</string>
+	<key>Files that couldn’t be read</key>
+	<string>Archivos que no se pudieron leer</string>
+	<key>Files there can be moved to the Trash only one at a time, by ticking each file.</key>
+	<string>Los archivos de ahí solo se pueden mover a la Papelera de uno en uno, marcando cada archivo.</string>
+	<key>Files under 1 MB, apps and ~/Library are skipped.</key>
+	<string>Se omiten los archivos de menos de 1 MB, las apps y ~/Library.</string>
+	<key>Find duplicate files</key>
+	<string>Buscar archivos duplicados</string>
+	<key>Find large and old files</key>
+	<string>Buscar archivos grandes y antiguos</string>
+	<key>Flush DNS cache</key>
+	<string>Vaciar la caché DNS</string>
+	<key>Folder</key>
+	<string>Carpeta</string>
+	<key>Folder · couldn’t be read</key>
+	<string>Carpeta · no se pudo leer</string>
+	<key>Folder: %@</key>
+	<string>Carpeta: %@</string>
+	<key>Force Quit</key>
+	<string>Forzar salida</string>
+	<key>Force Quit %@…</key>
+	<string>Forzar salida de %@…</string>
+	<key>Force Quit…</key>
+	<string>Forzar salida…</string>
+	<key>Force quit %@</key>
+	<string>Forzar salida de %@</string>
+	<key>Force quit %@?</key>
+	<string>¿Forzar salida de %@?</string>
+	<key>Force quitting stops the app immediately. Anything you haven’t saved in it will be lost. Try Quit first if the app is still responding.</key>
+	<string>Forzar la salida detiene la app de inmediato. Se perderá todo lo que no hayas guardado en ella. Prueba primero Salir si la app aún responde.</string>
+	<key>Forgets cached website addresses, so name lookups start fresh. Helps when a site moved or won't load after a network change.</key>
+	<string>Olvida las direcciones de sitios web en caché para que las búsquedas de nombres empiecen de cero. Ayuda cuando un sitio se ha movido o no carga tras un cambio de red.</string>
+	<key>Freed %@</key>
+	<string>%@ liberados</string>
+	<key>Freed now</key>
+	<string>Liberado ahora</string>
+	<key>From %@</key>
+	<string>De %@</string>
+	<key>From Desktop</key>
+	<string>Del Escritorio</string>
+	<key>From Documents</key>
+	<string>De Documentos</string>
+	<key>Full Disk Access</key>
+	<string>Acceso total al disco</string>
+	<key>Full Disk Access allowed</key>
+	<string>Acceso total al disco permitido</string>
+	<key>Full Disk Access is off</key>
+	<string>El Acceso total al disco está desactivado</string>
+	<key>Full Disk Access lets OpenClean include them.</key>
+	<string>El Acceso total al disco permite que OpenClean los incluya.</string>
+	<key>Full Disk Access needs to be granted again</key>
+	<string>Hay que volver a conceder el Acceso total al disco</string>
+	<key>Full Disk Access was turned off. Go back one step to allow it again.</key>
+	<string>Se desactivó el Acceso total al disco. Vuelve un paso atrás para permitirlo de nuevo.</string>
+	<key>General</key>
+	<string>General</string>
+	<key>Get started</key>
+	<string>Empezar</string>
+	<key>GitHub</key>
+	<string>GitHub</string>
+	<key>Go to Smart Scan</key>
+	<string>Ir a Smart Scan</string>
+	<key>Grant Full Disk Access to scan this.</key>
+	<string>Concede Acceso total al disco para analizar esto.</string>
+	<key>Grouped to keep the map light</key>
+	<string>Agrupados para que el mapa sea ligero</string>
+	<key>Has no bundle identifier, so it can't be checked safely</key>
+	<string>No tiene identificador de paquete, así que no se puede comprobar de forma segura</string>
+	<key>Heavy apps</key>
+	<string>Apps que más consumen</string>
+	<key>Heavy consumers</key>
+	<string>Mayores consumidores</string>
+	<key>Helpers apps installed for your account. Turning one off stops it and keeps it from starting; removing it moves its file to quarantine, which you can undo in History.</key>
+	<string>Asistentes que las apps instalaron para tu cuenta. Desactivar uno lo detiene y evita que se inicie; eliminarlo mueve su archivo a cuarentena, algo que puedes deshacer en el Historial.</string>
+	<key>Hide details</key>
+	<string>Ocultar detalles</string>
+	<key>High</key>
+	<string>Alta</string>
+	<key>History</key>
+	<string>Historial</string>
+	<key>Home</key>
+	<string>Inicio</string>
+	<key>If a file already exists at the original location:</key>
+	<string>Si ya existe un archivo en la ubicación original:</string>
+	<key>In Utilities — listed for information only</key>
+	<string>En Utilidades: solo se muestra como información</string>
+	<key>In quarantine</key>
+	<string>En cuarentena</string>
+	<key>Include Documents and Desktop</key>
+	<string>Incluir Documentos y Escritorio</string>
+	<key>Install and Relaunch</key>
+	<string>Instalar y reiniciar</string>
+	<key>Installed for all users</key>
+	<string>Instalados para todos los usuarios</string>
+	<key>Installed for all users by an administrator. OpenClean doesn’t change these in this version.</key>
+	<string>Instalado para todos los usuarios por un administrador. OpenClean no los modifica en esta versión.</string>
+	<key>Installers</key>
+	<string>Instaladores</string>
+	<key>Installing OpenClean %@…</key>
+	<string>Instalando OpenClean %@…</string>
+	<key>Installing…</key>
+	<string>Instalando…</string>
+	<key>Item</key>
+	<string>Ítem</string>
+	<key>Items that changed since the scan, are open in another app, or are protected are left in place.</key>
+	<string>Los ítems que han cambiado desde el análisis, están abiertos en otra app o están protegidos se quedan donde están.</string>
+	<key>Keep Both</key>
+	<string>Conservar ambos</string>
+	<key>Keep an eye on your Mac</key>
+	<string>Vigila tu Mac</string>
+	<key>Keep at least one copy</key>
+	<string>Conserva al menos una copia</string>
+	<key>Larger than</key>
+	<string>Más de</string>
+	<key>Last attempt %@ didn’t finish</key>
+	<string>El último intento (%@) no terminó</string>
+	<key>Last background scan</key>
+	<string>Último análisis en segundo plano</string>
+	<key>Last checked %@</key>
+	<string>Última comprobación: %@</string>
+	<key>Last checked %@.</key>
+	<string>Última comprobación: %@.</string>
+	<key>Last cleanup %@</key>
+	<string>Última limpieza %@</string>
+	<key>Last opened %@</key>
+	<string>Abierto por última vez %@</string>
+	<key>Last run %@</key>
+	<string>Última ejecución %@</string>
+	<key>Later</key>
+	<string>Más tarde</string>
+	<key>Launch agent</key>
+	<string>Agente de inicio</string>
+	<key>Let’s tidy up your Mac.</key>
+	<string>Pongamos en orden tu Mac.</string>
+	<key>List Apps</key>
+	<string>Mostrar apps</string>
+	<key>List apps again and re-measure their sizes</key>
+	<string>Volver a mostrar las apps y medir su tamaño</string>
+	<key>Listing files…</key>
+	<string>Listando archivos…</string>
+	<key>Live CPU and memory in the menu bar, heavy apps with Force Quit, login items, and one-click maintenance such as flushing the DNS cache.</key>
+	<string>CPU y memoria en directo en la barra de menús, apps que más consumen con Forzar salida, ítems de inicio y mantenimiento con un clic, como vaciar la caché DNS.</string>
+	<key>Live figures from your Mac, updated every 2 seconds while you watch.</key>
+	<string>Cifras en directo de tu Mac, actualizadas cada 2 segundos mientras miras.</string>
+	<key>Loaded</key>
+	<string>Cargado</string>
+	<key>Login items</key>
+	<string>Ítems de inicio</string>
+	<key>Looking for large files…</key>
+	<string>Buscando archivos grandes…</string>
+	<key>Looking for leftovers…</key>
+	<string>Buscando restos…</string>
+	<key>Looks through your home folder for big files, like videos, disk images and installers. ~/Library and apps are left out.</key>
+	<string>Busca archivos grandes en tu carpeta de inicio, como vídeos, imágenes de disco e instaladores. Se excluyen ~/Library y las apps.</string>
+	<key>Mail Attachments</key>
+	<string>Adjuntos de Mail</string>
+	<key>Mail downloads</key>
+	<string>Descargas de Mail</string>
+	<key>Maintenance</key>
+	<string>Mantenimiento</string>
+	<key>Managed by macOS</key>
+	<string>Gestionado por macOS</string>
+	<key>Matches bundle ID</key>
+	<string>Coincide con el ID de paquete</string>
+	<key>Matches name</key>
+	<string>Coincide con el nombre</string>
+	<key>Measuring apps</key>
+	<string>Midiendo apps</string>
+	<key>Measuring apps…</key>
+	<string>Midiendo apps…</string>
+	<key>Measuring…</key>
+	<string>Midiendo…</string>
+	<key>Memory</key>
+	<string>Memoria</string>
+	<key>Memory %@</key>
+	<string>Memoria %@</string>
+	<key>Menu bar</key>
+	<string>Barra de menús</string>
+	<key>Menu bar shows</key>
+	<string>La barra de menús muestra</string>
+	<key>Move to Quarantine</key>
+	<string>Mover a cuarentena</string>
+	<key>Move to Trash</key>
+	<string>Mover a la Papelera</string>
+	<key>Move to the Trash</key>
+	<string>Mover a la Papelera</string>
+	<key>Moved to Trash</key>
+	<string>Movido a la Papelera</string>
+	<key>Moving %@ to quarantine…</key>
+	<string>Moviendo %@ a cuarentena…</string>
+	<key>Moving…</key>
+	<string>Moviendo…</string>
+	<key>Needed to scan Trash, Mail, Safari and iOS backups.</key>
+	<string>Necesario para analizar la Papelera, Mail, Safari y las copias de iOS.</string>
+	<key>Needs access</key>
+	<string>Requiere acceso</string>
+	<key>Needs admin</key>
+	<string>Requiere administrador</string>
+	<key>Needs administrator — not supported yet. These stay in place and are shown for information.</key>
+	<string>Requiere administrador; aún no compatible. Se quedan donde están y se muestran como información.</string>
+	<key>Needs password</key>
+	<string>Requiere contraseña</string>
+	<key>Needs your administrator password to uninstall</key>
+	<string>Requiere tu contraseña de administrador para desinstalarla</string>
+	<key>Network</key>
+	<string>Red</string>
+	<key>Next scan %@ or later, while OpenClean is running.</key>
+	<string>Próximo análisis el %@ o más tarde, mientras OpenClean esté abierto.</string>
+	<key>No apps match “%@”</key>
+	<string>Ninguna app coincide con “%@”</string>
+	<key>No apps to uninstall</key>
+	<string>No hay apps para desinstalar</string>
+	<key>No bundle ID</key>
+	<string>Sin ID de paquete</string>
+	<key>No cleanups yet</key>
+	<string>Aún no hay limpiezas</string>
+	<key>No duplicates</key>
+	<string>No hay duplicados</string>
+	<key>No duplicates found</key>
+	<string>No se encontraron duplicados</string>
+	<key>No identical files over 1 MB in these folders.</key>
+	<string>No hay archivos idénticos de más de 1 MB en estas carpetas.</string>
+	<key>No large files found</key>
+	<string>No se encontraron archivos grandes</string>
+	<key>No launch agents in your Library.</key>
+	<string>No hay agentes de inicio en tu Library.</string>
+	<key>No leftovers found in your Library.</key>
+	<string>No se encontraron restos en tu Library.</string>
+	<key>No matching files</key>
+	<string>No hay archivos que coincidan</string>
+	<key>No release notes were published for this version.</key>
+	<string>No se publicaron notas para esta versión.</string>
+	<key>No scan yet</key>
+	<string>Aún no hay análisis</string>
+	<key>None installed.</key>
+	<string>No hay ninguno instalado.</string>
+	<key>Normal</key>
+	<string>Normal</string>
+	<key>Not allowed</key>
+	<string>No permitido</string>
+	<key>Not allowed yet</key>
+	<string>Aún no permitido</string>
+	<key>Not loaded</key>
+	<string>No cargado</string>
+	<key>Not opened for</key>
+	<string>Sin abrir desde hace</string>
+	<key>Not run from OpenClean yet</key>
+	<string>Aún no se ha ejecutado desde OpenClean</string>
+	<key>Nothing</key>
+	<string>Nada</string>
+	<key>Nothing cleaned yet</key>
+	<string>Aún no se ha limpiado nada</string>
+	<key>Nothing inside takes up space.</key>
+	<string>Nada de su contenido ocupa espacio.</string>
+	<key>Nothing is excluded. Excluded folders and files are never scanned or cleaned.</key>
+	<string>No hay nada excluido. Las carpetas y los archivos excluidos nunca se analizan ni se limpian.</string>
+	<key>Nothing over %@. Try a smaller size.</key>
+	<string>Nada de más de %@. Prueba con un tamaño menor.</string>
+	<key>Nothing selected</key>
+	<string>No hay nada seleccionado</string>
+	<key>Nothing to clean right now</key>
+	<string>Ahora mismo no hay nada que limpiar</string>
+	<key>Nothing was moved to the Trash</key>
+	<string>No se movió nada a la Papelera</string>
+	<key>Nothing was moved.</key>
+	<string>No se movió nada.</string>
+	<key>Nothing was moved. %@ is still in your Applications folder.</key>
+	<string>No se movió nada. %@ sigue en tu carpeta Aplicaciones.</string>
+	<key>Nothing was run.</key>
+	<string>No se ejecutó nada.</string>
+	<key>Notifications are off</key>
+	<string>Las notificaciones están desactivadas</string>
+	<key>OK</key>
+	<string>Aceptar</string>
+	<key>Off</key>
+	<string>Desactivado</string>
+	<key>Off. Nothing runs in the background.</key>
+	<string>Desactivado. No se ejecuta nada en segundo plano.</string>
+	<key>Old simulators</key>
+	<string>Simuladores antiguos</string>
+	<key>One click finds the junk</key>
+	<string>Un clic encuentra lo que sobra</string>
+	<key>One permission</key>
+	<string>Un permiso</string>
+	<key>One-click macOS housekeeping. Each task says exactly what it runs.</key>
+	<string>Mantenimiento de macOS con un clic. Cada tarea indica exactamente qué ejecuta.</string>
+	<key>Only exact matches are listed: folders and files named after %@, or exactly “%@” in Application Support, Caches and Logs.</key>
+	<string>Solo se muestran coincidencias exactas: carpetas y archivos con el nombre %1$@, o exactamente “%2$@” en Application Support, Caches y Logs.</string>
+	<key>Only node_modules, virtual environments and build output go to quarantine. Nothing else in it is touched.</key>
+	<string>Solo node_modules, los entornos virtuales y los resultados de compilación van a cuarentena. No se toca nada más.</string>
+	<key>Only your own processes can be measured without administrator rights. System processes are never offered Quit.</key>
+	<string>Sin derechos de administrador solo se pueden medir tus propios procesos. Nunca se ofrece Salir para procesos del sistema.</string>
+	<key>Open %@</key>
+	<string>Abrir %@</string>
+	<key>Open Installer</key>
+	<string>Abrir instalador</string>
+	<key>Open Login Items Settings</key>
+	<string>Abrir ajustes de Ítems de inicio</string>
+	<key>Open Notification Settings</key>
+	<string>Abrir ajustes de notificaciones</string>
+	<key>Open OpenClean</key>
+	<string>Abrir OpenClean</string>
+	<key>Open Privacy Settings</key>
+	<string>Abrir ajustes de privacidad</string>
+	<key>Open Settings</key>
+	<string>Abrir Ajustes</string>
+	<key>Open System Settings</key>
+	<string>Abrir Ajustes del Sistema</string>
+	<key>Open source under GPL-3.0.</key>
+	<string>Código abierto con licencia GPL-3.0.</string>
+	<key>OpenClean</key>
+	<string>OpenClean</string>
+	<key>OpenClean %@</key>
+	<string>OpenClean %@</string>
+	<key>OpenClean %@ is available</key>
+	<string>OpenClean %@ está disponible</string>
+	<key>OpenClean %@ is available — you have %@.</key>
+	<string>OpenClean %1$@ está disponible; tienes la %2$@.</string>
+	<key>OpenClean %@ is the newest version.</key>
+	<string>OpenClean %@ es la versión más reciente.</string>
+	<key>OpenClean asks api.github.com once a day whether a newer release exists, and downloads updates only from GitHub. Nothing about you is sent.</key>
+	<string>OpenClean pregunta a api.github.com una vez al día si hay una versión más reciente y solo descarga actualizaciones de GitHub. No se envía nada sobre ti.</string>
+	<key>OpenClean couldn’t read this folder.</key>
+	<string>OpenClean no pudo leer esta carpeta.</string>
+	<key>OpenClean finds an app's caches, preferences, containers and launch agents by its exact bundle ID. The whole uninstall goes to quarantine, so it can be restored.</key>
+	<string>OpenClean encuentra las cachés, preferencias, contenedores y agentes de inicio de una app por su ID de paquete exacto. Toda la desinstalación va a cuarentena, así que se puede restaurar.</string>
+	<key>OpenClean lists your apps with their sizes. Nothing is removed until you confirm, and uninstalled apps can be restored from History.</key>
+	<string>OpenClean muestra tus apps con su tamaño. No se elimina nada hasta que lo confirmes, y las apps desinstaladas se pueden restaurar desde el Historial.</string>
+	<key>OpenClean looks for old projects in your home folder, but never in Documents or Desktop. Add a folder where you keep code, such as Documents/Code, to search it too.</key>
+	<string>OpenClean busca proyectos antiguos en tu carpeta de inicio, pero nunca en Documentos ni en el Escritorio. Añade una carpeta donde guardes código, como Documentos/Code, para que también se busque en ella.</string>
+	<key>OpenClean only offers Quit for apps, never for macOS components or itself.</key>
+	<string>OpenClean solo ofrece Salir para apps, nunca para componentes de macOS ni para sí mismo.</string>
+	<key>OpenClean was updated. Allow Full Disk Access again</key>
+	<string>OpenClean se ha actualizado. Vuelve a permitir el Acceso total al disco</string>
+	<key>OpenClean was updated: remove it from the list and add it again.</key>
+	<string>OpenClean se ha actualizado: quítalo de la lista y vuelve a añadirlo.</string>
+	<key>OpenClean was updated: select it, remove it with **−**, then add it again.</key>
+	<string>OpenClean se ha actualizado: selecciónalo, quítalo con **−** y vuelve a añadirlo.</string>
+	<key>OpenClean, %@</key>
+	<string>OpenClean, %@</string>
+	<key>OpenClean, CPU %@, memory %@</key>
+	<string>OpenClean, CPU %1$@, memoria %2$@</string>
+	<key>Other files</key>
+	<string>Otros archivos</string>
+	<key>Overview</key>
+	<string>Resumen</string>
+	<key>Part of macOS, another user's, or OpenClean itself — it can't be quit from here.</key>
+	<string>Forma parte de macOS, es de otro usuario o es el propio OpenClean: no se puede cerrar desde aquí.</string>
+	<key>Pending</key>
+	<string>Pendiente</string>
+	<key>Performance</key>
+	<string>Rendimiento</string>
+	<key>Permissions</key>
+	<string>Permisos</string>
+	<key>Pick an app to see what it left behind</key>
+	<string>Elige una app para ver lo que ha dejado</string>
+	<key>Preferences</key>
+	<string>Preferencias</string>
+	<key>Preferences for every part of OpenClean.</key>
+	<string>Preferencias para todas las partes de OpenClean.</string>
+	<key>Press Return to start</key>
+	<string>Pulsa Retorno para empezar</string>
+	<key>Pressure: %@</key>
+	<string>Presión: %@</string>
+	<key>Privacy &amp; Security › Full Disk Access</key>
+	<string>Privacidad y seguridad › Acceso total al disco</string>
+	<key>Probably from %@</key>
+	<string>Probablemente de %@</string>
+	<key>Process</key>
+	<string>Proceso</string>
+	<key>Project folders</key>
+	<string>Carpetas de proyectos</string>
+	<key>Protected</key>
+	<string>Protegido</string>
+	<key>Quarantine</key>
+	<string>Cuarentena</string>
+	<key>Quarantined</key>
+	<string>En cuarentena</string>
+	<key>Quarantined items can be restored until they expire.</key>
+	<string>Los ítems en cuarentena se pueden restaurar hasta que caduquen.</string>
+	<key>Quick Look</key>
+	<string>Vista rápida</string>
+	<key>Quick Look %@</key>
+	<string>Vista rápida de %@</string>
+	<key>Quit</key>
+	<string>Salir</string>
+	<key>Quit %@ to uninstall it</key>
+	<string>Cierra %@ para desinstalarla</string>
+	<key>Quitting %@…</key>
+	<string>Cerrando %@…</string>
+	<key>Reading launch agents…</key>
+	<string>Leyendo agentes de inicio…</string>
+	<key>Reads your Applications folders only</key>
+	<string>Solo lee tus carpetas Aplicaciones</string>
+	<key>Ready to install OpenClean %@</key>
+	<string>Listo para instalar OpenClean %@</string>
+	<key>Rebuild Launch Services database</key>
+	<string>Reconstruir la base de datos de Launch Services</string>
+	<key>Rebuilds the list that decides which app opens which file and what appears in “Open With”. Fixes duplicate or missing entries. Default apps you chose may need choosing again.</key>
+	<string>Reconstruye la lista que decide qué app abre cada archivo y qué aparece en “Abrir con”. Corrige entradas duplicadas o que faltan. Puede que tengas que volver a elegir las apps predeterminadas.</string>
+	<key>Refresh</key>
+	<string>Actualizar</string>
+	<key>Reindex Spotlight</key>
+	<string>Reindexar Spotlight</string>
+	<key>Remind Me Later</key>
+	<string>Recordar más tarde</string>
+	<key>Remove</key>
+	<string>Eliminar</string>
+	<key>Remove %@</key>
+	<string>Eliminar %@</string>
+	<key>Remove %@?</key>
+	<string>¿Eliminar %@?</string>
+	<key>Remove apps and what they leave behind</key>
+	<string>Elimina apps y lo que dejan atrás</string>
+	<key>Remove apps and what they left behind</key>
+	<string>Elimina apps y lo que han dejado atrás</string>
+	<key>Remove…</key>
+	<string>Eliminar…</string>
+	<key>Replace It (old one goes to Trash)</key>
+	<string>Reemplazar (el antiguo va a la Papelera)</string>
+	<key>Report only</key>
+	<string>Solo informativo</string>
+	<key>Reset</key>
+	<string>Restablecer</string>
+	<key>Restore</key>
+	<string>Restaurar</string>
+	<key>Restore All…</key>
+	<string>Restaurar todo…</string>
+	<key>Restored</key>
+	<string>Restaurado</string>
+	<key>Restored from History</key>
+	<string>Restaurado desde el Historial</string>
+	<key>Retry</key>
+	<string>Reintentar</string>
+	<key>Reveal %@ in Finder</key>
+	<string>Mostrar %@ en el Finder</string>
+	<key>Reveal in Finder</key>
+	<string>Mostrar en el Finder</string>
+	<key>Review</key>
+	<string>Revisar</string>
+	<key>Review cleanup</key>
+	<string>Revisar limpieza</string>
+	<key>Review what moves to quarantine before anything happens</key>
+	<string>Revisa qué va a cuarentena antes de que ocurra nada</string>
+	<key>Run</key>
+	<string>Ejecutar</string>
+	<key>Run %@</key>
+	<string>Ejecutar %@</string>
+	<key>Run Smart Scan to see what can be cleaned.</key>
+	<string>Ejecuta Smart Scan para ver qué se puede limpiar.</string>
+	<key>Run maintenance scripts</key>
+	<string>Ejecutar scripts de mantenimiento</string>
+	<key>Run “%@”?</key>
+	<string>¿Ejecutar “%@”?</string>
+	<key>Running</key>
+	<string>En ejecución</string>
+	<key>Running %@</key>
+	<string>Ejecutando %@</string>
+	<key>Runs the daily, weekly and monthly housekeeping scripts macOS ships with (log rotation, temporary file cleanup). macOS normally runs them on its own.</key>
+	<string>Ejecuta los scripts de mantenimiento diarios, semanales y mensuales que incluye macOS (rotación de registros, limpieza de archivos temporales). Normalmente macOS los ejecuta por sí solo.</string>
+	<key>Runs: %@</key>
+	<string>Ejecuta: %@</string>
+	<key>Run…</key>
+	<string>Ejecutar…</string>
+	<key>Safe</key>
+	<string>Seguro</string>
+	<key>Safe by design</key>
+	<string>Seguro por diseño</string>
+	<key>Safe items are picked for you. Review items go to quarantine first, so you can undo.</key>
+	<string>Los ítems seguros se eligen por ti. Los ítems para revisar van primero a cuarentena, así que puedes deshacerlo.</string>
+	<key>Safety: %@</key>
+	<string>Seguridad: %@</string>
+	<key>Same content</key>
+	<string>Mismo contenido</string>
+	<key>Sample</key>
+	<string>Muestra</string>
+	<key>Scan</key>
+	<string>Analizar</string>
+	<key>Scan Again</key>
+	<string>Volver a analizar</string>
+	<key>Scan This Folder</key>
+	<string>Analizar esta carpeta</string>
+	<key>Scan reminder</key>
+	<string>Recordatorio de análisis</string>
+	<key>Scanning</key>
+	<string>Analizando</string>
+	<key>Scanning %@…</key>
+	<string>Analizando %@…</string>
+	<key>Search apps</key>
+	<string>Buscar apps</string>
+	<key>Section</key>
+	<string>Sección</string>
+	<key>See exactly where your space went</key>
+	<string>Mira exactamente dónde se ha ido tu espacio</string>
+	<key>See the feature tour and permission setup again.</key>
+	<string>Vuelve a ver la presentación y la configuración del permiso.</string>
+	<key>See what takes up space</key>
+	<string>Mira qué ocupa espacio</string>
+	<key>Select a rule</key>
+	<string>Selecciona una regla</string>
+	<key>Select an app</key>
+	<string>Selecciona una app</string>
+	<key>Settings</key>
+	<string>Ajustes</string>
+	<key>Settings…</key>
+	<string>Ajustes…</string>
+	<key>Show CPU and memory in the menu bar</key>
+	<string>Mostrar CPU y memoria en la barra de menús</string>
+	<key>Show OpenClean in the menu bar</key>
+	<string>Mostrar OpenClean en la barra de menús</string>
+	<key>Show Tour</key>
+	<string>Ver presentación</string>
+	<key>Show advanced (caution) rules</key>
+	<string>Mostrar reglas avanzadas (precaución)</string>
+	<key>Show next to the icon</key>
+	<string>Mostrar junto al icono</string>
+	<key>Size</key>
+	<string>Tamaño</string>
+	<key>Sizes are space on disk. Copies made by APFS cloning may share space.</key>
+	<string>Los tamaños son espacio en disco. Las copias creadas por clonación APFS pueden compartir espacio.</string>
+	<key>Skip It</key>
+	<string>Omitir</string>
+	<key>Skip This Version</key>
+	<string>Omitir esta versión</string>
+	<key>Skipped</key>
+	<string>Omitido</string>
+	<key>Skipped while %@ is running. Quit it and scan again.</key>
+	<string>Omitido mientras %@ esté en ejecución. Ciérrala y vuelve a analizar.</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Some rule packs were skipped</key>
+	<string>Se omitieron algunos paquetes de reglas</string>
+	<key>Something went wrong</key>
+	<string>Algo ha fallado</string>
+	<key>Sort by</key>
+	<string>Ordenar por</string>
+	<key>Sorted by size. Tick the ones you no longer need; they go to the Trash.</key>
+	<string>Ordenados por tamaño. Marca los que ya no necesites; irán a la Papelera.</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space Lens maps a folder by size so you can find what to remove. Nothing is removed until you tick it and confirm; items go to the Trash.</key>
+	<string>Space Lens representa una carpeta por tamaño para que encuentres qué eliminar. No se elimina nada hasta que lo marques y confirmes; los ítems van a la Papelera.</string>
+	<key>Space Lens view</key>
+	<string>Vista de Space Lens</string>
+	<key>Space map of %@</key>
+	<string>Mapa de espacio de %@</string>
+	<key>Spotlight is rebuilding its index in the background. Search results fill in as it goes.</key>
+	<string>Spotlight está reconstruyendo su índice en segundo plano. Los resultados de búsqueda irán apareciendo.</string>
+	<key>Start over</key>
+	<string>Empezar de nuevo</string>
+	<key>Starting scan…</key>
+	<string>Iniciando análisis…</string>
+	<key>Step %lld of %lld</key>
+	<string>Paso %1$lld de %2$lld</string>
+	<key>Step %lld: %@</key>
+	<string>Paso %1$lld: %2$@</string>
+	<key>Stop</key>
+	<string>Detener</string>
+	<key>Stop Excluding</key>
+	<string>Dejar de excluir</string>
+	<key>Suggested to keep</key>
+	<string>Se sugiere conservar</string>
+	<key>System (read-only)</key>
+	<string>Sistema (solo lectura)</string>
+	<key>System (root)</key>
+	<string>Sistema (root)</string>
+	<key>System Junk</key>
+	<string>Basura del sistema</string>
+	<key>Tasks marked “Needs admin” ask for your password once per run. OpenClean can only run these exact commands as administrator.</key>
+	<string>Las tareas marcadas con “Requiere administrador” piden tu contraseña una vez por ejecución. OpenClean solo puede ejecutar estos comandos exactos como administrador.</string>
+	<key>The app</key>
+	<string>La app</string>
+	<key>The app could not be moved.</key>
+	<string>No se pudo mover la app.</string>
+	<key>The app itself is always included</key>
+	<string>La propia app siempre se incluye</string>
+	<key>The command finished without errors.</key>
+	<string>El comando terminó sin errores.</string>
+	<key>The menu bar monitor only samples while it shows a figure or its window is open.</key>
+	<string>El monitor de la barra de menús solo toma muestras mientras muestra una cifra o su ventana está abierta.</string>
+	<key>The result shows only in the menu bar.</key>
+	<string>El resultado solo se muestra en la barra de menús.</string>
+	<key>The scan was stopped early. Results are partial.</key>
+	<string>El análisis se detuvo antes de tiempo. Los resultados son parciales.</string>
+	<key>The scan was stopped early. Sizes are partial.</key>
+	<string>El análisis se detuvo antes de tiempo. Los tamaños son parciales.</string>
+	<key>The update didn't finish</key>
+	<string>La actualización no terminó</string>
+	<key>These apps carry their own login items. macOS decides whether they run; turn them on or off in System Settings → General → Login Items.</key>
+	<string>Estas apps incluyen sus propios ítems de inicio. macOS decide si se ejecutan; actívalos o desactívalos en Ajustes del Sistema → General → Ítems de inicio.</string>
+	<key>Thin Time Machine local snapshots</key>
+	<string>Reducir las instantáneas locales de Time Machine</string>
+	<key>This build of OpenClean has a new signature, so macOS no longer recognises the earlier permission. Remove OpenClean from the list in Settings, add it again, then click Check Again.</key>
+	<string>Esta compilación de OpenClean tiene una firma nueva, así que macOS ya no reconoce el permiso anterior. Quita OpenClean de la lista en Ajustes, vuelve a añadirlo y haz clic en Comprobar de nuevo.</string>
+	<key>This can take a minute.</key>
+	<string>Puede tardar un minuto.</string>
+	<key>This folder is deep in the map, so its contents were summarized.</key>
+	<string>Esta carpeta está muy dentro del mapa, así que su contenido se ha resumido.</string>
+	<key>This is OpenClean itself</key>
+	<string>Es el propio OpenClean</string>
+	<key>This module is planned for a later OpenClean release.</key>
+	<string>Este módulo está previsto para una versión posterior de OpenClean.</string>
+	<key>This release can't be installed from inside OpenClean. Download it from GitHub instead.</key>
+	<string>Esta versión no se puede instalar desde OpenClean. Descárgala de GitHub.</string>
+	<key>Tick a category to clean it</key>
+	<string>Marca una categoría para limpiarla</string>
+	<key>Tick items to move them</key>
+	<string>Marca ítems para moverlos</string>
+	<key>Tick the copies you don’t need; they go to the Trash. One copy of each file always stays, and nothing is picked for you.</key>
+	<string>Marca las copias que no necesites; irán a la Papelera. Siempre se conserva una copia de cada archivo y no se elige nada por ti.</string>
+	<key>Today, %@</key>
+	<string>Hoy, %@</string>
+	<key>Trash</key>
+	<string>Papelera</string>
+	<key>Trash, Mail, Safari and iOS backups can be scanned.</key>
+	<string>Se pueden analizar la Papelera, Mail, Safari y las copias de iOS.</string>
+	<key>Trash, Mail, Safari and iOS backups can only be scanned with Full Disk Access.</key>
+	<string>La Papelera, Mail, Safari y las copias de iOS solo se pueden analizar con Acceso total al disco.</string>
+	<key>Trash, Mail, Safari and iOS backups live in folders macOS protects. OpenClean only reads what its cleaning rules list, and never sends anything off your Mac.</key>
+	<string>La Papelera, Mail, Safari y las copias de iOS están en carpetas que macOS protege. OpenClean solo lee lo que indican sus reglas de limpieza y nunca envía nada fuera de tu Mac.</string>
+	<key>Trash…</key>
+	<string>Papelera…</string>
+	<key>Turn Off</key>
+	<string>Desactivar</string>
+	<key>Turn On</key>
+	<string>Activar</string>
+	<key>Turn on **OpenClean** in the list, or drag its icon below into the list.</key>
+	<string>Activa **OpenClean** en la lista o arrastra su icono de abajo a la lista.</string>
+	<key>Undo for 7 days</key>
+	<string>Se puede deshacer durante 7 días</string>
+	<key>Uninstall</key>
+	<string>Desinstalar</string>
+	<key>Uninstall %@?</key>
+	<string>¿Desinstalar %@?</string>
+	<key>Uninstall cancelled</key>
+	<string>Desinstalación cancelada</string>
+	<key>Uninstaller</key>
+	<string>Desinstalador</string>
+	<key>Uninstalling</key>
+	<string>Desinstalando</string>
+	<key>Unknown</key>
+	<string>Desconocido</string>
+	<key>Unknown app</key>
+	<string>App desconocida</string>
+	<key>Update</key>
+	<string>Actualizar</string>
+	<key>Updates</key>
+	<string>Actualizaciones</string>
+	<key>User Caches &amp; Logs</key>
+	<string>Cachés y registros del usuario</string>
+	<key>Utilities</key>
+	<string>Utilidades</string>
+	<key>Value</key>
+	<string>Valor</string>
+	<key>Verifying…</key>
+	<string>Verificando…</string>
+	<key>Version %@</key>
+	<string>Versión %@</string>
+	<key>Videos</key>
+	<string>Vídeos</string>
+	<key>View on GitHub</key>
+	<string>Ver en GitHub</string>
+	<key>Waiting for access…</key>
+	<string>Esperando acceso…</string>
+	<key>Waiting for your password, then moving %@ to quarantine…</key>
+	<string>Esperando tu contraseña; después se moverá %@ a cuarentena…</string>
+	<key>We found %@ to clean</key>
+	<string>Hemos encontrado %@ para limpiar</string>
+	<key>Welcome Tour…</key>
+	<string>Presentación de bienvenida…</string>
+	<key>Welcome back. Ready for another sweep?</key>
+	<string>Bienvenido de nuevo. ¿Listo para otra limpieza?</string>
+	<key>Welcome to OpenClean</key>
+	<string>Te damos la bienvenida a OpenClean</string>
+	<key>Welcome tour</key>
+	<string>Presentación de bienvenida</string>
+	<key>What moves to quarantine</key>
+	<string>Lo que va a cuarentena</string>
+	<key>What starts when you log in, and who installed it.</key>
+	<string>Lo que se inicia al iniciar sesión y quién lo instaló.</string>
+	<key>What's New</key>
+	<string>Novedades</string>
+	<key>While OpenClean or its menu bar item is running, it scans in the background and tells you how much can be cleaned: in the menu bar, and with a notification when it's 1 GB or more. It never cleans by itself.</key>
+	<string>Mientras OpenClean o su ítem de la barra de menús esté abierto, analiza en segundo plano y te dice cuánto se puede limpiar: en la barra de menús y, a partir de 1 GB, con una notificación. Nunca limpia por sí solo.</string>
+	<key>Yesterday, %@</key>
+	<string>Ayer, %@</string>
+	<key>You</key>
+	<string>Tú</string>
+	<key>You can put items back from the Trash in Finder.</key>
+	<string>Puedes devolver los ítems desde la Papelera en el Finder.</string>
+	<key>You can switch to other screens while this runs.</key>
+	<string>Puedes cambiar a otras pantallas mientras se ejecuta.</string>
+	<key>You have %@. Your current version stays in History after updating.</key>
+	<string>Tienes la %@. Tu versión actual se queda en el Historial tras actualizar.</string>
+	<key>You're all set</key>
+	<string>Todo listo</string>
+	<key>You're up to date</key>
+	<string>Estás al día</string>
+	<key>Your Mac is %@ lighter</key>
+	<string>Tu Mac tiene %@ menos</string>
+	<key>Your current version is kept in History, so you can go back to it. After OpenClean restarts, macOS will ask you to allow Full Disk Access again.</key>
+	<string>Tu versión actual se guarda en el Historial para que puedas volver a ella. Cuando OpenClean se reinicie, macOS te pedirá que vuelvas a permitir el Acceso total al disco.</string>
+	<key>Your launch agents</key>
+	<string>Tus agentes de inicio</string>
+	<key>Your rule packs</key>
+	<string>Tus paquetes de reglas</string>
+	<key>You’ll see its size, its leftovers in your Library, and what would move to quarantine.</key>
+	<string>Verás su tamaño, sus restos en tu Library y lo que iría a cuarentena.</string>
+	<key>and %lld more</key>
+	<string>y %lld más</string>
+	<key>cleanup</key>
+	<string>limpieza</string>
+	<key>cleanups</key>
+	<string>limpiezas</string>
+	<key>collapsed</key>
+	<string>contraído</string>
+	<key>current</key>
+	<string>actual</string>
+	<key>expanded</key>
+	<string>desplegado</string>
+	<key>files looked at · %@</key>
+	<string>archivos revisados · %@</string>
+	<key>found</key>
+	<string>encontrado</string>
+	<key>freed in total</key>
+	<string>liberados en total</string>
+	<key>iOS Backups</key>
+	<string>Copias de iOS</string>
+	<key>kept running</key>
+	<string>se mantiene en ejecución</string>
+	<key>last opened</key>
+	<string>última apertura</string>
+	<key>launchctl couldn’t be asked for the current state, so “running” isn’t shown.</key>
+	<string>No se pudo consultar el estado actual a launchctl, así que no se muestra “en ejecución”.</string>
+	<key>macOS treats each new version of OpenClean as a new app. In Settings, remove OpenClean from the Full Disk Access list, add it again, then click Check Again.</key>
+	<string>macOS trata cada nueva versión de OpenClean como una app nueva. En Ajustes, quita OpenClean de la lista de Acceso total al disco, vuelve a añadirlo y haz clic en Comprobar de nuevo.</string>
+	<key>macOS will ask for your administrator password to move %@ to quarantine. If you restore it later, it comes back owned by you.</key>
+	<string>macOS te pedirá la contraseña de administrador para mover %@ a cuarentena. Si la restauras más tarde, volverá a ser de tu propiedad.</string>
+	<key>macOS will ask for your administrator password.</key>
+	<string>macOS te pedirá la contraseña de administrador.</string>
+	<key>moved</key>
+	<string>movido</string>
+	<key>needs your password</key>
+	<string>requiere tu contraseña</string>
+	<key>never</key>
+	<string>nunca</string>
+	<key>not selected</key>
+	<string>no seleccionado</string>
+	<key>not visited yet</key>
+	<string>aún no visitado</string>
+	<key>of %@</key>
+	<string>de %@</string>
+	<key>of %@ on your startup disk</key>
+	<string>de %@ en tu disco de arranque</string>
+	<key>on disk</key>
+	<string>en disco</string>
+	<key>owner</key>
+	<string>propietario</string>
+	<key>partially selected</key>
+	<string>seleccionado parcialmente</string>
+	<key>restarted when needed</key>
+	<string>se reinicia cuando hace falta</string>
+	<key>runs as root</key>
+	<string>se ejecuta como root</string>
+	<key>selected</key>
+	<string>seleccionado</string>
+	<key>starts at login</key>
+	<string>se inicia al iniciar sesión</string>
+	<key>the app</key>
+	<string>la app</string>
+	<key>the bundle ID</key>
+	<string>el ID de paquete</string>
+	<key>used of %@</key>
+	<string>usados de %@</string>
+	<key>visited</key>
+	<string>visitado</string>
+	<key>•</key>
+	<string>•</string>
+	<key>↑ %@ sent</key>
+	<string>↑ %@ enviados</string>
+	<key>↓ %@  ↑ %@</key>
+	<string>↓ %1$@  ↑ %2$@</string>
+</dict>
+</plist>

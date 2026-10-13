@@ -115,8 +115,10 @@ welcome**: a pull request that only fixes wording is a great first contribution.
   to. Counts use plural variations; a sentence with two arguments uses a substitution for the counted one.
 - New UI text: a `Text("…")` literal is localized automatically; a `String` shown in the UI must come
   from `String(localized: "…")` (in OpenCleanAppModel: `String(localized: "…", bundle: .appModel)`).
-  Then add the key with all five translations. `LocalizationCatalogTests` fails if a key misses a
-  language or a translation reads different arguments than its key.
+  Then add the key with all five translations and run `scripts/compile-strings.sh`, which compiles the
+  catalogs into the `Resources/<lang>.lproj` folders the targets ship (commit them too).
+  `LocalizationCatalogTests` fails if a key misses a language, a translation reads different arguments
+  than its key, or the `.lproj` folders are out of date.
 - The CLI stays English: its output and `--json` are a contract for scripts.
 
 ## Pull requests

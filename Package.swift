@@ -177,7 +177,10 @@ let package = Package(
                 "Maintenance", "SpaceKit", "Updater",
             ],
             path: "Apps/OpenClean/Sources/OpenCleanAppModel",
-            resources: [.process("Resources/Localizable.xcstrings")]
+            // Localizable.xcstrings is the source; scripts/compile-strings.sh compiles it into the .lproj
+            // folders shipped here (SwiftPM's native build system copies a catalog without compiling it).
+            exclude: ["Resources/Localizable.xcstrings"],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "OpenCleanAppModelTests",
@@ -202,7 +205,10 @@ let package = Package(
                 "AppInventory", "SystemMonitor", "Maintenance", "SpaceKit", "Updater",
             ],
             path: "Apps/OpenClean/Sources/OpenCleanApp",
-            resources: [.process("Resources/Localizable.xcstrings")]
+            // Localizable.xcstrings is the source; scripts/compile-strings.sh compiles it into the .lproj
+            // folders shipped here (SwiftPM's native build system copies a catalog without compiling it).
+            exclude: ["Resources/Localizable.xcstrings"],
+            resources: [.process("Resources")]
         ),
     ]
 )

@@ -160,6 +160,47 @@ import Testing
         }
     }
 
+    /// The targets ship the compiled `<lang>.lproj` folders (SwiftPM's native build system doesn't compile
+    /// catalogs). They must be what `scripts/compile-strings.sh` makes from the catalog right now.
+    @Test(
+        .enabled(if: FileManager.default.isExecutableFile(atPath: "/usr/bin/xcrun")),
+        arguments: targets)
+    func compiledStringsMatchTheCatalog(target: String) throws {
+        let catalog = Self.catalogURL(target)
+        let resources = catalog.deletingLastPathComponent()
+        let output = FileManager.default.temporaryDirectory.appendingPathComponent("openclean-strings-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: output) }
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
+        process.arguments = ["xcstringstool", "compile", catalog.path, "--output-directory", output.path]
+        process.standardOutput = FileHandle.nullDevice
+        try process.run()
+        process.waitUntilExit()
+        try #require(process.terminationStatus == 0, "xcstringstool failed")
+
+        let fileManager = FileManager.default
+        func lproj(_ folder: URL) -> Set<String> {
+            Set(((try? fileManager.contentsOfDirectory(atPath: folder.path)) ?? []).filter { $0.hasSuffix(".lproj") })
+        }
+        let expected = lproj(output)
+        #expect(expected.isSuperset(of: Self.languages.map { "\($0).lproj" }))
+        #expect(lproj(resources) == expected, "run scripts/compile-strings.sh")
+        for folder in expected {
+            for file in ["Localizable.strings", "Localizable.stringsdict"] {
+                let fresh = output.appendingPathComponent("\(folder)/\(file)")
+                let shipped = resources.appendingPathComponent("\(folder)/\(file)")
+                guard fileManager.fileExists(atPath: fresh.path) else {
+                    #expect(!fileManager.fileExists(atPath: shipped.path), "\(target): stale \(folder)/\(file)")
+                    continue
+                }
+                let a = NSDictionary(contentsOf: fresh)
+                let b = NSDictionary(contentsOf: shipped)
+                #expect(
+                    a != nil && a == b, "\(target): \(folder)/\(file) is out of date; run scripts/compile-strings.sh")
+            }
+        }
+    }
+
     @Test func specifierParserReadsPositionsAndSubstitutions() {
         #expect(Self.arguments("%@ of %lld files") == [1: "@", 2: "d"])
         #expect(Self.arguments("%2$lld 件中 %1$@") == [1: "@", 2: "d"])

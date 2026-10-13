@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ was moved to quarantine. You can restore it from History for %lld days; it loads again at your next login.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%1$@ wurde in die Quarantäne bewegt. Du kannst es %2$#@days@ lang aus dem Verlauf wiederherstellen; es wird bei deiner nächsten Anmeldung wieder geladen.</string>
+		<key>days</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%2$lld Tag</string>
+			<key>other</key>
+			<string>%2$lld Tage</string>
+		</dict>
+	</dict>
+	<key>%lld items were left in place</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld Objekt ist an seinem Ort geblieben</string>
+			<key>other</key>
+			<string>%lld Objekte sind an ihrem Ort geblieben</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

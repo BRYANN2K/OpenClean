@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ is turned off and won't start again until you turn it on.</key>
+	<string>%@ est désactivé et ne redémarrera pas tant que vous ne l’aurez pas activé.</string>
+	<key>%@ is turned on.</key>
+	<string>%@ est activé.</string>
+	<key>%@ was running. Quit it, then scan again.</key>
+	<string>%@ était ouvert. Quittez-le, puis relancez l’analyse.</string>
+	<key>A background Smart Scan found it. Nothing was removed; open OpenClean to review and clean.</key>
+	<string>Une Smart Scan en arrière-plan l’a trouvé. Rien n’a été supprimé ; ouvrez OpenClean pour vérifier et nettoyer.</string>
+	<key>A folder above it isn't protected by macOS, so it wasn't removed as administrator.</key>
+	<string>Un dossier parent n’est pas protégé par macOS : il n’a donc pas été supprimé en tant qu’administrateur.</string>
+	<key>About %@ can be cleaned</key>
+	<string>Environ %@ peuvent être nettoyés</string>
+	<key>All set</key>
+	<string>Tout est prêt</string>
+	<key>Already gone. Something else removed it after the scan.</key>
+	<string>Déjà disparu. Autre chose l’a supprimé après l’analyse.</string>
+	<key>CPU</key>
+	<string>CPU</string>
+	<key>CPU and memory</key>
+	<string>CPU et mémoire</string>
+	<key>Changed since the scan; an app may be using it.</key>
+	<string>Modifié depuis l’analyse ; une app l’utilise peut-être.</string>
+	<key>Could not save settings: %@</key>
+	<string>Impossible d’enregistrer les réglages : %@</string>
+	<key>Couldn't be removed.</key>
+	<string>N’a pas pu être supprimé.</string>
+	<key>Couldn't install the update: %@.</key>
+	<string>Impossible d’installer la mise à jour : %@.</string>
+	<key>Duplicates</key>
+	<string>Doublons</string>
+	<key>For different reasons; see the details.</key>
+	<string>Pour différentes raisons ; voir les détails.</string>
+	<key>Full Disk Access</key>
+	<string>Accès complet au disque</string>
+	<key>Icon only</key>
+	<string>Icône seulement</string>
+	<key>In a protected location. OpenClean never removes it.</key>
+	<string>Dans un emplacement protégé. OpenClean ne le supprime jamais.</string>
+	<key>Its path can't be passed safely to the administrator prompt.</key>
+	<string>Son chemin ne peut pas être transmis en toute sécurité à la demande d’administrateur.</string>
+	<key>Large &amp; old files</key>
+	<string>Fichiers volumineux et anciens</string>
+	<key>Memory</key>
+	<string>Mémoire</string>
+	<key>Monthly</key>
+	<string>Tous les mois</string>
+	<key>Network</key>
+	<string>Réseau</string>
+	<key>Off</key>
+	<string>Désactivé</string>
+	<key>Open in another app. Quit the app, then scan again.</key>
+	<string>Ouvert dans une autre app. Quittez l’app, puis relancez l’analyse.</string>
+	<key>OpenClean couldn't check whether another app had it open, so it left it alone.</key>
+	<string>OpenClean n’a pas pu vérifier si une autre app l’avait ouvert, il n’y a donc pas touché.</string>
+	<key>OpenClean couldn't reach GitHub (%@). Check your connection and try again.</key>
+	<string>OpenClean n’a pas pu joindre GitHub (%@). Vérifiez votre connexion et réessayez.</string>
+	<key>Performance</key>
+	<string>Performances</string>
+	<key>Safe by design</key>
+	<string>Sûr par conception</string>
+	<key>Shown for information only. OpenClean never removes it.</key>
+	<string>Affiché à titre d’information uniquement. OpenClean ne le supprime jamais.</string>
+	<key>Skipped.</key>
+	<string>Ignoré.</string>
+	<key>Skipped: %@.</key>
+	<string>Ignoré : %@.</string>
+	<key>Smart Scan</key>
+	<string>Smart Scan</string>
+	<key>Space Lens</key>
+	<string>Space Lens</string>
+	<key>Space map</key>
+	<string>Carte de l’espace</string>
+	<key>System items can only be deleted, not moved to quarantine.</key>
+	<string>Les éléments système peuvent seulement être supprimés, pas placés en quarantaine.</string>
+	<key>That folder can't be scanned. It may have been moved or deleted.</key>
+	<string>Ce dossier ne peut pas être analysé. Il a peut-être été déplacé ou supprimé.</string>
+	<key>The administrator password prompt was cancelled.</key>
+	<string>La demande du mot de passe administrateur a été annulée.</string>
+	<key>The app wasn't moved, so this was left in place.</key>
+	<string>L’app n’a pas été déplacée : cet élément est donc resté en place.</string>
+	<key>Too many system items for one password prompt. Clean again to remove the rest.</key>
+	<string>Trop d’éléments système pour une seule demande de mot de passe. Relancez le nettoyage pour supprimer le reste.</string>
+	<key>Uninstaller</key>
+	<string>Désinstallation</string>
+	<key>Weekly</key>
+	<string>Toutes les semaines</string>
+	<key>Welcome</key>
+	<string>Bienvenue</string>
+	<key>unknown</key>
+	<string>inconnue</string>
+</dict>
+</plist>

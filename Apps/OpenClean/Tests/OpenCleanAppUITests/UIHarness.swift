@@ -119,7 +119,7 @@ final class UIHarness {
     @discardableResult
     func host<V: View>(_ view: V, size: CGSize = CGSize(width: 1200, height: 760)) -> NSWindow {
         let hosting = NSHostingView(rootView: AnyView(withEnvironment(view)))
-        let window = NSWindow(
+        let window = UnconstrainedWindow(
             contentRect: NSRect(origin: .zero, size: size),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered, defer: false)
@@ -222,4 +222,10 @@ enum EmptyProbes {
         static let id = "xcode.simulators"
         func scan(_ context: ScanContext) async throws -> [ProbeFinding] { [] }
     }
+}
+
+/// A window AppKit doesn't shrink to fit the screen: CI runners have a 1024 × 768 display, smaller than the
+/// app's 1200 × 720 minimum, and the tests must lay views out at the sizes they ask for.
+final class UnconstrainedWindow: NSWindow {
+    override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect { frameRect }
 }
