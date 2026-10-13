@@ -46,14 +46,18 @@ public struct PreDeleteChecker: Sendable {
     let busy: Set<[UInt8]>?
     /// Set only for an uninstall request: lets that one app bundle past the application-bundle rule.
     let exemption: UninstallBundleExemption?
+    /// Lets artifacts the project probes found inside the user's project folders past the Documents and
+    /// Desktop rules (see `ProjectFolderExemption`). Re-checked here, against the folders saved now.
+    let projectFolders: ProjectFolderExemption?
 
     public init(
         denyList: DenyList, processChecker: any ProcessChecker, openPaths: Set<String>?,
-        exemption: UninstallBundleExemption? = nil
+        exemption: UninstallBundleExemption? = nil, projectFolders: ProjectFolderExemption? = nil
     ) {
         self.denyList = denyList
         self.processChecker = processChecker
         self.exemption = exemption
+        self.projectFolders = projectFolders
         guard let openPaths else {
             busy = nil
             return
@@ -74,7 +78,9 @@ public struct PreDeleteChecker: Sendable {
         {
             return .changedSinceScan
         }
-        if let reason = denyList.denialReason(for: item.path), exemption?.permits(item.path, deniedFor: reason) != true
+        if let reason = denyList.denialReason(for: item.path),
+            exemption?.permits(item.path, deniedFor: reason) != true,
+            projectFolders?.permits(item.path, deniedFor: reason, rule: rule) != true
         {
             return .protected(reason)
         }

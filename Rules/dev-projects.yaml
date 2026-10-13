@@ -4,7 +4,7 @@ rules:
   - id: node.project-modules
     name: node_modules in old projects
     category: developer
-    explain: Installed packages in JavaScript projects you haven't changed for 30 days. Your package manager's install command puts them back. Moved to quarantine, so you can restore them. OpenClean searches your home folder for projects, but never Documents, Desktop, Downloads, Library or hidden folders.
+    explain: Installed packages in JavaScript projects you haven't changed for 30 days. Your package manager's install command puts them back. Moved to quarantine, so you can restore them. OpenClean searches your home folder for projects, but never Documents, Desktop, Downloads, Library or hidden folders, unless you add a folder under Settings → Project folders.
     probe: node.project-modules
     safety: review
   - id: python.project-venvs

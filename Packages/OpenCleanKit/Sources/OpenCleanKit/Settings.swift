@@ -6,20 +6,28 @@ public struct Settings: Codable, Sendable, Equatable {
     public var retentionDays: Int
     public var advancedEnabled: Bool
     public var excludedPaths: [String]
+    /// Extra folders the project probes search (Settings → Project folders), e.g. `~/Documents/Code`.
+    /// Opt-in; empty by default. See `ProjectFolderExemption` for what this lets through.
+    public var projectFolders: [String]
 
-    public init(retentionDays: Int = 7, advancedEnabled: Bool = false, excludedPaths: [String] = []) {
+    public init(
+        retentionDays: Int = 7, advancedEnabled: Bool = false, excludedPaths: [String] = [],
+        projectFolders: [String] = []
+    ) {
         self.retentionDays = retentionDays
         self.advancedEnabled = advancedEnabled
         self.excludedPaths = excludedPaths
+        self.projectFolders = projectFolders
     }
 
-    enum CodingKeys: String, CodingKey { case retentionDays, advancedEnabled, excludedPaths }
+    enum CodingKeys: String, CodingKey { case retentionDays, advancedEnabled, excludedPaths, projectFolders }
 
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         retentionDays = try c.decodeIfPresent(Int.self, forKey: .retentionDays) ?? 7
         advancedEnabled = try c.decodeIfPresent(Bool.self, forKey: .advancedEnabled) ?? false
         excludedPaths = try c.decodeIfPresent([String].self, forKey: .excludedPaths) ?? []
+        projectFolders = try c.decodeIfPresent([String].self, forKey: .projectFolders) ?? []
     }
 
     public var clampedRetentionDays: Int {

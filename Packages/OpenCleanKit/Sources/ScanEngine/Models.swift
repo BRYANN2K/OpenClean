@@ -121,11 +121,14 @@ public struct ScanContext: Sendable {
     public var processChecker: any ProcessChecker
     /// Absolute paths the user excluded in Settings; items equal to or inside them are skipped.
     public var userExcludes: [String]
+    /// Extra folders the user asked the project probes to search (Settings → Project folders), resolved;
+    /// folders `ProjectFolderExemption.problem(with:home:)` rejects are dropped.
+    public var projectFolders: [String]
     public var now: Date
 
     public init(
         home: String, hasFullDiskAccess: Bool, processChecker: any ProcessChecker,
-        userExcludes: [String] = [], now: Date = .now
+        userExcludes: [String] = [], projectFolders: [String] = [], now: Date = .now
     ) {
         self.home = realPath(home) ?? home
         self.hasFullDiskAccess = hasFullDiskAccess
@@ -133,9 +136,16 @@ public struct ScanContext: Sendable {
         self.userExcludes = userExcludes.map { exclude in
             realPath(exclude) ?? (exclude.count > 1 && exclude.hasSuffix("/") ? String(exclude.dropLast()) : exclude)
         }
+        let resolvedHome = self.home
+        self.projectFolders = projectFolders.compactMap { realPath($0) }.filter {
+            ProjectFolderExemption.problem(with: $0, home: resolvedHome) == nil
+        }
         self.now = now
     }
 
     public var expander: PathExpander { PathExpander(home: home) }
     public var denyList: DenyList { DenyList(home: home) }
+    public var projectFolderExemption: ProjectFolderExemption {
+        ProjectFolderExemption(home: home, folders: projectFolders)
+    }
 }

@@ -82,21 +82,43 @@ public struct OpenCleanCoordinator: Sendable {
     public func scan(
         _ rules: [Rule], settings: Settings, progress: AsyncStream<ScanProgress>.Continuation? = nil
     ) async -> ScanResult {
-        let expander = PathExpander(home: resolvedHome)
-        let excludes = settings.excludedPaths.map { path -> String in
-            let expanded = expander.expand(path)
-            return realPath(expanded) ?? expanded
-        }
         let context = ScanContext(
             home: resolvedHome, hasFullDiskAccess: accessCheck() == .granted, processChecker: processChecker,
-            userExcludes: excludes)
+            userExcludes: resolved(settings.excludedPaths), projectFolders: resolved(settings.projectFolders))
         return await ScanEngine(registry: registry).scan(rules, context: context, progress: progress)
     }
 
+    /// Settings paths with `~` expanded and symlinks resolved, the form every check compares against.
+    func resolved(_ paths: [String]) -> [String] {
+        let expander = PathExpander(home: resolvedHome)
+        return paths.map { path -> String in
+            let expanded = expander.expand(path)
+            return realPath(expanded) ?? expanded
+        }
+    }
+
+    /// Why `path` can't be added under Settings → Project folders, in plain words, or nil if it can.
+    public func projectFolderProblem(_ path: String) -> String? {
+        guard let folder = resolved([path]).first, realPath(folder) != nil else { return "That folder doesn't exist." }
+        if canonicalPathKey(folder) == canonicalPathKey(resolvedHome) {
+            return "Your home folder is already searched. Choose a folder inside it, such as Documents/Code."
+        }
+        guard ProjectFolderExemption.problem(with: folder, home: resolvedHome) == nil else {
+            return
+                "Choose a folder inside your home folder, on the same disk, that isn't protected (Library, iCloud Drive, .ssh and similar)."
+        }
+        return nil
+    }
+
+    /// Removes the plan's items. The pre-delete checks use the project folders saved right now, not the
+    /// ones from the scan: removing a folder from Settings withdraws its exemption immediately.
     public func execute(_ plan: CleanupPlan) throws -> RemovalReport {
         let openPaths = try? openFiles.openPaths()
+        let projectFolders = ProjectFolderExemption(
+            home: resolvedHome, folders: resolved(settingsStore.load().projectFolders))
         let checker = PreDeleteChecker(
-            denyList: DenyList(home: resolvedHome), processChecker: processChecker, openPaths: openPaths)
+            denyList: DenyList(home: resolvedHome), processChecker: processChecker, openPaths: openPaths,
+            projectFolders: projectFolders)
         return try Remover(store: store, checker: checker, admin: admin, trash: trash).remove(plan.requests)
     }
 
