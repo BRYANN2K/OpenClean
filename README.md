@@ -46,6 +46,9 @@ No accounts, no analytics, no tracking — every cleaning rule is readable YAML.
 - **CLI with JSON output** — script `openclean scan` / `clean` in CI or dotfiles.
 - **Software Update** — OpenClean checks GitHub once a day for a new release (you can turn this off),
   downloads and verifies it, installs it in place and relaunches; the previous version stays in History.
+- **Scan reminder (optional, off by default)** — weekly or monthly, a read-only Smart Scan runs in the
+  background while OpenClean or its menu bar item is running and tells you how much can be cleaned. It
+  never cleans by itself.
 - **Native and private** — Swift 6 + SwiftUI, no telemetry, GPL-3.0.
 
 ## Why OpenClean

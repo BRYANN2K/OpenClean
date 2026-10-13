@@ -71,6 +71,8 @@ struct SettingsView: View {
                     }
                 }
 
+                ScanReminderSettingsSection()
+
                 section("Excluded locations", symbol: "eye.slash") {
                     if model.settings.excludedPaths.isEmpty {
                         note("Nothing is excluded. Excluded folders and files are never scanned or cleaned.")

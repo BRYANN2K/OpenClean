@@ -133,16 +133,13 @@ struct MenuBarPopover: View {
                 }
             }
 
+            ScanReminderNotice(review: startSmartScan)
+
             HStack(spacing: 8) {
                 Button("Open OpenClean") { showMainWindow() }
                     .buttonStyle(CapsuleButtonStyle(prominent: true))
-                Button("Smart Scan") {
-                    navigation.selection = .smartScan
-                    showMainWindow()
-                    // Never throw away results the user hasn't acted on, or interrupt a cleanup.
-                    if app.phase == .idle || app.phase == .finished { app.startScan() }
-                }
-                .buttonStyle(CapsuleButtonStyle())
+                Button("Smart Scan") { startSmartScan() }
+                    .buttonStyle(CapsuleButtonStyle())
             }
         }
         .foregroundStyle(Theme.textPrimary)
@@ -163,6 +160,13 @@ struct MenuBarPopover: View {
             MeterBar(fraction: fraction, color: color)
         }
         .accessibilityElement(children: .combine)
+    }
+
+    private func startSmartScan() {
+        navigation.selection = .smartScan
+        showMainWindow()
+        // Never throw away results the user hasn't acted on, or interrupt a cleanup.
+        if app.phase == .idle || app.phase == .finished { app.startScan() }
     }
 
     /// Brings the existing main window forward, or opens one if it was closed.
