@@ -3,9 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OpenClean – Free, open-source Mac cleaner</title>
+<title>OpenClean – Free, Open-Source Mac Cleaner for macOS</title>
 <meta name="description" content="OpenClean is a free, open-source Mac cleaner you can read and undo. Clean up junk, uninstall apps completely, see what fills your disk and watch your Mac from the menu bar. No account, no tracking.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="leoAnimesh">
+<meta name="application-name" content="OpenClean">
 <link rel="canonical" href="https://leoanimesh.github.io/OpenClean/">
+<link rel="sitemap" type="application/xml" href="sitemap.xml">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#082A33">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -14,6 +18,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="OpenClean">
+<meta property="og:locale" content="en_US">
 <meta property="og:title" content="OpenClean – Free, open-source Mac cleaner">
 <meta property="og:description" content="A free, open-source Mac cleaner you can read and undo. An open alternative to CleanMyMac for macOS.">
 <meta property="og:url" content="https://leoanimesh.github.io/OpenClean/">
@@ -30,21 +35,126 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "OpenClean",
-  "description": "A free, open-source Mac cleaner you can read and undo. Clean up junk, uninstall apps, see what fills your disk and watch your Mac from the menu bar.",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "macOS 14 or later",
-  "url": "https://leoanimesh.github.io/OpenClean/",
-  "downloadUrl": "https://github.com/leoAnimesh/OpenClean/releases/latest",
-  "installUrl": "https://github.com/leoAnimesh/OpenClean/releases/latest",
-  "image": "https://leoanimesh.github.io/OpenClean/assets/social-preview.jpg",
-  "screenshot": "https://leoanimesh.github.io/OpenClean/assets/smart-scan-results.webp",
-  "license": "https://www.gnu.org/licenses/gpl-3.0.html",
-  "isAccessibleForFree": true,
-  "codeRepository": "https://github.com/leoAnimesh/OpenClean",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "author": { "@type": "Person", "name": "leoAnimesh", "url": "https://github.com/leoAnimesh" }
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://leoanimesh.github.io/OpenClean/#website",
+      "url": "https://leoanimesh.github.io/OpenClean/",
+      "name": "OpenClean",
+      "alternateName": [
+        "OpenClean for Mac",
+        "OpenClean Mac cleaner"
+      ],
+      "inLanguage": "en"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://leoanimesh.github.io/OpenClean/#app",
+      "name": "OpenClean",
+      "alternateName": "OpenClean for Mac",
+      "description": "A free, open-source Mac cleaner you can read and undo. Clean up junk, uninstall apps, see what fills your disk and watch your Mac from the menu bar.",
+      "applicationCategory": "UtilitiesApplication",
+      "applicationSubCategory": "Mac cleaner",
+      "operatingSystem": "macOS 14 or later",
+      "url": "https://leoanimesh.github.io/OpenClean/",
+      "downloadUrl": "https://github.com/leoAnimesh/OpenClean/releases/latest",
+      "installUrl": "https://github.com/leoAnimesh/OpenClean/releases/latest",
+      "image": "https://leoanimesh.github.io/OpenClean/assets/social-preview.jpg",
+      "screenshot": [
+        "https://leoanimesh.github.io/OpenClean/assets/smart-scan-results.webp",
+        "https://leoanimesh.github.io/OpenClean/assets/history.webp"
+      ],
+      "featureList": [
+        "Smart Scan junk cleanup",
+        "Complete app uninstaller with leftovers",
+        "Space Lens disk usage map",
+        "Developer tool cache cleanup",
+        "Menu bar performance monitor",
+        "Quarantine and one-click restore"
+      ],
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "sameAs": [
+        "https://github.com/leoAnimesh/OpenClean"
+      ],
+      "author": {
+        "@type": "Person",
+        "name": "leoAnimesh",
+        "url": "https://github.com/leoAnimesh"
+      },
+      "isPartOf": {
+        "@id": "https://leoanimesh.github.io/OpenClean/#website"
+      }
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "OpenClean",
+      "codeRepository": "https://github.com/leoAnimesh/OpenClean",
+      "programmingLanguage": "Swift",
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "targetProduct": {
+        "@id": "https://leoanimesh.github.io/OpenClean/#app"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is it really free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Free and open source under GPL-3.0, with no account, trial or purchase."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I get my files back?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Anything that is not trivially rebuilt is moved to quarantine, and History restores it until it expires."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it need special permissions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Full Disk Access, once, so it can see the Trash, old iOS backups and other protected folders. It asks for your administrator password only to clean system caches."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it send my data anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The only network request is a daily check for a new release, which you can switch off in Settings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which languages does it speak?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "English, German, Spanish, French, Japanese and Simplified Chinese. It follows your macOS language."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a command line version?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. brew install leoanimesh/openclean/openclean installs the openclean command. See the command line guide."
+          }
+        }
+      ]
+    }
+  ]
 }
 </script>
 

@@ -1,3 +1,6 @@
+# Crawlers only read robots.txt at the host root (https://leoanimesh.github.io/robots.txt),
+# so this file is informational. Submit sitemap.xml in Google Search Console, and list
+# https://leoanimesh.github.io/OpenClean/ in the root site's sitemap.
 User-agent: *
 Allow: /
 
