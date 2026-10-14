@@ -209,15 +209,3 @@ struct ProblemsBanner: View {
         }
     }
 }
-
-struct ComingSoonView: View {
-    var body: some View {
-        VStack(spacing: 14) {
-            Image(systemName: "hammer.fill").font(.system(size: 44)).foregroundStyle(Theme.textSecondary)
-            Text("Coming soon").font(.system(size: 28, weight: .bold))
-            Text("This module is planned for a later OpenClean release.")
-                .foregroundStyle(Theme.textSecondary)
-        }
-        .foregroundStyle(.white)
-    }
-}

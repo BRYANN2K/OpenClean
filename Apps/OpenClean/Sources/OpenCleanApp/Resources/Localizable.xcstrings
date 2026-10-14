@@ -6297,40 +6297,6 @@
         }
       }
     },
-    "Coming soon": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Demnächst"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Próximamente"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bientôt disponible"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "近日公開"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "即将推出"
-          }
-        }
-      }
-    },
     "Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays.": {
       "localizations": {
         "de": {
@@ -18779,40 +18745,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "这是 OpenClean 本身"
-          }
-        }
-      }
-    },
-    "This module is planned for a later OpenClean release.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dieses Modul ist für eine spätere OpenClean-Version geplant."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Este módulo está previsto para una versión posterior de OpenClean."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ce module est prévu pour une version ultérieure d’OpenClean."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このモジュールは今後の OpenClean のリリースで予定しています。"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此模块计划在 OpenClean 的后续版本中推出。"
           }
         }
       }
