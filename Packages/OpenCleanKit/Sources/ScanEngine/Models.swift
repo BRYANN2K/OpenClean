@@ -70,8 +70,6 @@ public struct RuleResult: Sendable, Identifiable {
 
     /// Bytes that can actually be removed (report-only items excluded).
     public var totalSize: Int64 { items.filter { !$0.reportOnly }.reduce(0) { $0 + $1.size } }
-    /// Bytes shown for information only (e.g. Docker's disk image).
-    public var reportOnlySize: Int64 { items.filter(\.reportOnly).reduce(0) { $0 + $1.size } }
 }
 
 public struct ScanResult: Sendable {

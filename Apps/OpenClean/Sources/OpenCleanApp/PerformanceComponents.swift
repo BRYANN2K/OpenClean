@@ -136,23 +136,6 @@ struct ProcessIcon: View {
     }
 }
 
-/// The "back" link at the top left of sub-screens.
-struct BackLink: View {
-    let title: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Label(title, systemImage: "chevron.left")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(Theme.textSecondary)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .keyboardShortcut(.cancelAction)
-    }
-}
-
 /// Renders the logo glyph as a monochrome template image for the menu bar.
 @MainActor
 enum MenuBarGlyph {
