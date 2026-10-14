@@ -230,8 +230,6 @@
 	<string>关闭</string>
 	<key>Come back here. OpenClean notices on its own.</key>
 	<string>回到这里。OpenClean 会自动察觉。</string>
-	<key>Coming soon</key>
-	<string>即将推出</string>
 	<key>Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays.</key>
 	<string>逐字节比较下方文件夹中的文件。不会替你选择任何项目，每个文件总会保留一份副本。</string>
 	<key>Comparing files…</key>
@@ -908,8 +906,6 @@
 	<string>此文件夹在地图中层级很深，因此其内容已被汇总。</string>
 	<key>This is OpenClean itself</key>
 	<string>这是 OpenClean 本身</string>
-	<key>This module is planned for a later OpenClean release.</key>
-	<string>此模块计划在 OpenClean 的后续版本中推出。</string>
 	<key>This release can't be installed from inside OpenClean. Download it from GitHub instead.</key>
 	<string>此版本无法在 OpenClean 内安装。请改为从 GitHub 下载。</string>
 	<key>Tick a category to clean it</key>

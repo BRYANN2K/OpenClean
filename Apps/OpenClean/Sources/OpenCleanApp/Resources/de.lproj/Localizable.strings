@@ -230,8 +230,6 @@
 	<string>Schließen</string>
 	<key>Come back here. OpenClean notices on its own.</key>
 	<string>Komm hierher zurück. OpenClean bemerkt es von selbst.</string>
-	<key>Coming soon</key>
-	<string>Demnächst</string>
 	<key>Compares files byte for byte in the folders below. Nothing is picked for you, and one copy of each file always stays.</key>
 	<string>Vergleicht Dateien in den Ordnern unten Byte für Byte. Nichts wird für dich ausgewählt, und eine Kopie jeder Datei bleibt immer erhalten.</string>
 	<key>Comparing files…</key>
@@ -908,8 +906,6 @@
 	<string>Dieser Ordner liegt tief in der Karte, daher wurde sein Inhalt zusammengefasst.</string>
 	<key>This is OpenClean itself</key>
 	<string>Das ist OpenClean selbst</string>
-	<key>This module is planned for a later OpenClean release.</key>
-	<string>Dieses Modul ist für eine spätere OpenClean-Version geplant.</string>
 	<key>This release can't be installed from inside OpenClean. Download it from GitHub instead.</key>
 	<string>Diese Version kann nicht aus OpenClean heraus installiert werden. Lade sie stattdessen von GitHub.</string>
 	<key>Tick a category to clean it</key>
