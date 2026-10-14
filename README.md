@@ -10,6 +10,13 @@
 </p>
 
 <p align="center">
+  <a href="https://leoanimesh.github.io/OpenClean/"><strong>Website</strong></a> ·
+  <a href="https://github.com/leoAnimesh/OpenClean/releases/latest">Download</a> ·
+  <a href="docs/how-it-works.md">How it works</a> ·
+  <a href="docs/cli.md">Command line</a>
+</p>
+
+<p align="center">
   <a href="https://github.com/leoAnimesh/OpenClean/releases/latest"><img src="https://img.shields.io/github/v/release/leoAnimesh/OpenClean?label=download&color=12A88B" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/macOS-14%2B-0A4756" alt="macOS 14 or later">
   <a href="LICENSE"><img src="https://img.shields.io/github/license/leoAnimesh/OpenClean" alt="License: GPL-3.0"></a>
