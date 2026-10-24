@@ -11,6 +11,11 @@ func formatPercent(_ fraction: Double?) -> String {
     return fraction.formatted(.percent.precision(.fractionLength(0)))
 }
 
+/// Physical memory in binary units, the way macOS sizes it: a 24 GB Mac reads "24 GB", not "25.77 GB".
+func formatMemory(_ bytes: UInt64) -> String {
+    ByteCountFormatter.string(fromByteCount: Int64(clamping: bytes), countStyle: .memory)
+}
+
 /// "1.2 MB/s", "340 KB/s", "0 KB/s".
 func formatRate(_ bytesPerSecond: Double?) -> String {
     guard let bytesPerSecond else { return "–" }

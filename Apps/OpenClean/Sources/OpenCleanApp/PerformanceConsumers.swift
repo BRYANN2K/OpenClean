@@ -143,11 +143,11 @@ struct ConsumerRow: View {
                 .monospacedDigit()
                 .frame(minWidth: 64, alignment: .trailing)
                 .accessibilityLabel("CPU \(Int(group.cpuPercent.rounded())) percent")
-            Text(formatBytes(Int64(group.residentBytes)))
+            Text(formatMemory(group.residentBytes))
                 .font(.system(size: 14))
                 .monospacedDigit()
                 .frame(minWidth: 84, alignment: .trailing)
-                .accessibilityLabel("Memory \(formatBytes(Int64(group.residentBytes)))")
+                .accessibilityLabel("Memory \(formatMemory(group.residentBytes))")
             if quittable {
                 Button("Quit", action: onQuit).buttonStyle(CapsuleButtonStyle()).fixedSize()
                 Button("Force Quit…", action: onForceQuit).buttonStyle(CapsuleButtonStyle()).fixedSize()

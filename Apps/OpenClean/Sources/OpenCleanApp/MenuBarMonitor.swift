@@ -70,7 +70,7 @@ struct MenuBarPopover: View {
                 meterRow(String(localized: "CPU"), value: formatPercent(model.cpu), fraction: model.cpu ?? 0)
                 meterRow(
                     String(localized: "Memory"),
-                    value: model.memory.map { "\(formatBytes(Int64($0.used))) · \(pressureLabel($0.pressure))" } ?? "–",
+                    value: model.memory.map { "\(formatMemory($0.used)) · \(pressureLabel($0.pressure))" } ?? "–",
                     fraction: model.memory?.usedFraction ?? 0,
                     color: model.memory.map { pressureColor($0.pressure) } ?? Theme.accent)
                 meterRow(
@@ -107,7 +107,7 @@ struct MenuBarPopover: View {
                             Text(group.name).lineLimit(1)
                             Spacer()
                             Text(String(format: "%.0f%%", group.cpuPercent)).monospacedDigit()
-                            Text(formatBytes(Int64(group.residentBytes)))
+                            Text(formatMemory(group.residentBytes))
                                 .monospacedDigit()
                                 .foregroundStyle(Theme.textSecondary)
                                 .frame(minWidth: 64, alignment: .trailing)
