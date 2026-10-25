@@ -16,7 +16,7 @@ struct PerformanceOverview: View {
                         detail: String(localized: "Busy across all cores"), points: model.cpuHistory, maxValue: 1)
                     MetricCard(
                         title: String(localized: "Memory"), symbol: "memorychip",
-                        value: model.memory.map { formatBytes(Int64($0.used)) } ?? "–",
+                        value: model.memory.map { formatMemory($0.used) } ?? "–",
                         detail: memoryDetail, points: model.memoryHistory, maxValue: 1,
                         tag: model.memory.map {
                             (String(localized: "Pressure: \(pressureLabel($0.pressure))"), pressureColor($0.pressure))
@@ -81,7 +81,7 @@ struct PerformanceOverview: View {
 
     private var memoryDetail: String {
         guard let memory = model.memory else { return "" }
-        return String(localized: "used of \(formatCapacity(Int64(memory.total)))")
+        return String(localized: "used of \(formatMemory(memory.total))")
     }
 }
 

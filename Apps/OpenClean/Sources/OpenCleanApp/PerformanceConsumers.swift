@@ -162,11 +162,11 @@ struct ConsumerRow: View {
                 .foregroundStyle(group.gpuPercent < 0.05 ? Theme.textTertiary : Theme.textPrimary)
                 .frame(minWidth: 64, alignment: .trailing)
                 .accessibilityLabel("GPU \(Int(group.gpuPercent.rounded())) percent")
-            Text(formatBytes(Int64(group.residentBytes)))
+            Text(formatMemory(group.residentBytes))
                 .font(.system(size: 14))
                 .monospacedDigit()
                 .frame(minWidth: 84, alignment: .trailing)
-                .accessibilityLabel("Memory \(formatBytes(Int64(group.residentBytes)))")
+                .accessibilityLabel("Memory \(formatMemory(group.residentBytes))")
             HStack(spacing: 14) {
                 if quittable {
                     Button("Quit", action: onQuit).buttonStyle(CapsuleButtonStyle()).fixedSize()
